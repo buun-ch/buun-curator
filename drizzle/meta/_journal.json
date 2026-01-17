@@ -1,0 +1,181 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1764922151597,
+      "tag": "0000_init_categories_feeds",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764932101499,
+      "tag": "0001_add_articles_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764933409196,
+      "tag": "0002_rename_articles_to_entries",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1764952667551,
+      "tag": "0003_add-entries-url-unique-index",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1764994604526,
+      "tag": "0004_add-feed-cache-headers",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1765004236263,
+      "tag": "0005_add_full_content",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1765023397009,
+      "tag": "0006_convert_ids_to_ulid",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1765025549238,
+      "tag": "0007_add_filtered_content",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1765196400000,
+      "tag": "0008_add_raw_html",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1765290472261,
+      "tag": "0009_add_app_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1765355528491,
+      "tag": "0010_add_reddit_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1765400000000,
+      "tag": "0011_add_cascade_delete",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1765450000000,
+      "tag": "0012_add_entry_preference",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1765600000000,
+      "tag": "0013_add_translated_content",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1765714662724,
+      "tag": "0014_add_better_auth_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1765948121800,
+      "tag": "0015_add_entry_context",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1765948729122,
+      "tag": "0016_add_entry_enrichments",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1766294614513,
+      "tag": "0017_add_entry_links",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1767322498031,
+      "tag": "0018_add_graph_added_at",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1767400000000,
+      "tag": "0019_add_entry_embedding",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1767500000000,
+      "tag": "0020_extract_feed_options",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1767600346470,
+      "tag": "0021_add_labels",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1767615686787,
+      "tag": "0022_add_labels_name_unique",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1767700000000,
+      "tag": "0023_rename_preference_to_keep",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1768396401961,
+      "tag": "0024_add_thumbnail_url",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "buun-curator.fullname" . }}-frontend
+  labels:
+    {{- include "buun-curator.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+spec:
+  {{- if not .Values.frontend.autoscaling.enabled }}
+  replicas: {{ .Values.frontend.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "buun-curator.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: frontend
+  template:
+    metadata:
+      {{- with .Values.frontend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "buun-curator.labels" . | nindent 8 }}
+        app.kubernetes.io/component: frontend
+        {{- with .Values.frontend.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "buun-curator.serviceAccountName" . }}
+      {{- with .Values.frontend.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+      {{- if .Values.frontend.initContainers }}
+        {{- include "buun-curator.initContainers" . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.frontend.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: {{ include "buun-curator.frontendImage" . }}
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.service.port }}
+              protocol: TCP
+          env:
+          {{- if .Values.postgres.app.host }}
+            - name: DATABASE_URL
+              value: "postgresql://{{ .Values.postgres.app.username }}:{{ .Values.postgres.app.password }}@{{ .Values.postgres.app.host }}:{{ .Values.postgres.app.port }}/{{ .Values.postgres.app.database }}"
+          {{- end }}
+          {{- if .Values.frontend.serverUrl }}
+            - name: NEXT_PUBLIC_SERVER_URL
+              value: {{ .Values.frontend.serverUrl | quote }}
+          {{- end }}
+          {{- if .Values.frontend.allowedDevOrigins }}
+            - name: ALLOWED_DEV_ORIGINS
+              value: {{ .Values.frontend.allowedDevOrigins | quote }}
+          {{- end }}
+            - name: AUTH_ENABLED
+              value: {{ .Values.auth.enabled | quote }}
+          {{- if .Values.auth.enabled }}
+          {{- if .Values.auth.authUrl }}
+            - name: KEYCLOAK_URL
+              value: {{ .Values.auth.authUrl | quote }}
+          {{- end }}
+            - name: KEYCLOAK_REALM
+              value: {{ .Values.auth.realm | quote }}
+          {{- if .Values.auth.appUrl }}
+            - name: BETTER_AUTH_URL
+              value: {{ .Values.auth.appUrl | quote }}
+          {{- end }}
+          {{- if .Values.auth.secret }}
+            - name: BETTER_AUTH_SECRET
+              value: {{ .Values.auth.secret | quote }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.llm.baseUrl }}
+            - name: OPENAI_BASE_URL
+              value: {{ .Values.llm.baseUrl | quote }}
+          {{- end }}
+          {{- $assistantModel := .Values.llm.models.assistant | default .Values.llm.models.default }}
+          {{- if $assistantModel }}
+            - name: OPENAI_MODEL
+              value: {{ $assistantModel | quote }}
+          {{- end }}
+          {{- if .Values.temporal.host }}
+            - name: TEMPORAL_HOST
+              value: {{ .Values.temporal.host | quote }}
+          {{- end }}
+          {{- if .Values.temporal.namespace }}
+            - name: TEMPORAL_NAMESPACE
+              value: {{ .Values.temporal.namespace | quote }}
+          {{- end }}
+          {{- if .Values.temporal.taskQueue }}
+            - name: TEMPORAL_TASK_QUEUE
+              value: {{ .Values.temporal.taskQueue | quote }}
+          {{- end }}
+          {{- if .Values.worker.translation.provider }}
+            - name: TRANSLATION_PROVIDER
+              value: {{ .Values.worker.translation.provider | quote }}
+          {{- end }}
+          {{- if .Values.meilisearch.host }}
+            - name: MEILISEARCH_HOST
+              value: {{ .Values.meilisearch.host | quote }}
+          {{- end }}
+          {{- if .Values.meilisearch.index }}
+            - name: MEILISEARCH_INDEX
+              value: {{ .Values.meilisearch.index | quote }}
+          {{- end }}
+          {{- if .Values.meilisearch.apiKey }}
+            - name: MEILISEARCH_API_KEY
+              value: {{ .Values.meilisearch.apiKey | quote }}
+          {{- end }}
+          {{- with .Values.frontend.env }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if not .Values.frontend.telemetry.enabled }}
+            - name: NEXT_TELEMETRY_DISABLED
+              value: "1"
+          {{- end }}
+          {{- if not .Values.frontend.logging.health_request }}
+            - name: DISABLE_HEALTH_REQUEST_LOGS
+              value: "1"
+          {{- end }}
+          {{- with .Values.frontend.extraEnvVars }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.internalApi.token }}
+            - name: INTERNAL_API_TOKEN
+              value: {{ .Values.internalApi.token | quote }}
+          {{- end }}
+            - name: NEXT_PUBLIC_REDDIT_ENABLED
+              value: {{ .Values.reddit.enabled | quote }}
+            - name: NEXT_PUBLIC_RESEARCH_CONTEXT_ENABLED
+              value: {{ .Values.research.context.enabled | quote }}
+          {{- $agentUrl := .Values.frontend.agentUrl | default (printf "http://%s-agent:%d" (include "buun-curator.fullname" .) (int .Values.agent.service.port)) }}
+            - name: AGENT_URL
+              value: {{ $agentUrl | quote }}
+          {{- if .Values.tracing.enabled }}
+            - name: OTEL_TRACING_ENABLED
+              value: "true"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: {{ .Values.tracing.endpoint | quote }}
+            {{- $frontendServiceName := .Values.tracing.frontend.serviceName | default (include "buun-curator.fullname" .) }}
+            - name: OTEL_SERVICE_NAME
+              value: {{ $frontendServiceName | quote }}
+          {{- end }}
+          envFrom:
+          {{- with .Values.frontend.envFrom }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.frontend.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ .Values.frontend.extraEnvVarsSecret }}
+          {{- end }}
+          {{- if .Values.frontend.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ .Values.frontend.extraEnvVarsCM }}
+          {{- end }}
+          {{- with .Values.frontend.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.frontend.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.frontend.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.frontend.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.frontend.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+      {{- with .Values.frontend.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Article With Ads</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+        </nav>
+    </header>
+    <main>
+        <article>
+            <h1>Article With Ads</h1>
+            <p>This is the main article content that should be extracted.</p>
+            <div class="advertisement">
+                <p>BUY NOW! Special offer only today!</p>
+            </div>
+            <p>More article content after the ad block.</p>
+            <div data-component="ad-slot">
+                <p>Another ad placement here.</p>
+            </div>
+            <p>Final paragraph of the article.</p>
+        </article>
+        <aside class="sidebar">
+            <h3>Related Articles</h3>
+            <ul>
+                <li><a href="/related1">Related Article 1</a></li>
+                <li><a href="/related2">Related Article 2</a></li>
+            </ul>
+        </aside>
+    </main>
+    <footer>
+        <p>Copyright 2024 Example Site</p>
+    </footer>
+</body>
+</html>

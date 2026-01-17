@@ -1,0 +1,331 @@
+# Buun Curator Ontology
+# A lightweight ontology for general content, based on Schema.org.
+#
+# Statistics:
+#   - Classes: 28
+#   - Properties: 19
+#   - Language Instances: 8
+#
+# References:
+#   - https://schema.org/
+
+@prefix schema: <https://schema.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix : <http://buun.dev/ontology#> .
+
+# ============================================================
+# CLASSES (28 classes)
+# ============================================================
+
+# --- Agents ---
+:Person a owl:Class ;
+    rdfs:subClassOf schema:Person ;
+    rdfs:label "Person" ;
+    rdfs:comment "An individual such as an author, expert, or public figure." .
+
+:Organization a owl:Class ;
+    rdfs:subClassOf schema:Organization ;
+    rdfs:label "Organization" ;
+    rdfs:comment "Base class for organizations." .
+
+:Company a owl:Class ;
+    rdfs:subClassOf :Organization ;
+    rdfs:label "Company" ;
+    rdfs:comment "A business entity or startup." .
+
+:GovernmentOrganization a owl:Class ;
+    rdfs:subClassOf :Organization ;
+    rdfs:label "Government Organization" ;
+    rdfs:comment "A government agency or public institution." .
+
+:EducationalOrganization a owl:Class ;
+    rdfs:subClassOf :Organization ;
+    rdfs:label "Educational Organization" ;
+    rdfs:comment "A university, research institution, or school." .
+
+:MediaOrganization a owl:Class ;
+    rdfs:subClassOf :Organization ;
+    rdfs:label "Media Organization" ;
+    rdfs:comment "A media company, publisher, or news organization." .
+
+:Community a owl:Class ;
+    rdfs:subClassOf :Organization ;
+    rdfs:label "Community" ;
+    rdfs:comment "A community, open-source project, or group." .
+
+# --- Places ---
+:Place a owl:Class ;
+    rdfs:subClassOf schema:Place ;
+    rdfs:label "Place" ;
+    rdfs:comment "Base class for locations." .
+
+:Country a owl:Class ;
+    rdfs:subClassOf :Place ;
+    rdfs:label "Country" ;
+    rdfs:comment "A nation or country." .
+
+:City a owl:Class ;
+    rdfs:subClassOf :Place ;
+    rdfs:label "City" ;
+    rdfs:comment "A city or urban area." .
+
+# --- Creative Works ---
+:CreativeWork a owl:Class ;
+    rdfs:subClassOf schema:CreativeWork ;
+    rdfs:label "Creative Work" ;
+    rdfs:comment "Base class for creative works." .
+
+:Book a owl:Class ;
+    rdfs:subClassOf :CreativeWork ;
+    rdfs:label "Book" ;
+    rdfs:comment "A book or publication." .
+
+:Article a owl:Class ;
+    rdfs:subClassOf :CreativeWork ;
+    rdfs:label "Article" ;
+    rdfs:comment "An article or paper." .
+
+:WebSite a owl:Class ;
+    rdfs:subClassOf :CreativeWork ;
+    rdfs:label "Web Site" ;
+    rdfs:comment "A website or blog." .
+
+:Software a owl:Class ;
+    rdfs:subClassOf :CreativeWork ;
+    rdfs:label "Software" ;
+    rdfs:comment "Software, application, or library." .
+
+# --- Products & Services ---
+:Product a owl:Class ;
+    rdfs:subClassOf schema:Product ;
+    rdfs:label "Product" ;
+    rdfs:comment "A product or goods." .
+
+:Service a owl:Class ;
+    rdfs:subClassOf schema:Service ;
+    rdfs:label "Service" ;
+    rdfs:comment "A service offering." .
+
+# --- Events ---
+:Event a owl:Class ;
+    rdfs:subClassOf schema:Event ;
+    rdfs:label "Event" ;
+    rdfs:comment "Base class for events." .
+
+:BusinessEvent a owl:Class ;
+    rdfs:subClassOf :Event ;
+    rdfs:label "Business Event" ;
+    rdfs:comment "A business event such as announcement, release, acquisition, or IPO." .
+
+:SocialEvent a owl:Class ;
+    rdfs:subClassOf :Event ;
+    rdfs:label "Social Event" ;
+    rdfs:comment "A social event such as conference, meeting, or election." .
+
+# --- Concepts ---
+:Concept a owl:Class ;
+    rdfs:subClassOf schema:Intangible ;
+    rdfs:label "Concept" ;
+    rdfs:comment "Base class for abstract concepts." .
+
+:Technology a owl:Class ;
+    rdfs:subClassOf :Concept ;
+    rdfs:label "Technology" ;
+    rdfs:comment "A technology or methodology." .
+
+:Topic a owl:Class ;
+    rdfs:subClassOf :Concept ;
+    rdfs:label "Topic" ;
+    rdfs:comment "A topic, theme, or field." .
+
+:Law a owl:Class ;
+    rdfs:subClassOf :Concept ;
+    rdfs:label "Law" ;
+    rdfs:comment "A law, regulation, or policy." .
+
+:FinancialInstrument a owl:Class ;
+    rdfs:subClassOf :Concept ;
+    rdfs:label "Financial Instrument" ;
+    rdfs:comment "A financial instrument such as stock, currency, or cryptocurrency." .
+
+:Disease a owl:Class ;
+    rdfs:subClassOf :Concept ;
+    rdfs:label "Disease" ;
+    rdfs:comment "A disease or health condition." .
+
+# --- Language ---
+:Language a owl:Class ;
+    rdfs:subClassOf schema:Language ;
+    rdfs:label "Language" ;
+    rdfs:comment "A natural language used in content." .
+
+# --- Language Instances (8 supported languages) ---
+:English a :Language ;
+    rdfs:label "English" ;
+    rdfs:comment "English language" ;
+    schema:alternateName "en" .
+
+:Japanese a :Language ;
+    rdfs:label "Japanese" ;
+    rdfs:comment "Japanese language" ;
+    schema:alternateName "ja" .
+
+:Chinese a :Language ;
+    rdfs:label "Chinese" ;
+    rdfs:comment "Chinese language" ;
+    schema:alternateName "zh" .
+
+:Korean a :Language ;
+    rdfs:label "Korean" ;
+    rdfs:comment "Korean language" ;
+    schema:alternateName "ko" .
+
+:Spanish a :Language ;
+    rdfs:label "Spanish" ;
+    rdfs:comment "Spanish language" ;
+    schema:alternateName "es" .
+
+:French a :Language ;
+    rdfs:label "French" ;
+    rdfs:comment "French language" ;
+    schema:alternateName "fr" .
+
+:German a :Language ;
+    rdfs:label "German" ;
+    rdfs:comment "German language" ;
+    schema:alternateName "de" .
+
+:Portuguese a :Language ;
+    rdfs:label "Portuguese" ;
+    rdfs:comment "Portuguese language (Brazilian)" ;
+    schema:alternateName "pt" .
+
+# ============================================================
+# PROPERTIES (19 properties)
+# ============================================================
+
+# --- Agent Relations ---
+:createdBy a owl:ObjectProperty ;
+    rdfs:label "created by" ;
+    rdfs:comment "The creator or author of a work." ;
+    rdfs:domain [ owl:unionOf (:CreativeWork :Product :Software) ] ;
+    rdfs:range [ owl:unionOf (:Person :Organization) ] .
+
+:worksFor a owl:ObjectProperty ;
+    rdfs:label "works for" ;
+    rdfs:comment "Employment or affiliation relationship." ;
+    rdfs:domain :Person ;
+    rdfs:range :Organization .
+
+:foundedBy a owl:ObjectProperty ;
+    rdfs:label "founded by" ;
+    rdfs:comment "The founder of an organization." ;
+    rdfs:domain :Organization ;
+    rdfs:range :Person .
+
+:leaderOf a owl:ObjectProperty ;
+    rdfs:label "leader of" ;
+    rdfs:comment "Leadership role such as CEO or director." ;
+    rdfs:domain :Person ;
+    rdfs:range :Organization .
+
+# --- Organization Relations ---
+:subsidiaryOf a owl:ObjectProperty ;
+    rdfs:label "subsidiary of" ;
+    rdfs:comment "A subsidiary relationship between organizations." ;
+    rdfs:domain :Organization ;
+    rdfs:range :Organization .
+
+:partnersWith a owl:ObjectProperty ;
+    rdfs:label "partners with" ;
+    rdfs:comment "A partnership or alliance relationship." ;
+    rdfs:domain :Organization ;
+    rdfs:range :Organization ;
+    a owl:SymmetricProperty .
+
+:competesWith a owl:ObjectProperty ;
+    rdfs:label "competes with" ;
+    rdfs:comment "A competitive relationship." ;
+    rdfs:domain [ owl:unionOf (:Organization :Product :Software) ] ;
+    rdfs:range [ owl:unionOf (:Organization :Product :Software) ] ;
+    a owl:SymmetricProperty .
+
+# --- Product/Service Relations ---
+:produces a owl:ObjectProperty ;
+    rdfs:label "produces" ;
+    rdfs:comment "Production or provision of products/services." ;
+    rdfs:domain :Organization ;
+    rdfs:range [ owl:unionOf (:Product :Software :Service) ] .
+
+:uses a owl:ObjectProperty ;
+    rdfs:label "uses" ;
+    rdfs:comment "Usage or dependency relationship." ;
+    rdfs:domain [ owl:unionOf (:Software :Product :Organization) ] ;
+    rdfs:range [ owl:unionOf (:Software :Technology :Service) ] .
+
+:basedOn a owl:ObjectProperty ;
+    rdfs:label "based on" ;
+    rdfs:comment "Derivation or foundation relationship." ;
+    rdfs:domain [ owl:unionOf (:Software :Product :CreativeWork) ] ;
+    rdfs:range [ owl:unionOf (:Software :Technology :CreativeWork) ] .
+
+# --- Location Relations ---
+:locatedIn a owl:ObjectProperty ;
+    rdfs:label "located in" ;
+    rdfs:comment "Physical or headquarters location." ;
+    rdfs:domain [ owl:unionOf (:Organization :Event :Person) ] ;
+    rdfs:range :Place .
+
+# --- Event Relations ---
+:participatesIn a owl:ObjectProperty ;
+    rdfs:label "participates in" ;
+    rdfs:comment "Participation in an event." ;
+    rdfs:domain [ owl:unionOf (:Person :Organization) ] ;
+    rdfs:range :Event .
+
+:organizedBy a owl:ObjectProperty ;
+    rdfs:label "organized by" ;
+    rdfs:comment "The organizer or host of an event." ;
+    rdfs:domain :Event ;
+    rdfs:range :Organization .
+
+# --- Content Relations ---
+:about a owl:ObjectProperty ;
+    rdfs:label "about" ;
+    rdfs:comment "The primary subject or topic of a work." ;
+    rdfs:domain :CreativeWork ;
+    rdfs:range owl:Thing .
+
+:mentions a owl:ObjectProperty ;
+    rdfs:label "mentions" ;
+    rdfs:comment "A reference or mention within content." ;
+    rdfs:domain :CreativeWork ;
+    rdfs:range owl:Thing .
+
+:relatedTo a owl:ObjectProperty ;
+    rdfs:label "related to" ;
+    rdfs:comment "A general relationship between entities." ;
+    rdfs:domain owl:Thing ;
+    rdfs:range owl:Thing ;
+    a owl:SymmetricProperty .
+
+# --- Regulatory/Legal ---
+:regulatedBy a owl:ObjectProperty ;
+    rdfs:label "regulated by" ;
+    rdfs:comment "Subject to regulation by an authority or law." ;
+    rdfs:domain [ owl:unionOf (:Organization :Product :Service) ] ;
+    rdfs:range [ owl:unionOf (:GovernmentOrganization :Law) ] .
+
+:affects a owl:ObjectProperty ;
+    rdfs:label "affects" ;
+    rdfs:comment "Impact or influence on something." ;
+    rdfs:domain [ owl:unionOf (:Event :Law :Disease) ] ;
+    rdfs:range owl:Thing .
+
+# --- Language Relations ---
+:inLanguage a owl:ObjectProperty ;
+    rdfs:label "in language" ;
+    rdfs:comment "The language used in content." ;
+    rdfs:domain :CreativeWork ;
+    rdfs:range :Language .

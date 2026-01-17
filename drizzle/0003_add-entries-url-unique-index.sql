@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "entries_url_idx" ON "entries" USING btree ("url");

@@ -1,0 +1,206 @@
+/* Entry Labels - Tagify Customization */
+/* Styled like Tagify's advance-options example */
+
+.entry-labels {
+  margin-top: 0;
+}
+
+.entry-labels .tagify {
+  --tags-border-color: var(--border);
+  --tags-hover-border-color: var(--border);
+  --tags-focus-border-color: var(--border);
+  --tag-bg: var(--card);
+  --tag-hover: color-mix(in srgb, var(--tag-bg), black 10%);
+  --tag-text-color: var(--foreground);
+  --tag-text-color--edit: var(--foreground);
+  --tag-pad: 0.3em 0.5em;
+  --tag-inset-shadow-size: 1em;
+  --tag-remove-bg: transparent;
+  --tag-remove-btn-bg: none;
+  --tag-remove-btn-color: var(--foreground);
+  --tag-remove-btn-bg--hover: var(--muted)
+  --placeholder-color: var(--muted-foreground);
+  --placeholder-color-focus: var(--muted-foreground);
+  --input-color: var(--foreground);
+
+  /* Field border styling - match Tagify's advance-options example */
+  border: 1px solid var(--tags-border-color);
+  border-radius: 3px;
+  padding: 0.2rem 0.5rem;
+  gap: 5px;
+  background: var(--color-background);
+  min-height: 2.25rem;
+  width: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.entry-labels .tagify:hover {
+  border-color: var(--tags-hover-border-color);
+}
+
+.entry-labels .tagify--focus {
+  border-color: var(--tags-focus-border-color);
+}
+
+.entry-labels .tagify__tag {
+  margin: auto;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  vertical-align: middle;
+  line-height: 1.4;
+  background: var(--tag-bg);
+  color: var(--tag-text-color);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.entry-labels .tagify__tag:hover {
+  transform: scale(1.02);
+}
+
+.entry-labels .tagify__tag > div {
+  padding: 0.2em 0.5em;
+  vertical-align: middle;
+}
+
+.entry-labels .tagify__tag > div::before {
+  box-shadow: none;
+}
+
+.entry-labels .tagify__tag .tagify__tag-text {
+  vertical-align: middle;
+}
+
+.entry-labels .tagify__tag__removeBtn {
+  width: 14px;
+  height: 14px;
+  margin-right: 4.666px;
+  margin-left: -4.666px;
+  font-size: 10px;
+  line-height: 14px;
+  opacity: 0.8;
+  transition: opacity 0.1s ease, background 0.1s ease;
+}
+
+.entry-labels .tagify__tag__removeBtn:hover {
+  opacity: 1;
+  background: var(--tag-remove-btn-bg--hover);
+}
+
+/* Input / Placeholder styling */
+.entry-labels .tagify__input {
+  padding: 0.3em 0;
+  margin: 0;
+  min-width: 80px;
+  flex-grow: 1;
+}
+
+.entry-labels .tagify__input::before {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--placeholder-color);
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+/* Placeholder: fade when focused */
+.entry-labels .tagify--focus .tagify__input::before {
+  color: var(--placeholder-color-focus);
+}
+
+/* Placeholder: hide when input has content (not empty) */
+.entry-labels .tagify__input:not(:empty)::before {
+  display: none;
+}
+
+/* Hide placeholder when there are tags */
+.entry-labels .tagify:not(.tagify--empty) .tagify__input::before {
+  display: none;
+}
+
+/* Dropdown styling - shadcn/ui style */
+/* Tagify dropdown is appended to body, so use global selector */
+.tagify__dropdown {
+  z-index: 50;
+  min-width: 8rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px); /* rounded-md */
+  background: var(--popover);
+  color: var(--popover-foreground);
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  padding: 0;
+  /* Animation */
+  animation: dropdown-in 0.15s ease-out;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.tagify__dropdown__wrapper {
+  border: none;
+  background: transparent;
+  padding: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.tagify__dropdown__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 6px 8px;
+  margin: 0;
+  border-radius: calc(var(--radius) - 4px); /* rounded-sm */
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  white-space: nowrap;
+  color: var(--popover-foreground);
+  background: transparent;
+  cursor: default;
+  user-select: none;
+  outline: none;
+  transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+.tagify__dropdown__item:hover,
+.tagify__dropdown__item--active {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.tagify__dropdown__item__color {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+/* Dark mode adjustments */
+.dark .entry-labels .tagify {
+  --tags-border-color: var(--border);
+  --tags-hover-border-color: var(--border);
+  --tags-focus-border-color: var(--border);
+  --placeholder-color: var(--muted);
+  --placeholder-color-focus: var(--muted);
+  --input-color: var(--foreground);
+  background: var(--background);
+}
+
+.dark .entry-labels .tagify__tag {
+  --tag-text-color: var(--foreground);
+}

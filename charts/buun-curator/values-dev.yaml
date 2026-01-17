@@ -1,0 +1,153 @@
+frontend:
+  image:
+    repository: buun-curator-frontend
+
+  serverUrl: http://buun-curator.buun-curator:3000
+
+  # Only hostname is needed (no protocol, no port)
+  allowedDevOrigins: buun-curator.buun-curator
+
+  # Development-friendly liveness probe (longer timeout for JIT compilation)
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+
+  # Development-friendly readiness probe
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 3
+
+  env:
+    - name: NODE_ENV
+      value: development
+
+  extraEnvVarsSecret: buun-curator-secret
+
+worker:
+  enabled: true
+
+  reload: true
+
+  replicaCount: 2
+
+  image:
+    repository: buun-curator-worker
+
+  apiUrl: http://buun-curator.buun-curator:3000
+
+  logLevel: debug
+
+  feedIngestionConcurrency: 5
+
+  s3:
+    endpoint: http://minio.minio:9000
+    # accessKey and secretKey are set via extraEnvVarsSecret
+    bucket: buun-curator
+    prefix: public
+    publicUrl: https://minio.buun.ai/buun-curator/public
+    region: us-east-1
+
+  translation:
+    provider: microsoft
+
+  extraEnvVarsSecret: buun-curator-secret
+
+agent:
+  enabled: true
+
+  reload: true
+
+  image:
+    repository: buun-curator-agent
+
+  logLevel: debug
+
+  extraEnvVarsSecret: buun-curator-secret
+
+migration:
+  enabled: false
+
+research:
+  context:
+    enabled: true
+
+auth:
+  enabled: true
+  authUrl: "" # Keycloak top URL e.g. https://keycloak.example.com
+  realm: buunstack
+  appUrl: http://buun-curator.buun-curator:3000
+
+postgres:
+  app:
+    host: postgres-cluster-rw.postgres
+    port: 5432
+    username: buun_curator
+    password: buun_curator
+    database: buun_curator_dev
+
+temporal:
+  host: temporal-frontend.temporal:7233
+  namespace: buun-curator
+  taskQueue: buun-curator
+
+meilisearch:
+  host: meilisearch.meilisearch:7700
+  index: buun-curator
+
+llm:
+  baseUrl: http://litellm.litellm:4000
+  apiKey: ""
+  models:
+    # Default model (fallback for all tasks)
+    default: gemini-flash-lite
+    # Task-specific models (if empty, falls back to default)
+    # EXTRACTION: Requires Structured Output support
+    extraction: gemini-3-flash
+    # REASONING: Requires Structured Output support
+    reasoning: gemini-3-flash
+    # SUMMARIZATION: Any model works
+    summarization: gemini-flash-lite
+    # ASSISTANT: Frontend AI assistant model (falls back to default)
+    assistant: gemini-3-flash
+    # GRAPHRAG: Model for GraphRAG operations (entity extraction, etc.)
+    graphRAG: gemini-flash-lite
+    # AGENT: Agent service models
+    agent:
+      research: gemini-3-flash
+
+evaluation:
+  enabled: true
+
+langfuse:
+  host: https://langfuse.buun.ai
+
+graphRag:
+  lightrag:
+    logLevel: warning
+
+memgraph:
+  host: memgraph.memgraph
+  port: 7687
+  username: buun_curator
+  password: buun_curator
+
+falkordb:
+  host: falkordb.falkordb
+  port: 6379
+  username: buun_curator
+  password: buun_curator
+  graph: buun_curator
+
+tracing:
+  enabled: true
+  endpoint: http://tempo.monitoring:4317

@@ -1,0 +1,82 @@
+[project]
+name = "buun-curator-agent"
+version = "0.1.0"
+description = "LangGraph-based AI agent service for Buun Curator"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.127.1",
+    "uvicorn>=0.40.0",
+    "langchain>=1.2.0",
+    "langchain-openai>=1.1.6",
+    "langchain-community>=0.3.0",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.12.0",
+    "python-ulid>=3.1.0",
+    "httpx>=0.28.1",
+    "ag-ui-protocol>=0.1.10",
+    "langgraph>=1.0.5",
+    "temporalio>=1.21.1",
+    "langfuse>=3.11.2",
+    "ragas>=0.4.2",
+    "langchain-huggingface>=1.2.0",
+    "sentence-transformers>=5.2.0",
+    "structlog>=25.5.0",
+    "opentelemetry-api>=1.39.1",
+    "opentelemetry-sdk>=1.39.1",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.39.1",
+    "opentelemetry-instrumentation-fastapi>=0.52b0",
+    "opentelemetry-instrumentation-httpx>=0.52b0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "ruff>=0.14.10",
+    "pyright>=1.1.408",
+]
+
+[project.scripts]
+agent = "buun_curator_agent.main:main"
+agent-cli = "buun_curator_agent.cli:main"
+batch-eval = "scripts.batch_eval:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["buun_curator_agent", "scripts"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes (undefined names, unused imports, etc.)
+    "I",    # isort (import sorting)
+    "UP",   # pyupgrade (Python version upgrade suggestions)
+    "B",    # flake8-bugbear (common bugs and design issues)
+    "C4",   # flake8-comprehensions (unnecessary list/dict/set comprehensions)
+    "SIM",  # flake8-simplify (simplifiable code patterns)
+    "ARG",  # flake8-unused-arguments
+]
+ignore = []
+extend-select = ["E501"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::pydantic.warnings.PydanticDeprecatedSince20",
+]
+
+[tool.pyright]
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+reportUnusedVariable = "warning"
+venvPath = "."
+venv = ".venv"

@@ -1,0 +1,1 @@
+ALTER TABLE "entries" ADD COLUMN "translated_content" text DEFAULT '' NOT NULL;

@@ -1,0 +1,29 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "buun-curator.fullname" . }}-test-connection"
+  labels:
+    {{- include "buun-curator.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['sh', '-c']
+      args:
+        - |
+          echo "Waiting for service to be ready..."
+          for i in $(seq 1 30); do
+            if wget --spider -q {{ include "buun-curator.fullname" . }}:{{ .Values.frontend.service.port }}/healthz; then
+              echo "Service is ready!"
+              exit 0
+            fi
+            echo "Attempt $i/30 failed, waiting..."
+            sleep 2
+          done
+          echo "Service failed to become ready"
+          exit 1
+  restartPolicy: Never
+{{- end }}

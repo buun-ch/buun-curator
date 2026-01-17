@@ -1,0 +1,15 @@
+Dockerfile
+Dockerfile.dev
+.dockerignore
+.venv/
+.pytest_cache/
+.ruff_cache/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+.git/
+.env
+.env.*
+!.env.example
+*.md
+tests/

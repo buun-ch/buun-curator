@@ -1,0 +1,1 @@
+ALTER TABLE "entries" ADD COLUMN "filtered_content" text DEFAULT '' NOT NULL;

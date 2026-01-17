@@ -1,0 +1,350 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "buun-curator.fullname" . }}-worker
+  labels:
+    {{- include "buun-curator.labels" . | nindent 4 }}
+    app.kubernetes.io/component: worker
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "buun-curator.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: worker
+  template:
+    metadata:
+      {{- with .Values.worker.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "buun-curator.labels" . | nindent 8 }}
+        app.kubernetes.io/component: worker
+        {{- with .Values.worker.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "buun-curator.serviceAccountName" . }}
+      {{- with .Values.worker.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: worker
+          {{- with .Values.worker.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: {{ include "buun-curator.workerImage" . }}
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          {{- if .Values.worker.reload }}
+          args:
+            - --reload
+          {{- end }}
+          {{- if .Values.worker.healthPort }}
+          ports:
+            - name: health
+              containerPort: {{ .Values.worker.healthPort }}
+              protocol: TCP
+          {{- end }}
+          {{- with .Values.worker.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.worker.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+          {{- if .Values.worker.healthPort }}
+            - name: HEALTH_PORT
+              value: {{ .Values.worker.healthPort | quote }}
+          {{- end }}
+          {{- if .Values.worker.logLevel }}
+            - name: LOG_LEVEL
+              value: {{ .Values.worker.logLevel | quote }}
+          {{- end }}
+          {{- if .Values.worker.apiUrl }}
+            - name: BUUN_CURATOR_API_URL
+              value: {{ .Values.worker.apiUrl | quote }}
+          {{- end }}
+          {{- if .Values.internalApi.token }}
+            - name: INTERNAL_API_TOKEN
+              value: {{ .Values.internalApi.token | quote }}
+          {{- end }}
+          {{- if .Values.worker.feedIngestionConcurrency }}
+            - name: FEED_INGESTION_CONCURRENCY
+              value: {{ .Values.worker.feedIngestionConcurrency | quote }}
+          {{- end }}
+          {{- if .Values.worker.maxEntryAgeDays }}
+            - name: MAX_ENTRY_AGE_DAYS
+              value: {{ .Values.worker.maxEntryAgeDays | quote }}
+          {{- end }}
+          {{- if .Values.worker.concurrency }}
+          {{- if .Values.worker.concurrency.maxActivities }}
+            - name: MAX_CONCURRENT_ACTIVITIES
+              value: {{ .Values.worker.concurrency.maxActivities | quote }}
+          {{- end }}
+          {{- if .Values.worker.concurrency.maxWorkflowTasks }}
+            - name: MAX_CONCURRENT_WORKFLOW_TASKS
+              value: {{ .Values.worker.concurrency.maxWorkflowTasks | quote }}
+          {{- end }}
+          {{- if .Values.worker.concurrency.maxLocalActivities }}
+            - name: MAX_CONCURRENT_LOCAL_ACTIVITIES
+              value: {{ .Values.worker.concurrency.maxLocalActivities | quote }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.postgres.app.host }}
+            - name: DATABASE_URL
+              value: "postgresql://{{ .Values.postgres.app.username }}:{{ .Values.postgres.app.password }}@{{ .Values.postgres.app.host }}:{{ .Values.postgres.app.port }}/{{ .Values.postgres.app.database }}"
+          {{- end }}
+          {{- if .Values.worker.s3.endpoint }}
+            - name: S3_ENDPOINT
+              value: {{ .Values.worker.s3.endpoint | quote }}
+          {{- end }}
+          {{- if .Values.worker.s3.accessKey }}
+            - name: S3_ACCESS_KEY
+              value: {{ .Values.worker.s3.accessKey | quote }}
+          {{- end }}
+          {{- if .Values.worker.s3.secretKey }}
+            - name: S3_SECRET_KEY
+              value: {{ .Values.worker.s3.secretKey | quote }}
+          {{- end }}
+          {{- if .Values.worker.s3.bucket }}
+            - name: S3_BUCKET
+              value: {{ .Values.worker.s3.bucket | quote }}
+          {{- end }}
+          {{- if .Values.worker.s3.prefix }}
+            - name: S3_PREFIX
+              value: {{ .Values.worker.s3.prefix | quote }}
+          {{- end }}
+          {{- if .Values.worker.s3.publicUrl }}
+            - name: S3_PUBLIC_URL
+              value: {{ .Values.worker.s3.publicUrl | quote }}
+          {{- end }}
+          {{- if .Values.worker.s3.region }}
+            - name: S3_REGION
+              value: {{ .Values.worker.s3.region | quote }}
+          {{- end }}
+          {{- if .Values.temporal.host }}
+            - name: TEMPORAL_HOST
+              value: {{ .Values.temporal.host | quote }}
+          {{- end }}
+          {{- if .Values.temporal.namespace }}
+            - name: TEMPORAL_NAMESPACE
+              value: {{ .Values.temporal.namespace | quote }}
+          {{- end }}
+          {{- if .Values.temporal.taskQueue }}
+            - name: TEMPORAL_TASK_QUEUE
+              value: {{ .Values.temporal.taskQueue | quote }}
+          {{- end }}
+          {{- if .Values.meilisearch.host }}
+            - name: MEILISEARCH_HOST
+              value: {{ .Values.meilisearch.host | quote }}
+          {{- end }}
+          {{- if .Values.meilisearch.index }}
+            - name: MEILISEARCH_INDEX
+              value: {{ .Values.meilisearch.index | quote }}
+          {{- end }}
+          {{- if .Values.meilisearch.apiKey }}
+            - name: MEILISEARCH_API_KEY
+              value: {{ .Values.meilisearch.apiKey | quote }}
+          {{- end }}
+          {{- if .Values.llm.baseUrl }}
+            - name: OPENAI_BASE_URL
+              value: {{ .Values.llm.baseUrl | quote }}
+          {{- end }}
+          {{- if .Values.memgraph.host }}
+            - name: MEMGRAPH_HOST
+              value: {{ .Values.memgraph.host | quote }}
+            - name: MEMGRAPH_PORT
+              value: {{ .Values.memgraph.port | quote }}
+            {{- if .Values.memgraph.username }}
+            - name: MEMGRAPH_USERNAME
+              value: {{ .Values.memgraph.username | quote }}
+            {{- end }}
+            {{- if .Values.memgraph.password }}
+            - name: MEMGRAPH_PASSWORD
+              value: {{ .Values.memgraph.password | quote }}
+            {{- end }}
+            {{- if .Values.memgraph.database }}
+            - name: MEMGRAPH_DATABASE
+              value: {{ .Values.memgraph.database | quote }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.falkordb.host }}
+            - name: FALKORDB_HOST
+              value: {{ .Values.falkordb.host | quote }}
+            - name: FALKORDB_PORT
+              value: {{ .Values.falkordb.port | quote }}
+            - name: FALKORDB_USERNAME
+              value: {{ .Values.falkordb.username | quote }}
+            - name: FALKORDB_PASSWORD
+              value: {{ .Values.falkordb.password | quote }}
+            - name: FALKORDB_GRAPH
+              value: {{ .Values.falkordb.graph | quote }}
+          {{- end }}
+          {{- if .Values.llm.apiKey }}
+            - name: OPENAI_API_KEY
+              value: {{ .Values.llm.apiKey | quote }}
+          {{- end }}
+          {{- if .Values.llm.models.default }}
+            - name: LLM_MODEL
+              value: {{ .Values.llm.models.default | quote }}
+          {{- end }}
+          {{- if .Values.llm.models.extraction }}
+            - name: EXTRACTION_LLM_MODEL
+              value: {{ .Values.llm.models.extraction | quote }}
+          {{- end }}
+          {{- if .Values.llm.models.reasoning }}
+            - name: REASONING_LLM_MODEL
+              value: {{ .Values.llm.models.reasoning | quote }}
+          {{- end }}
+          {{- if .Values.llm.models.summarization }}
+            - name: SUMMARIZATION_LLM_MODEL
+              value: {{ .Values.llm.models.summarization | quote }}
+          {{- end }}
+          {{- if .Values.langfuse.publicKey }}
+            - name: LANGFUSE_PUBLIC_KEY
+              value: {{ .Values.langfuse.publicKey | quote }}
+          {{- end }}
+          {{- if .Values.langfuse.secretKey }}
+            - name: LANGFUSE_SECRET_KEY
+              value: {{ .Values.langfuse.secretKey | quote }}
+          {{- end }}
+          {{- if .Values.langfuse.host }}
+            - name: LANGFUSE_HOST
+              value: {{ .Values.langfuse.host | quote }}
+          {{- end }}
+            - name: AI_EVALUATION_ENABLED
+              value: {{ .Values.evaluation.enabled | quote }}
+          {{- if .Values.evaluation.embeddingModel }}
+            - name: EVALUATION_EMBEDDING_MODEL
+              value: {{ .Values.evaluation.embeddingModel | quote }}
+          {{- end }}
+          {{- if .Values.worker.translation.provider }}
+            - name: TRANSLATION_PROVIDER
+              value: {{ .Values.worker.translation.provider | quote }}
+          {{- end }}
+          {{- if .Values.worker.translation.deepl.apiKey }}
+            - name: DEEPL_API_KEY
+              value: {{ .Values.worker.translation.deepl.apiKey | quote }}
+          {{- end }}
+          {{- if .Values.worker.translation.microsoft.subscriptionKey }}
+            - name: MS_TRANSLATOR_SUBSCRIPTION_KEY
+              value: {{ .Values.worker.translation.microsoft.subscriptionKey | quote }}
+          {{- end }}
+          {{- if .Values.worker.translation.microsoft.region }}
+            - name: MS_TRANSLATOR_REGION
+              value: {{ .Values.worker.translation.microsoft.region | quote }}
+          {{- end }}
+          {{- if .Values.research.context.githubToken }}
+            - name: GITHUB_TOKEN
+              value: {{ .Values.research.context.githubToken | quote }}
+          {{- end }}
+          {{- if .Values.graphRag }}
+          {{- if .Values.graphRag.backend }}
+            - name: GRAPH_RAG_BACKEND
+              value: {{ .Values.graphRag.backend | quote }}
+          {{- end }}
+          {{- $graphRagModel := .Values.llm.models.graphRAG | default .Values.llm.models.default }}
+          {{- if $graphRagModel }}
+            - name: GRAPH_RAG_LLM_MODEL
+              value: {{ $graphRagModel | quote }}
+          {{- end }}
+          {{- if eq .Values.graphRag.backend "graphiti" }}
+          {{- if and .Values.graphRag.graphiti .Values.graphRag.graphiti.enableVersioning }}
+            - name: GRAPHITI_ENABLE_VERSIONING
+              value: "true"
+          {{- end }}
+          {{- if and .Values.graphRag.graphiti .Values.graphRag.graphiti.logLevel }}
+            - name: GRAPHITI_LOG_LEVEL
+              value: {{ .Values.graphRag.graphiti.logLevel | quote }}
+          {{- end }}
+          {{- end }}
+          {{- if eq .Values.graphRag.backend "lightrag" }}
+          {{- if and .Values.graphRag.lightrag .Values.graphRag.lightrag.workingDir }}
+            - name: LIGHTRAG_WORKING_DIR
+              value: {{ .Values.graphRag.lightrag.workingDir | quote }}
+          {{- end }}
+          {{- if and .Values.graphRag.lightrag .Values.graphRag.lightrag.queryMode }}
+            - name: LIGHTRAG_QUERY_MODE
+              value: {{ .Values.graphRag.lightrag.queryMode | quote }}
+          {{- end }}
+          {{- if and .Values.graphRag.lightrag .Values.graphRag.lightrag.logLevel }}
+            - name: LIGHTRAG_LOG_LEVEL
+              value: {{ .Values.graphRag.lightrag.logLevel | quote }}
+          {{- end }}
+          {{- end }}
+          {{- if and .Values.graphRag.embedding .Values.graphRag.embedding.model }}
+            - name: GRAPHRAG_EMBEDDING_MODEL
+              value: {{ .Values.graphRag.embedding.model | quote }}
+          {{- end }}
+          {{- if and .Values.graphRag.embedding .Values.graphRag.embedding.dimensions }}
+            - name: GRAPHRAG_EMBEDDING_DIMENSIONS
+              value: {{ .Values.graphRag.embedding.dimensions | quote }}
+          {{- end }}
+          {{- if and .Values.graphRag.embedding .Values.graphRag.embedding.threads }}
+            - name: GRAPHRAG_EMBEDDING_THREADS
+              value: {{ .Values.graphRag.embedding.threads | quote }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.tracing.enabled }}
+            - name: ENVIRONMENT
+              value: "production"
+            - name: OTEL_TRACING_ENABLED
+              value: "true"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: {{ .Values.tracing.endpoint | quote }}
+            {{- $workerServiceName := .Values.tracing.worker.serviceName | default (include "buun-curator.fullname" .) }}
+            - name: OTEL_SERVICE_NAME
+              value: {{ $workerServiceName | quote }}
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: {{ .Values.tracing.worker.insecure | quote }}
+          {{- end }}
+          {{- with .Values.worker.env }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.worker.extraEnvVars }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          envFrom:
+          {{- with .Values.worker.envFrom }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.worker.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ .Values.worker.extraEnvVarsSecret }}
+          {{- end }}
+          {{- if .Values.worker.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ .Values.worker.extraEnvVarsCM }}
+          {{- end }}
+          {{- with .Values.worker.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.worker.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+      {{- with .Values.worker.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

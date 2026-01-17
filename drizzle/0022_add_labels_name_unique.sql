@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "labels_name_idx" ON "labels" USING btree ("name");

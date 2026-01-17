@@ -1,0 +1,583 @@
+# Default values for buun-curator.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+imagePullSecrets: []
+# - name: regcred
+
+# This is to override the chart name.
+nameOverride: ""
+fullnameOverride: ""
+
+frontend:
+  # Enable/disable frontend deployment
+  enabled: true
+
+  # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+  replicaCount: 1
+
+  # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+  image:
+    # Container image registry
+    imageRegistry: ""
+    # imageRegistry: ghcr.io/buun-ch
+    # Container image repository
+    repository: buun-curator-frontend
+    # This sets the pull policy for images.
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    # tag: ""
+    tag: latest
+    # tag: dev
+
+  # This is for setting Kubernetes Annotations to a Pod.
+  # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+  # This is for setting Kubernetes Labels to a Pod.
+  # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
+  service:
+    # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+    type: ClusterIP
+    # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+    port: 3000
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  # Startup probe to allow time for schema pulling and initialization
+  startupProbe:
+    httpGet:
+      path: /healthz
+      port: http
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 30  # Allow up to 5 minutes (10s * 30) for startup
+
+  # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+  # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  # Additional volumes on the output Deployment definition.
+  volumes: []
+  # - name: foo
+  #   secret:
+  #     secretName: mysecret
+  #     optional: false
+
+  # Additional volumeMounts on the output Deployment definition.
+  volumeMounts: []
+  # - name: foo
+  #   mountPath: "/etc/foo"
+  #   readOnly: true
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  telemetry:
+    enabled: false
+
+  logging:
+    health_request: false  # Enable/disable health check request logs
+
+  # Server URL (for client-side NEXT_PUBLIC_SERVER_URL)
+  serverUrl: ""
+
+  # Agent URL for CopilotKit (for client-side NEXT_PUBLIC_AGENT_URL)
+  # If empty, uses default: http://<fullname>-agent:<agent.service.port>
+  agentUrl: ""
+
+  # Allowed dev origins for CORS
+  allowedDevOrigins: ""
+
+  # Environment variables to set in the container
+  env: []
+  # - name: CUSTOM_VAR
+  #   value: "custom-value"
+
+  # Environment variables from ConfigMaps or Secrets
+  envFrom: []
+  # - configMapRef:
+  #     name: my-config
+  # - secretRef:  # yamllint disable-line
+  #     name: my-secret
+
+  # Extra environment variables (key-value pairs)
+  # These will be added as individual env vars
+  extraEnvVars: []
+  # - name: OPENAI_API_KEY
+  #   value: "sk-ant-..."
+
+  # Name of existing Secret containing extra environment variables
+  # All keys from the secret will be exposed as environment variables
+  extraEnvVarsSecret: ""
+  # extraEnvVarsSecret: "buun-curator-secret"
+
+  # Name of existing ConfigMap containing extra environment variables
+  # All keys from the ConfigMap will be exposed as environment variables
+  extraEnvVarsCM: ""
+  # extraEnvVarsCM: "buun-curator-config"
+
+  # Init containers to run before the main container
+  initContainers: []
+
+worker:
+  # Enable auto-reload on code changes (for development)
+  reload: false
+
+  # Replica count for worker
+  replicaCount: 2
+
+  # Worker container image
+  image:
+    imageRegistry: ""
+    repository: buun-curator-worker
+    pullPolicy: IfNotPresent
+    tag: latest
+
+  # Pod annotations
+  podAnnotations: {}
+
+  # Pod labels
+  podLabels: {}
+
+  # Pod security context
+  podSecurityContext: {}
+
+  # Container security context
+  securityContext: {}
+
+  # Resource limits and requests
+  resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 256Mi
+
+  # API URL for REST API access
+  apiUrl: ""
+
+  # Logging configuration
+  logLevel: "info"
+
+  # Feed ingestion concurrency
+  feedIngestionConcurrency: 5
+
+  # Max entry age in days (skip entries older than this, 0 = no limit)
+  maxEntryAgeDays: 7
+
+  # Worker concurrency limits (Temporal worker configuration)
+  # Set to 0 to use Temporal defaults (unlimited)
+  concurrency:
+    # Max concurrent activity tasks (recommended: 10-20 for stability)
+    maxActivities: 10
+    # Max concurrent workflow tasks (recommended: 10-20 to avoid SDK race conditions)
+    maxWorkflowTasks: 10
+    # Max concurrent local activities (0 = Temporal default)
+    maxLocalActivities: 0
+
+  # S3/MinIO configuration for thumbnails
+  s3:
+    endpoint: ""  # Empty for AWS S3, URL for MinIO/other S3-compatible
+    accessKey: ""  # Can be overridden by secret
+    secretKey: ""  # Can be overridden by secret
+    bucket: buun-curator
+    prefix: ""
+    publicUrl: ""
+    region: us-east-1
+
+  # Translation configuration
+  translation:
+    provider: microsoft  # "microsoft" or "deepl"
+
+    microsoft:
+      subscriptionKey: ""
+      region: ""
+
+    deepl:
+      apiKey: ""
+
+  # Environment variables
+  env: []
+  # - name: CUSTOM_VAR
+  #   value: "custom-value"
+
+  # Extra environment variables
+  extraEnvVars: []
+
+  # Environment variables from ConfigMaps or Secrets
+  envFrom: []
+
+  # Name of existing Secret containing extra environment variables
+  extraEnvVarsSecret: ""
+
+  # Name of existing ConfigMap containing extra environment variables
+  extraEnvVarsCM: ""
+
+  # Additional volumes
+  volumes: []
+
+  # Additional volume mounts
+  volumeMounts: []
+
+  # Node selector
+  nodeSelector: {}
+
+  # Tolerations
+  tolerations: []
+
+  # Affinity
+  affinity: {}
+
+  # Health check port for liveness/readiness probes
+  healthPort: 8080
+
+  # Liveness probe (verifies Temporal connectivity)
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: health
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+
+  # Readiness probe
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: health
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+agent:
+  # Enable auto-reload on code changes (for development)
+  reload: false
+
+  # Replica count for agent
+  replicaCount: 1
+
+  # Agent container image
+  image:
+    imageRegistry: ""
+    repository: buun-curator-agent
+    pullPolicy: IfNotPresent
+    tag: latest
+
+  # Pod annotations
+  podAnnotations: {}
+
+  # Pod labels
+  podLabels: {}
+
+  # Pod security context
+  podSecurityContext: {}
+
+  # Container security context
+  securityContext: {}
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 8000
+
+  # Resource limits and requests
+  resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 256Mi
+
+  # Liveness probe
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: http
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+  # Readiness probe
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: http
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+  # Logging configuration
+  logLevel: info
+
+  # API base URL for Next.js API (used to fetch entry data)
+  # If empty, uses default: http://<fullname>:3000
+  apiBaseUrl: ""
+
+  # CORS origins (comma-separated or list)
+  corsOrigins: []
+
+  # Environment variables
+  env: []
+  # - name: CUSTOM_VAR
+  #   value: custom-value
+
+  # Extra environment variables
+  extraEnvVars: []
+
+  # Environment variables from ConfigMaps or Secrets
+  envFrom: []
+
+  # Name of existing Secret containing extra environment variables
+  extraEnvVarsSecret: ""
+
+  # Name of existing ConfigMap containing extra environment variables
+  extraEnvVarsCM: ""
+
+  # Additional volumes
+  volumes: []
+
+  # Additional volume mounts
+  volumeMounts: []
+
+  # Node selector
+  nodeSelector: {}
+
+  # Tolerations
+  tolerations: []
+
+  # Affinity
+  affinity: {}
+
+# Database migration (runs as Helm pre-install/pre-upgrade hook)
+migration:
+  enabled: true
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 256Mi
+  # requests:
+  #   cpu: 50m
+  #   memory: 128Mi
+
+# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: buun-curator.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+research:
+  # Context extraction and enrichment is experimental
+  context:
+    enabled: false
+    githubToken: ""
+
+auth:
+  enabled: false
+  authUrl: ""
+  realm: ""
+  appUrl: ""
+  secret: "" # Generate a random secret with `openssl rand -base64 32`
+
+internalApi:
+  token: ""
+
+postgres:
+  # App database
+  app:
+    host: ""
+    port: 5432
+    username: ""
+    password: ""
+    database: ""
+
+temporal:
+  host: ""
+  namespace: default
+  taskQueue: buun-curator
+
+meilisearch:
+  host: ""
+  index: buun-curator
+  apiKey: ""
+
+# OpenAI/LLM configuration (shared between frontend and worker)
+# If baseUrl is empty, uses OpenAI API directly. If set, uses LiteLLM proxy or compatible endpoint.
+llm:
+  baseUrl: ""
+  apiKey: ""
+  # LLM models configuration
+  # See: https://docs.langchain.com/oss/python/integrations/chat/anthropic#structured-output
+  models:
+    # Default model (fallback for all tasks)
+    default: gpt-5-mini
+    # Task-specific models (if empty, falls back to default)
+    # EXTRACTION: Requires Structured Output support
+    extraction: ""
+    # REASONING: Requires Structured Output support
+    reasoning: ""
+    # SUMMARIZATION: Any model works
+    summarization: ""
+    # ASSISTANT: Frontend AI assistant model
+    assistant: ""
+    # GRAPHRAG: Model for GraphRAG operations (entity extraction, etc.)
+    graphRAG: ""
+    # AGENT: Agent service models
+    agent:
+      research: ""
+
+evaluation:
+  enabled: false
+  # Embedding model for RAGAS evaluation
+  # sentence-transformers/paraphrase-multilingual-mpnet-base-v2 # dim=768 quality
+  # sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 # dim=384 fast
+  embeddingModel: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+
+langfuse:
+  host: ""
+  publicKey: ""
+  secretKey: ""
+
+# Reddit integration (experimental)
+reddit:
+  enabled: false
+
+# GraphRAG Configuration (experimental)
+graphRag:
+  # Backend selection: "graphiti" or "lightrag"
+  backend: lightrag
+
+  # Graphiti configuration (when backend=graphiti)
+  graphiti:
+    # Enable bi-temporal versioning
+    enableVersioning: true
+    # Custom entity types (JSON array)
+    entityTypes: ""
+    logLevel: info
+
+  # LightRAG configuration (when backend=lightrag)
+  lightrag:
+    # Working directory for LightRAG cache files
+    workingDir: "/data/lightrag"
+    # Default query mode: naive, local, global, hybrid, mix
+    queryMode: hybrid
+    logLevel: info
+
+  # Embedding configuration (FastEmbed - shared by all backends)
+  embedding:
+    # sentence-transformers/paraphrase-multilingual-mpnet-base-v2 # dim=768 quality
+    # sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 # dim=384 fast
+    model: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+    # Embedding dimensions (default: 768)
+    dimensions: 384
+    # Number of threads for ONNX Runtime
+    threads: 1
+
+# Memgraph configuration (for LightRAG)
+memgraph:
+  host: ""
+  port: 7687
+  username: ""
+  password: ""
+  # Database name (optional - not available in free version)
+  database: ""
+
+# FalkorDB configuration (for Graphitic)
+falkordb:
+  host: ""
+  port: 6379
+  username: ""
+  password: ""
+  graph: ""
+
+# OpenTelemetry Tracing configuration
+tracing:
+  enabled: false
+  # OTLP endpoint (gRPC)
+  endpoint: ""
+  # Service names (auto-generated if empty)
+  frontend:
+    serviceName: ""
+  worker:
+    serviceName: ""
+    insecure: true
+  agent:
+    serviceName: ""

@@ -1,0 +1,137 @@
+frontend:
+  image:
+    imageRegistry: localhost:30500
+    repository: buun-curator-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  serverUrl: https://buun-curator.example.com
+
+  env:
+    - name: NODE_ENV
+      value: production
+
+  extraEnvVarsSecret: buun-curator-secret
+
+worker:
+  enabled: true
+
+  replicaCount: 1
+
+  image:
+    imageRegistry: localhost:30500
+    repository: buun-curator-worker
+    tag: latest
+    pullPolicy: Always
+
+  apiUrl: http://buun-curator.buun-curator:3000
+
+  logLevel: info
+
+  feedIngestionConcurrency: 3
+
+  # Worker concurrency limits (Temporal worker configuration)
+  # Set to 0 to use Temporal defaults (unlimited)
+  concurrency:
+    # Max concurrent activity tasks (recommended: 10-20 for stability)
+    maxActivities: 10
+    # Max concurrent workflow tasks (recommended: 10-20 to avoid SDK race conditions)
+    maxWorkflowTasks: 10
+    # Max concurrent local activities (0 = Temporal default)
+    maxLocalActivities: 0
+
+  s3:
+    endpoint: ""  # Empty for AWS S3, URL for MinIO/other S3-compatible
+    accessKey: ""
+    secretKey: ""
+    bucket: buun-curator
+    prefix: public
+    publicUrl: https://minio.example.com/buun-curator/public
+    region: us-east-1
+
+  translation:
+    provider: microsoft
+
+    microsoft:
+      subscriptionKey: ""
+      region: ""
+
+    # deepl:
+    #   apiKey: ""
+
+  extraEnvVarsSecret: buun-curator-secret
+
+agent:
+  enabled: true
+
+  image:
+    imageRegistry: localhost:30500
+    repository: buun-curator-agent
+    tag: latest
+    pullPolicy: Always
+
+  logLevel: info
+
+  extraEnvVarsSecret: buun-curator-secret
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  hosts:
+    - host: buun-curator.example.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+      - buun-curator.example.com
+
+postgres:
+  app:
+    host: postgres-cluster-rw.postgres
+    port: 5432
+    username: buun_curator
+    password: buun_curator
+    database: buun_curator
+
+auth:
+  enabled: true
+  realm: buunstack
+  appUrl: https://buun-curator.example.com
+
+temporal:
+  host: temporal-frontend.temporal:7233
+  namespace: buun-curator
+  taskQueue: buun-curator
+
+meilisearch:
+  host: meilisearch.meilisearch:7700
+  index: buun-curator
+
+llm:
+  baseUrl: http://litellm.litellm:4000
+  apiKey: ""
+  models:
+    # Default model (fallback for all tasks)
+    default: gpt-5-mini
+    # Task-specific models (if empty, falls back to default)
+    # EXTRACTION: Requires Structured Output support (Claude 4.x only)
+    extraction: ""
+    # REASONING: Requires Structured Output support
+    reasoning: ""
+    # SUMMARIZATION: Any model works
+    summarization: ""
+    # ASSISTANT: Frontend AI assistant model (falls back to default)
+    assistant: ""
+    # AGENT: Agent service models
+    agent:
+      # Research model for deep research tasks
+      research: ""
+
+evaluation:
+  enabled: true
+
+langfuse:
+  host: ""
