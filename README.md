@@ -53,11 +53,12 @@ AI-powered information curator and research assistant, currently just a feed rea
     - [Helm Chart](./charts/buun-curator/README.md) - Kubernetes deployment with Helm
 - Development
     - [Development Guide](./docs/development.md) - Kubernetes-based development with Tilt
+    - [Testing](./docs/testing.md) - Test setup and commands
 - Reference
     - [Terminology](./docs/terminology.md) - Common terms used in documentation and codebase
     - [CLI Reference](./docs/cli.md) - Command-line tools for Agent and Worker services
 - Technical Details
-    - [Next.js Application](./docs/app.md) - Database (Drizzle), API, and testing
+    - [Next.js Application](./docs/app.md) - Database (Drizzle), API, and configuration
     - [Query and Cache Design](./docs/query-and-cache.md) - React Query cache keys and UI action flows
     - [Temporal Workflows](./docs/workflow.md) - Workflow hierarchy, SSE notifications, activity patterns
     - [Content Fetching](./docs/fetch-content.md) - Content extraction rules with Crawl4AI
@@ -99,15 +100,15 @@ AI-powered information curator and research assistant, currently just a feed rea
 
 ### Components
 
-| Component | Technology | Description |
-|-----------|------------|-------------|
-| Frontend | Next.js (React) | Multi-panel feed reader UI with CopilotKit chat |
-| API | Next.js API Routes | REST API for entries, feeds, subscriptions |
-| AI Agent | FastAPI + AG-UI | Real-time streaming responses via Server-Sent Events |
-| Worker | Python + Temporal | Durable workflow execution for background tasks |
-| Database | PostgreSQL + pgvector | Entry storage, embeddings for recommendations |
-| Search | Meilisearch | Full-text search with CJK language support |
-| Observability | Langfuse | LLM tracing and RAGAS evaluation scores |
+| Component     | Technology             | Description                                          |
+| ------------- | ---------------------- | ---------------------------------------------------- |
+| Frontend      | Next.js (React)        | Multi-panel feed reader UI with CopilotKit chat      |
+| API           | Next.js API Routes     | REST API for entries, feeds, subscriptions           |
+| AI Agent      | FastAPI + AG-UI        | Real-time streaming responses via Server-Sent Events |
+| Worker        | Python + Temporal      | Durable workflow execution for background tasks      |
+| Database      | PostgreSQL + pgvector  | Entry storage, embeddings for recommendations        |
+| Search        | Meilisearch            | Full-text search with CJK language support           |
+| Observability | Langfuse               | LLM tracing and RAGAS evaluation scores              |
 
 - [Next.js](https://nextjs.org/)
 - [CopilotKit](https://www.copilotkit.ai/)

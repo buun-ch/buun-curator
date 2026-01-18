@@ -10,6 +10,14 @@ for SSE (Server-Sent Events) connection resilience.
 | Unit | Vitest                 | `tests/unit/`  | Logic testing             |
 | E2E  | Playwright + Toxiproxy | `tests/e2e/`   | SSE connection resilience |
 
+## Setup
+
+Create a test database `buun_curator_test` and run migrations:
+
+```bash
+bun db:migrate:test
+```
+
 ## Unit Tests
 
 Unit tests use Vitest and run in Node.js environment.

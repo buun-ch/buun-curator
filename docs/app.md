@@ -213,23 +213,6 @@ env:
 
 These values are read at **runtime**, not build time.
 
-## Testing
-
-### Setup
-
-Create a test database `buun_curator_test` and run migrations:
-
-```bash
-bun db:migrate:test
-```
-
-### Commands
-
-| Command              | Description             |
-| -------------------- | ----------------------- |
-| `bun test:unit`      | Run tests in watch mode |
-| `bun test:unit:run`  | Run tests once          |
-
 ## Client-Side State Management
 
 For React Query cache keys and UI action → query flows, see [Query and Cache Design](./query-and-cache.md).
