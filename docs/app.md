@@ -35,12 +35,12 @@ The database schema is defined in `db/schema.ts`:
 
 ### Commands
 
-| Command            | Description                                                  |
-| ------------------ | ------------------------------------------------------------ |
-| `bun db:generate` | Generate migration files from schema changes                 |
-| `bun db:migrate`  | Run pending migrations                                       |
-| `bun db:push`     | Push schema changes directly to the database (development)   |
-| `bun db:studio`   | Open Drizzle Studio (database GUI)                           |
+| Command            | Description                                                |
+| ------------------ | ---------------------------------------------------------- |
+| `bun db:generate`  | Generate migration files from schema changes               |
+| `bun db:migrate`   | Run pending migrations                                     |
+| `bun db:push`      | Push schema changes directly to the database (development) |
+| `bun db:studio`    | Open Drizzle Studio (database GUI)                         |
 
 ### Workflow
 
@@ -125,6 +125,94 @@ PATCH  /api/entries/:id        # Update entry content/summary
 GET    /api/settings           # Get application settings
 ```
 
+## Configuration
+
+Frontend configuration is centralized in `lib/config.ts` using [next-public-env](https://github.com/alizeait/next-public-env) for runtime environment variables.
+
+### Why next-public-env?
+
+Standard Next.js `NEXT_PUBLIC_*` variables are embedded at **build time**, requiring separate builds per environment. With `next-public-env`, the same Docker image can be deployed to multiple environments with different configurations.
+
+### Architecture
+
+```text
+lib/env.ts      # Low-level: next-public-env setup with Zod validation
+lib/config.ts   # High-level: Helper functions for accessing config
+```
+
+### Available Configuration
+
+| Environment Variable                     | Default   | Description                            |
+| ---------------------------------------- | --------- | -------------------------------------- |
+| `NEXT_PUBLIC_AUTH_ENABLED`               | `"true"`  | Enable/disable authentication          |
+| `NEXT_PUBLIC_DEBUG_SSE`                  | `"false"` | Show SSE connection status in sidebar  |
+| `NEXT_PUBLIC_REDDIT_ENABLED`             | `"false"` | Enable Reddit features                 |
+| `NEXT_PUBLIC_RESEARCH_CONTEXT_ENABLED`   | `"false"` | Enable research context panel          |
+
+### Usage
+
+Import helper functions from `lib/config.ts`:
+
+```typescript
+import { isAuthEnabled, isRedditEnabled, isDebugSSEEnabled } from "@/lib/config";
+
+// In components
+if (isAuthEnabled()) {
+  // Auth-specific logic
+}
+
+// For API route guards
+import { checkRedditEnabled } from "@/lib/config";
+
+export async function GET() {
+  const disabled = checkRedditEnabled();
+  if (disabled) return disabled; // Returns 403 if Reddit is disabled
+  // ...
+}
+```
+
+### Adding New Configuration
+
+1. Add the environment variable to `lib/env.ts`:
+
+   ```typescript
+   export const { getPublicEnv, PublicEnv } = createPublicEnv(
+     {
+       // ... existing vars
+       MY_NEW_VAR: process.env.NEXT_PUBLIC_MY_NEW_VAR,
+     },
+     {
+       schema: (z) => ({
+         // ... existing schema
+         MY_NEW_VAR: z.enum(["true", "false"]).default("false")
+           .transform((v) => v === "true"),
+       }),
+     }
+   );
+   ```
+
+2. Add a helper function to `lib/config.ts`:
+
+   ```typescript
+   export function isMyNewVarEnabled(): boolean {
+     return getPublicEnv().MY_NEW_VAR;
+   }
+   ```
+
+### Deployment
+
+Set environment variables in Kubernetes Deployment or docker-compose:
+
+```yaml
+env:
+  - name: NEXT_PUBLIC_AUTH_ENABLED
+    value: "false"
+  - name: NEXT_PUBLIC_DEBUG_SSE
+    value: "true"
+```
+
+These values are read at **runtime**, not build time.
+
 ## Testing
 
 ### Setup
@@ -137,10 +225,10 @@ bun db:migrate:test
 
 ### Commands
 
-| Command         | Description              |
-| --------------- | ------------------------ |
-| `bun test`     | Run tests in watch mode  |
-| `bun test:run` | Run tests once           |
+| Command              | Description             |
+| -------------------- | ----------------------- |
+| `bun test:unit`      | Run tests in watch mode |
+| `bun test:unit:run`  | Run tests once          |
 
 ## Client-Side State Management
 

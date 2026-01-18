@@ -2,7 +2,8 @@
 
 import { createContext, useContext, useEffect, ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useSession } from "@/lib/auth-client";
+import { useSession as useBetterAuthSession } from "@/lib/auth-client";
+import { isAuthEnabled } from "@/lib/config";
 
 /** User object from Better Auth session. */
 interface User {
@@ -29,6 +30,22 @@ function isPublicRoute(pathname: string): boolean {
   return PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
 }
 
+/**
+ * Session hook that returns mock data when auth is disabled.
+ * Avoids making Better Auth API calls when BETTER_AUTH_URL is not configured.
+ */
+function useSession() {
+  // Always call the hook to satisfy React's rules of hooks
+  const realSession = useBetterAuthSession();
+
+  // Return mock data when auth is disabled
+  if (!isAuthEnabled()) {
+    return { data: null, isPending: false };
+  }
+
+  return realSession;
+}
+
 /** Provides authentication state to child components. */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { data: session, isPending } = useSession();
@@ -36,8 +53,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   // Redirect to login when session is invalid (cookie exists but session doesn't)
+  // Skip redirect if auth is disabled
   useEffect(() => {
-    if (!isPending && !session?.user && !isPublicRoute(pathname)) {
+    if (
+      isAuthEnabled() &&
+      !isPending &&
+      !session?.user &&
+      !isPublicRoute(pathname)
+    ) {
       router.replace("/login");
     }
   }, [isPending, session?.user, pathname, router]);

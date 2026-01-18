@@ -17,7 +17,7 @@ import { useFeedIngestion } from "@/hooks/use-feed-ingestion";
 import { useUrlState } from "@/lib/url-state-context";
 import { usePreserveEntries } from "@/lib/preserve-entries-context";
 import { UserMenu } from "./user-menu";
-import { isRedditEnabled } from "@/lib/config";
+import { isRedditEnabled, isDebugSSEEnabled } from "@/lib/config";
 import { SSEStatusIndicator } from "@/components/status";
 
 import type { SubscriptionSidebarProps } from "./types";
@@ -117,7 +117,7 @@ export function SubscriptionSidebar({
     setIsScrolled(e.currentTarget.scrollTop > 0);
   }, []);
 
-  const debugEnabled = process.env.NEXT_PUBLIC_DEBUG_SSE === "true";
+  const debugEnabled = isDebugSSEEnabled();
 
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">

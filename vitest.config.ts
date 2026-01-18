@@ -8,7 +8,7 @@ export default defineConfig({
     environment: "node",
     globals: true,
     include: ["tests/**/*.test.ts"],
-    exclude: ["**/node_modules/**"],
+    exclude: ["**/node_modules/**", "tests/e2e/**"],
     pool: "forks",
     fileParallelism: false, // Run test files sequentially to avoid DB conflicts
     sequence: {

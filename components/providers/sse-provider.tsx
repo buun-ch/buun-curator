@@ -15,6 +15,7 @@ import { useSSE, type SSEStatus } from "@/hooks/use-sse";
 import { signOut } from "@/lib/auth-client";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useWorkflowStore } from "@/stores/workflow-store";
+import { isAuthEnabled } from "@/lib/config";
 import type {
   WorkflowProgress,
   ContentDistillationProgress,
@@ -115,7 +116,9 @@ export function SSEProvider({ children, enabled = true }: SSEProviderProps) {
   } = useWorkflowStore();
 
   // Only enable SSE when authenticated and not loading auth state
-  const sseEnabled = enabled && isAuthenticated && !authLoading;
+  // Skip auth check if authentication is disabled
+  const sseEnabled =
+    enabled && (isAuthEnabled() ? isAuthenticated && !authLoading : true);
 
   // Track toast IDs for each workflow (to update loading -> success/error)
   const toastIds = useRef<Map<string, string | number>>(new Map());

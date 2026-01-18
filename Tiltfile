@@ -74,6 +74,7 @@ else:
     print("🔥 Agent: Using development Dockerfile with live reload")
 
 values_files = ['./charts/buun-curator/values-dev.yaml']
+
 extra_values_file = cfg.get('extra-values-file', '')
 if extra_values_file:
     values_files.append(extra_values_file)

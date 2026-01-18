@@ -1,0 +1,23 @@
+{{- if .Values.e2e.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "buun-curator.fullname" . }}-toxiproxy
+  labels:
+    {{- include "buun-curator.labels" . | nindent 4 }}
+    app.kubernetes.io/component: toxiproxy
+spec:
+  type: {{ .Values.e2e.toxiproxy.service.type }}
+  ports:
+    - port: 8474
+      targetPort: api
+      protocol: TCP
+      name: api
+    - port: 8080
+      targetPort: frontend-proxy
+      protocol: TCP
+      name: frontend-proxy
+  selector:
+    {{- include "buun-curator.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: toxiproxy
+{{- end }}

@@ -45,6 +45,8 @@ yarn-error.log*
 /scripts/
 /stories/
 /tests/
+/test-results/
+/playwright-report/
 Dockerfile*
 .claude/
 .playwright-mcp/

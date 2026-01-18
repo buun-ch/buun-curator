@@ -1,0 +1,19 @@
+{{- if .Values.e2e.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "buun-curator.fullname" . }}-toxiproxy-config
+  labels:
+    {{- include "buun-curator.labels" . | nindent 4 }}
+    app.kubernetes.io/component: toxiproxy
+data:
+  toxiproxy.json: |
+    [
+      {
+        "name": "frontend-sse",
+        "listen": "0.0.0.0:8080",
+        "upstream": "{{ include "buun-curator.fullname" . }}.{{ .Release.Namespace }}:3000",
+        "enabled": true
+      }
+    ]
+{{- end }}

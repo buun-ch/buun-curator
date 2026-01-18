@@ -12,6 +12,13 @@ const log = createLogger("sse:hook");
 /** SSE connection status */
 export type SSEStatus = "connecting" | "connected" | "disconnected" | "error";
 
+/**
+ * Keep-alive timeout threshold in milliseconds.
+ * Server sends keep-alive every 30 seconds, so we use 45 seconds (30s + 15s buffer)
+ * to detect stale connections after sleep/wake.
+ */
+const KEEPALIVE_TIMEOUT_MS = 45000;
+
 /** SSE event handler */
 export type SSEEventHandler<T = unknown> = (data: T) => void;
 
@@ -73,6 +80,7 @@ export function useSSE(options: UseSSEOptions = {}) {
   const reconnectCountRef = useRef(0);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isConnectingRef = useRef(false);
+  const lastKeepAliveRef = useRef<number>(-1);
 
   // Store callbacks in refs to avoid re-triggering useEffect
   const onUpdateRef = useRef(onUpdate);
@@ -171,6 +179,7 @@ export function useSSE(options: UseSSEOptions = {}) {
           log.info("connected");
           reconnectCountRef.current = 0;
           isConnectingRef.current = false;
+          lastKeepAliveRef.current = Date.now();
           updateStatus("connected");
         } else if (response.status === 401) {
           // Authentication failed - notify and don't retry
@@ -200,6 +209,8 @@ export function useSSE(options: UseSSEOptions = {}) {
               onUpdateRef.current?.(data);
               break;
             case "keep-alive":
+              // Update last keep-alive timestamp for sleep/wake detection
+              lastKeepAliveRef.current = Date.now();
               onKeepAliveRef.current?.(data);
               break;
             case "auth-expired":
@@ -248,7 +259,23 @@ export function useSSE(options: UseSSEOptions = {}) {
           return; // Don't throw, connection was intentionally aborted
         }
 
-        // Throw to trigger onclose and reconnect
+        // Schedule reconnect (same logic as onclose)
+        if (
+          maxReconnectAttempts === 0 ||
+          reconnectCountRef.current < maxReconnectAttempts
+        ) {
+          reconnectCountRef.current++;
+          log.info(
+            { interval: reconnectInterval, attempt: reconnectCountRef.current },
+            "scheduling reconnect after error",
+          );
+
+          reconnectTimeoutRef.current = setTimeout(() => {
+            setReconnectTrigger((t) => t + 1);
+          }, reconnectInterval);
+        }
+
+        // Throw to signal error to fetchEventSource
         throw err;
       },
     });
@@ -272,6 +299,74 @@ export function useSSE(options: UseSSEOptions = {}) {
     maxReconnectAttempts,
     updateStatus,
   ]);
+
+  // Force reconnect when keep-alive timeout is detected
+  const forceReconnect = useCallback(
+    (reason: string) => {
+      log.info(
+        {
+          elapsed: Date.now() - lastKeepAliveRef.current,
+          threshold: KEEPALIVE_TIMEOUT_MS,
+        },
+        `${reason}, reconnecting`,
+      );
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+      isConnectingRef.current = false;
+      reconnectCountRef.current = 0;
+      lastKeepAliveRef.current = Date.now();
+      setReconnectTrigger((t) => t + 1);
+    },
+    [],
+  );
+
+  // Periodic keep-alive timeout check (detects stale connections while tab is visible)
+  useEffect(() => {
+    if (status !== "connected") {
+      return;
+    }
+
+    const checkKeepAlive = () => {
+      // Skip if not yet initialized (first keep-alive not received)
+      if (lastKeepAliveRef.current < 0) {
+        return;
+      }
+      const elapsed = Date.now() - lastKeepAliveRef.current;
+      if (elapsed > KEEPALIVE_TIMEOUT_MS) {
+        forceReconnect("keep-alive timeout detected");
+      }
+    };
+
+    // Check every 10 seconds
+    const intervalId = setInterval(checkKeepAlive, 10000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [status, forceReconnect]);
+
+  // Detect sleep/wake via visibility change and check keep-alive timeout
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && status === "connected") {
+        // Skip if not yet initialized
+        if (lastKeepAliveRef.current < 0) {
+          return;
+        }
+        const elapsed = Date.now() - lastKeepAliveRef.current;
+        if (elapsed > KEEPALIVE_TIMEOUT_MS) {
+          forceReconnect("keep-alive timeout after wake");
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [status, forceReconnect]);
 
   return {
     status,

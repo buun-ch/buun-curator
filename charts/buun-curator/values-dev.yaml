@@ -1,7 +1,4 @@
 frontend:
-  image:
-    repository: buun-curator-frontend
-
   serverUrl: http://buun-curator.buun-curator:3000
 
   # Only hostname is needed (no protocol, no port)
@@ -34,14 +31,9 @@ frontend:
   extraEnvVarsSecret: buun-curator-secret
 
 worker:
-  enabled: true
-
   reload: true
 
-  replicaCount: 2
-
-  image:
-    repository: buun-curator-worker
+  replicaCount: 1
 
   apiUrl: http://buun-curator.buun-curator:3000
 
@@ -63,12 +55,7 @@ worker:
   extraEnvVarsSecret: buun-curator-secret
 
 agent:
-  enabled: true
-
   reload: true
-
-  image:
-    repository: buun-curator-agent
 
   logLevel: debug
 
@@ -127,9 +114,6 @@ llm:
 
 evaluation:
   enabled: true
-
-langfuse:
-  host: https://langfuse.buun.ai
 
 graphRag:
   lightrag:

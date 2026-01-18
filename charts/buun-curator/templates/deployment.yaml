@@ -57,16 +57,30 @@ spec:
             - name: DATABASE_URL
               value: "postgresql://{{ .Values.postgres.app.username }}:{{ .Values.postgres.app.password }}@{{ .Values.postgres.app.host }}:{{ .Values.postgres.app.port }}/{{ .Values.postgres.app.database }}"
           {{- end }}
-          {{- if .Values.frontend.serverUrl }}
-            - name: NEXT_PUBLIC_SERVER_URL
-              value: {{ .Values.frontend.serverUrl | quote }}
-          {{- end }}
           {{- if .Values.frontend.allowedDevOrigins }}
             - name: ALLOWED_DEV_ORIGINS
               value: {{ .Values.frontend.allowedDevOrigins | quote }}
           {{- end }}
             - name: AUTH_ENABLED
               value: {{ .Values.auth.enabled | quote }}
+            - name: NEXT_PUBLIC_AUTH_ENABLED
+              value: {{ .Values.auth.enabled | quote }}
+          {{- /* Always set BETTER_AUTH_URL and BETTER_AUTH_SECRET for Better Auth to function */}}
+          {{- if .Values.auth.appUrl }}
+            - name: BETTER_AUTH_URL
+              value: {{ .Values.auth.appUrl | quote }}
+          {{- else if .Values.frontend.serverUrl }}
+            - name: BETTER_AUTH_URL
+              value: {{ .Values.frontend.serverUrl | quote }}
+          {{- end }}
+          {{- if .Values.auth.secret }}
+            - name: BETTER_AUTH_SECRET
+              value: {{ .Values.auth.secret | quote }}
+          {{- else if not .Values.auth.enabled }}
+            {{- /* Use a placeholder secret when auth is disabled (session endpoint still needs it) */}}
+            - name: BETTER_AUTH_SECRET
+              value: "e2e-testing-placeholder-secret-not-for-production"
+          {{- end }}
           {{- if .Values.auth.enabled }}
           {{- if .Values.auth.authUrl }}
             - name: KEYCLOAK_URL
@@ -74,14 +88,6 @@ spec:
           {{- end }}
             - name: KEYCLOAK_REALM
               value: {{ .Values.auth.realm | quote }}
-          {{- if .Values.auth.appUrl }}
-            - name: BETTER_AUTH_URL
-              value: {{ .Values.auth.appUrl | quote }}
-          {{- end }}
-          {{- if .Values.auth.secret }}
-            - name: BETTER_AUTH_SECRET
-              value: {{ .Values.auth.secret | quote }}
-          {{- end }}
           {{- end }}
           {{- if .Values.llm.baseUrl }}
             - name: OPENAI_BASE_URL

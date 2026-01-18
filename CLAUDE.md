@@ -37,6 +37,17 @@ bun dev                               # Start dev server with Turbopack (http://
 op run --env-file=.env.op -- bun dev  # With 1Password secrets
 ```
 
+**Kubernetes Development (Tilt + Telepresence):**
+
+```bash
+tilt up                # Deploy all components to Kubernetes with hot reload
+telepresence connect   # Connect local machine to Kubernetes network
+```
+
+- File changes are automatically hot-reloaded by Tilt
+- Access the app at `http://buun-curator.buun-curator:3000` after `telepresence connect`
+- View logs with `stern` or `kubectl logs`
+
 **Build & Production:**
 
 ```bash
@@ -93,10 +104,10 @@ logger.info(
 
 **Python Logging (Worker):**
 
-| Location | Logger | Syntax |
-| -------- | ------ | ------ |
-| **Workflows** | `workflow.logger` | `workflow.logger.info("msg", extra={"key": value})` |
-| **Activities/Services** | `structlog` (`get_logger()`) | `logger.info("msg", key=value)` |
+| Location             | Logger                       | Syntax                                              |
+| -------------------- | ---------------------------- | --------------------------------------------------- |
+| Workflows            | `workflow.logger`            | `workflow.logger.info("msg", extra={"key": value})` |
+| Activities/Services  | `structlog` (`get_logger()`) | `logger.info("msg", key=value)`                     |
 
 `workflow.logger` is a standard Python logger (does NOT support kwargs) while structlog does.
 See [docs/logs-and-tracing.md](docs/logs-and-tracing.md) for details.
@@ -184,13 +195,13 @@ class ContentFetcher:
 **Code Quality (Markdown):**
 
 ```bash
-bun exec markdownlint-cli2 "**/*.md"  # Check all Markdown files
-bun exec markdownlint-cli2 README.md  # Check specific file
+markdownlint-cli2 "**/*.md"  # Check all Markdown files
+markdownlint-cli2 README.md  # Check specific file
 ```
 
 After editing Markdown files, run `markdownlint-cli2` to verify formatting.
 
-**Tool Management:** Uses mise for Bun 1.3.6. Run `mise install` if needed.
+**Tool Management:** Uses mise for Bun, markdownlint-cli2, etc. Run `mise install` if needed.
 
 **Database Migrations (Drizzle):**
 
@@ -268,11 +279,11 @@ Chat API (`app/api/chat/route.ts`) uses:
 
 This app uses three state management patterns, each for a specific purpose:
 
-| Pattern | Location | Use Case | Persistence |
-|---------|----------|----------|-------------|
-| **Zustand** | `stores/settings-store.ts` | User preferences, UI state to persist | localStorage |
-| **TanStack Query** | `hooks/use-*.ts` | Server data (fetch, cache, sync) | Memory (cache) |
-| **useState** | Custom hooks, components | Temporary UI state | None |
+| Pattern        | Location                   | Use Case                              | Persistence    |
+| -------------- | -------------------------- | ------------------------------------- | -------------- |
+| Zustand        | `stores/settings-store.ts` | User preferences, UI state to persist | localStorage   |
+| TanStack Query | `hooks/use-*.ts`           | Server data (fetch, cache, sync)      | Memory (cache) |
+| useState       | Custom hooks, components   | Temporary UI state                    | None           |
 
 **When to use each:**
 
@@ -317,13 +328,13 @@ The AI chat uses CopilotKit (`@copilotkit/react-core`, `@copilotkit/react-ui`) w
 
 All Temporal I/O uses Pydantic:
 
-| Context | Model Type | Reason |
-|---------|------------|--------|
-| **Workflow I/O** | Pydantic (`CamelCaseModel`) | camelCase for Next.js |
-| **Activity I/O** | Pydantic (`BaseModel`) | Validation, consistent serialization |
-| **API/External** | Pydantic (`CamelCaseModel`) | camelCase conversion, validation |
-| **LLM output** | Pydantic | LangChain structured output |
-| **With Enum** | Pydantic | Proper enum serialization |
+| Context      | Model Type                  | Reason                               |
+| ------------ | --------------------------- | ------------------------------------ |
+| Workflow I/O | Pydantic (`CamelCaseModel`) | camelCase for Next.js                |
+| Activity I/O | Pydantic (`BaseModel`)      | Validation, consistent serialization |
+| API/External | Pydantic (`CamelCaseModel`) | camelCase conversion, validation     |
+| LLM output   | Pydantic                    | LangChain structured output          |
+| With Enum    | Pydantic                    | Proper enum serialization            |
 
 ```python
 # Workflow I/O: Pydantic with CamelCaseModel

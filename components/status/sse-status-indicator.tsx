@@ -39,7 +39,11 @@ export function SSEStatusIndicator({ className }: { className?: string }) {
   };
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div
+      className={cn("flex items-center gap-2", className)}
+      data-testid="sse-status"
+      data-status={status}
+    >
       <div
         className={cn("size-2 rounded-full", statusColors[status])}
         title={statusLabels[status]}
@@ -56,6 +60,7 @@ export function SSEStatusIndicator({ className }: { className?: string }) {
           status === "connecting" && "animate-spin"
         )}
         title="Reconnect"
+        data-testid="sse-reconnect"
       >
         <RefreshCw className="size-3" />
       </button>

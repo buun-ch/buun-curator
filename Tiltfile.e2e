@@ -1,0 +1,115 @@
+# -*- mode: Python -*-
+# https://docs.tilt.dev/
+#
+# Tiltfile for E2E testing in separate namespace
+#
+# Usage:
+#   tilt up -f Tiltfile.e2e --port 10351
+#   tilt up -f Tiltfile.e2e --port 10351 -- --port-forward
+#   tilt up -f Tiltfile.e2e --port 10351 -- --namespace=my-e2e-ns
+#
+# Note: Use --port 10351 to run simultaneously with dev Tilt (default port 10350)
+#
+# Default namespace: buun-curator-e2e
+# Access via Telepresence: http://buun-curator.<namespace>:3000
+
+allow_k8s_contexts(k8s_context())
+
+config.define_string('registry')
+config.define_bool('port-forward')
+config.define_string('extra-values-file')
+config.define_string('namespace')
+
+cfg = config.parse()
+
+e2e_namespace = cfg.get('namespace', 'buun-curator-e2e')
+
+registry = cfg.get('registry', 'localhost:30500')
+default_registry(registry)
+
+# Frontend: Production build for stable E2E testing
+# Using production Dockerfile to avoid rebuilds during tests
+docker_build(
+    'buun-curator-frontend',
+    '.',
+    dockerfile='Dockerfile',
+    ignore=['./worker', './agent'],
+)
+print("🧪 E2E: Building frontend image (production mode)")
+
+# Worker: Production build for stable E2E testing
+docker_build(
+    'buun-curator-worker',
+    './worker',
+    dockerfile='./worker/Dockerfile',
+)
+print("🧪 E2E: Building worker image (production mode)")
+
+# Agent: Production build for stable E2E testing
+docker_build(
+    'buun-curator-agent',
+    './agent',
+    dockerfile='./agent/Dockerfile',
+)
+print("🧪 E2E: Building agent image (production mode)")
+
+# Values files for E2E (production mode, no dev settings)
+values_files = [
+    './charts/buun-curator/values-e2e.yaml',
+]
+
+extra_values_file = cfg.get('extra-values-file', '')
+if extra_values_file:
+    values_files.append(extra_values_file)
+    print("📝 Using extra values file: " + extra_values_file)
+
+# Deploy to E2E namespace
+helm_release = helm(
+    './charts/buun-curator',
+    name='buun-curator',
+    namespace=e2e_namespace,
+    values=values_files,
+    set=['frontend.serverUrl=http://buun-curator.' + e2e_namespace + ':3000',
+         'frontend.allowedDevOrigins=buun-curator.' + e2e_namespace + '\\,buun-curator-toxiproxy.' + e2e_namespace],
+)
+k8s_yaml(helm_release)
+
+print("🧪 E2E namespace: " + e2e_namespace)
+
+enable_port_forwards = cfg.get('port-forward', False)
+if enable_port_forwards:
+    print("🚀 E2E ports:")
+    print("   Frontend: http://localhost:13001")
+    print("   Agent: http://localhost:18001")
+    print("   Toxiproxy API: http://localhost:18474")
+    print("   Toxiproxy Proxy: http://localhost:18080")
+
+print("🌐 Via Telepresence: http://buun-curator." + e2e_namespace + ":3000")
+
+k8s_resource(
+    'buun-curator-frontend',
+    port_forwards='13001:3000' if enable_port_forwards else [],
+    labels=['frontend'],
+)
+
+k8s_resource(
+    'buun-curator-worker',
+    labels=['worker'],
+)
+
+k8s_resource(
+    'buun-curator-agent',
+    port_forwards='18001:8000' if enable_port_forwards else [],
+    labels=['agent'],
+)
+
+k8s_resource(
+    'buun-curator-toxiproxy',
+    port_forwards=['18474:8474', '18080:8080'] if enable_port_forwards else [],
+    labels=['e2e'],
+)
+
+k8s_resource(
+    'buun-curator-playwright',
+    labels=['e2e'],
+)

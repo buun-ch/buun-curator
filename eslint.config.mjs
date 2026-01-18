@@ -3,7 +3,16 @@ import nextConfig from "eslint-config-next";
 
 export default defineConfig([
   {
-    ignores: ["worker/", "agent/", ".next/", "node_modules/", ".venv/", "dist/"],
+    ignores: [
+      "worker/",
+      "agent/",
+      ".next/",
+      "node_modules/",
+      ".venv/",
+      "dist/",
+      "playwright-report/",
+      "test-results/",
+    ],
   },
   ...nextConfig,
   {

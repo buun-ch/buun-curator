@@ -9,6 +9,7 @@ import { QueryProvider } from "@/components/providers/query-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { SSEProvider, WorkflowStatusPanel } from "@/components/status";
 import { NextjsIndicatorFix } from "@/components/dev/nextjs-indicator-fix";
+import { PublicEnv } from "@/lib/config";
 import "./globals.css";
 
 const inter = Inter({
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${bizUdpGothic.variable} ${jetbrainsMono.variable} ${mplus1Code.variable} antialiased`}
       >
+        <PublicEnv />
         <QueryProvider>
           <AuthProvider>
             <SSEProvider>

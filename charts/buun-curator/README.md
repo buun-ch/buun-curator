@@ -215,7 +215,6 @@ worker:
 | `frontend.affinity`                | Affinity for frontend pods                                          | `{}`                       |
 | `frontend.telemetry.enabled`       | Enable telemetry                                                    | `false`                    |
 | `frontend.logging.health_request`  | Enable health check request logging                                 | `false`                    |
-| `frontend.serverUrl`               | Server URL for client-side NEXT_PUBLIC_SERVER_URL                   | `""`                       |
 | `frontend.agentUrl`                | Agent URL for CopilotKit                                            | `""`                       |
 | `frontend.allowedDevOrigins`       | Allowed dev origins for CORS                                        | `""`                       |
 | `frontend.env`                     | Environment variables for frontend containers                       | `[]`                       |

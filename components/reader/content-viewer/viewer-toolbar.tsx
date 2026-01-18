@@ -14,6 +14,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { isResearchContextEnabled } from "@/lib/config";
 import type { Entry } from "@/lib/types";
 
 interface ViewerToolbarProps {
@@ -136,7 +137,7 @@ export function ViewerToolbar({
         <RefreshCw className={cn("size-4", refreshing && "animate-spin")} />
       </Button>
 
-      {process.env.NEXT_PUBLIC_RESEARCH_CONTEXT_ENABLED === "true" && (
+      {isResearchContextEnabled() && (
         <Button
           variant="ghost"
           size="icon"
