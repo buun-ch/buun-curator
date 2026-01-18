@@ -126,7 +126,7 @@ class DomainFetchInput(CamelCaseModel):
 
     domain: str
     entries: list[dict]  # List of DomainFetchEntry as dicts
-    delay_seconds: float = 2.0
+    delay_seconds: float = 1.0
     timeout: int = 60
     enable_thumbnail: bool = False
     auto_distill: bool = True  # Whether to distill after fetch
