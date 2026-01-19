@@ -32,7 +32,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     if (!parseResult.success) {
       return NextResponse.json(
         { error: "Invalid request body", details: parseResult.error.issues },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -53,7 +53,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     log.error({ error }, "Failed to start delete enrichment workflow");
     return NextResponse.json(
       { error: "Failed to start delete enrichment workflow" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

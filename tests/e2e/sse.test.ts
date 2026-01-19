@@ -33,7 +33,10 @@ const UPSTREAM =
  * If not connected within initial timeout, clicks reconnect button and waits again.
  * Retries reconnect button up to 3 times if needed.
  */
-async function waitForSSEConnection(page: Page, timeout = 10000): Promise<void> {
+async function waitForSSEConnection(
+  page: Page,
+  timeout = 10000,
+): Promise<void> {
   const sseStatus = page.locator('[data-testid="sse-status"]');
   const reconnectButton = page.locator('[data-testid="sse-reconnect"]');
 

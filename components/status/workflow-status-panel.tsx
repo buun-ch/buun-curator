@@ -180,11 +180,15 @@ function WorkflowItem({ workflow, onRemove }: WorkflowItemProps) {
 
   const workflowLabel = getWorkflowLabel(workflow.workflowType);
   const durationMs =
-    new Date(workflow.updatedAt).getTime() - new Date(workflow.startedAt).getTime();
+    new Date(workflow.updatedAt).getTime() -
+    new Date(workflow.startedAt).getTime();
   const duration = formatDuration(durationMs);
 
   // Extract feedName from workflow-specific fields (if present)
-  const feedName = "feedName" in workflow ? (workflow as { feedName?: string }).feedName : undefined;
+  const feedName =
+    "feedName" in workflow
+      ? (workflow as { feedName?: string }).feedName
+      : undefined;
 
   return (
     <div className="group flex items-center gap-3 px-3 py-2 hover:bg-muted/50">

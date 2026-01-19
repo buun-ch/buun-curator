@@ -76,7 +76,7 @@ frontend:
     initialDelaySeconds: 10
     periodSeconds: 10
     timeoutSeconds: 5
-    failureThreshold: 30  # Allow up to 5 minutes (10s * 30) for startup
+    failureThreshold: 30 # Allow up to 5 minutes (10s * 30) for startup
 
   # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   livenessProbe:
@@ -127,7 +127,7 @@ frontend:
     enabled: false
 
   logging:
-    health_request: false  # Enable/disable health check request logs
+    health_request: false # Enable/disable health check request logs
 
   # Agent URL for CopilotKit (for client-side NEXT_PUBLIC_AGENT_URL)
   # If empty, uses default: http://<fullname>-agent:<agent.service.port>
@@ -226,9 +226,9 @@ worker:
 
   # S3/MinIO configuration for thumbnails
   s3:
-    endpoint: ""  # Empty for AWS S3, URL for MinIO/other S3-compatible
-    accessKey: ""  # Can be overridden by secret
-    secretKey: ""  # Can be overridden by secret
+    endpoint: "" # Empty for AWS S3, URL for MinIO/other S3-compatible
+    accessKey: "" # Can be overridden by secret
+    secretKey: "" # Can be overridden by secret
     bucket: buun-curator
     prefix: ""
     publicUrl: ""
@@ -236,7 +236,7 @@ worker:
 
   # Translation configuration
   translation:
-    provider: microsoft  # "microsoft" or "deepl"
+    provider: microsoft # "microsoft" or "deepl"
 
     microsoft:
       subscriptionKey: ""

@@ -27,7 +27,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     log.error({ error }, "Failed to update feed checked");
     return NextResponse.json(
       { error: "Failed to update feed checked" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

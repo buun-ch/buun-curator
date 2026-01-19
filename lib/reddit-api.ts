@@ -36,13 +36,15 @@ interface SubredditInfoResponse {
  * @throws Error if the subreddit is not found or request fails
  */
 export async function fetchSubredditInfo(
-  subredditName: string
+  subredditName: string,
 ): Promise<SubredditInfo> {
   const response = await fetch(`/api/reddit/subreddit/${subredditName}`);
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    throw new Error(error.error || `Failed to fetch subreddit: ${response.status}`);
+    throw new Error(
+      error.error || `Failed to fetch subreddit: ${response.status}`,
+    );
   }
 
   const data: SubredditInfoResponse = await response.json();
@@ -79,7 +81,13 @@ interface PostsResponse {
 export type PostSortOption = "hot" | "new" | "top" | "rising" | "controversial";
 
 /** Time filter options for top/controversial sorting. */
-export type TimeFilterOption = "hour" | "day" | "week" | "month" | "year" | "all";
+export type TimeFilterOption =
+  | "hour"
+  | "day"
+  | "week"
+  | "month"
+  | "year"
+  | "all";
 
 /**
  * Fetches posts from a subreddit with sorting and pagination.
@@ -96,7 +104,7 @@ export async function fetchSubredditPosts(
     time?: TimeFilterOption;
     limit?: number;
     after?: string;
-  } = {}
+  } = {},
 ): Promise<{ posts: RedditPost[]; after: string | null }> {
   const { sort = "hot", time = "day", limit = 25, after } = options;
 
@@ -112,7 +120,7 @@ export async function fetchSubredditPosts(
   }
 
   const response = await fetch(
-    `/api/reddit/subreddit/${subredditName}/posts?${params}`
+    `/api/reddit/subreddit/${subredditName}/posts?${params}`,
   );
 
   if (!response.ok) {
@@ -199,7 +207,7 @@ export async function fetchRedditPost(
     sort?: "best" | "top" | "new" | "controversial" | "old" | "qa";
     limit?: number;
     depth?: number;
-  } = {}
+  } = {},
 ): Promise<{ post: RedditPostDetail; comments: RedditComment[] }> {
   const { sort = "best", limit = 50, depth = 5 } = options;
 
@@ -246,7 +254,7 @@ export async function searchRedditPosts(
     time?: "hour" | "day" | "week" | "month" | "year" | "all";
     limit?: number;
     after?: string;
-  } = {}
+  } = {},
 ): Promise<{ posts: RedditPost[]; after?: string }> {
   // TODO: Implement via internal API route
   throw new Error("Not implemented");

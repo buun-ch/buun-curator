@@ -25,7 +25,7 @@ export async function GET() {
     log.error({ error }, "failed to fetch settings");
     return NextResponse.json(
       { error: "Failed to fetch settings" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -64,7 +64,7 @@ export async function PATCH(request: Request) {
     log.error({ error }, "failed to update settings");
     return NextResponse.json(
       { error: "Failed to update settings" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

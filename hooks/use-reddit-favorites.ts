@@ -79,7 +79,7 @@ async function removeFavorite(id: string): Promise<void> {
  */
 async function updateFavorite(
   id: string,
-  data: { minScore?: number }
+  data: { minScore?: number },
 ): Promise<RedditFavorite> {
   const response = await fetch(`/api/reddit/subreddits/${id}`, {
     method: "PATCH",

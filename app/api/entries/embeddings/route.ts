@@ -46,8 +46,8 @@ export async function GET(request: NextRequest) {
         and(
           isNull(entries.embedding),
           sql`(${entries.filteredContent} IS NOT NULL AND ${entries.filteredContent} != ''
-               OR ${entries.summary} IS NOT NULL AND ${entries.summary} != '')`
-        )
+               OR ${entries.summary} IS NOT NULL AND ${entries.summary} != '')`,
+        ),
       );
     const totalCount = Number(countResult[0]?.count || 0);
 
@@ -61,7 +61,8 @@ export async function GET(request: NextRequest) {
 
     const hasMore = result.length > first;
     const entryIds = result.slice(0, first).map((r) => r.id);
-    const endCursor = entryIds.length > 0 ? entryIds[entryIds.length - 1] : null;
+    const endCursor =
+      entryIds.length > 0 ? entryIds[entryIds.length - 1] : null;
 
     return NextResponse.json({
       entryIds,
@@ -73,7 +74,7 @@ export async function GET(request: NextRequest) {
     log.error({ error }, "failed to get entries for embedding");
     return NextResponse.json(
       { error: "Failed to get entries for embedding" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -91,7 +92,7 @@ export async function POST(request: NextRequest) {
     if (!Array.isArray(embeddings) || embeddings.length === 0) {
       return NextResponse.json(
         { error: "embeddings must be a non-empty array" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -99,14 +100,19 @@ export async function POST(request: NextRequest) {
     for (const item of embeddings) {
       if (typeof item.entryId !== "string" || !Array.isArray(item.embedding)) {
         return NextResponse.json(
-          { error: "Each embedding must have entryId (string) and embedding (number[])" },
-          { status: 400 }
+          {
+            error:
+              "Each embedding must have entryId (string) and embedding (number[])",
+          },
+          { status: 400 },
         );
       }
       if (item.embedding.length !== 768) {
         return NextResponse.json(
-          { error: `Embedding must be 768 dimensions, got ${item.embedding.length}` },
-          { status: 400 }
+          {
+            error: `Embedding must be 768 dimensions, got ${item.embedding.length}`,
+          },
+          { status: 400 },
         );
       }
     }
@@ -131,7 +137,7 @@ export async function POST(request: NextRequest) {
     log.error({ error }, "failed to save embeddings");
     return NextResponse.json(
       { error: "Failed to save embeddings" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

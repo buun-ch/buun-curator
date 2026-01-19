@@ -17,7 +17,10 @@ async function fetchLabels(): Promise<Label[]> {
 }
 
 /** Creates a new label. */
-async function createLabel(data: { name: string; color: string }): Promise<Label> {
+async function createLabel(data: {
+  name: string;
+  color: string;
+}): Promise<Label> {
   const response = await fetch("/api/labels", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -40,7 +43,10 @@ async function deleteLabel(id: string): Promise<void> {
 }
 
 /** Adds a label to an entry. */
-async function addLabelToEntry(entryId: string, labelId: string): Promise<Label> {
+async function addLabelToEntry(
+  entryId: string,
+  labelId: string,
+): Promise<Label> {
   const response = await fetch(`/api/entries/${entryId}/labels`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -53,10 +59,16 @@ async function addLabelToEntry(entryId: string, labelId: string): Promise<Label>
 }
 
 /** Removes a label from an entry. */
-async function removeLabelFromEntry(entryId: string, labelId: string): Promise<void> {
-  const response = await fetch(`/api/entries/${entryId}/labels?labelId=${labelId}`, {
-    method: "DELETE",
-  });
+async function removeLabelFromEntry(
+  entryId: string,
+  labelId: string,
+): Promise<void> {
+  const response = await fetch(
+    `/api/entries/${entryId}/labels?labelId=${labelId}`,
+    {
+      method: "DELETE",
+    },
+  );
   if (!response.ok) {
     throw new Error("Failed to remove label from entry");
   }

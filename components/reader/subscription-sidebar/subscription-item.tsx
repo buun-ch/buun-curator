@@ -35,7 +35,7 @@ export function SubscriptionItem({
 }: SubscriptionItemProps) {
   // Use store for category collapse state (persisted to localStorage)
   const categoryCollapseState = useSettingsStore(
-    (state) => state.categoryCollapseState
+    (state) => state.categoryCollapseState,
   );
   const setCategoryOpen = useSettingsStore((state) => state.setCategoryOpen);
   // Default to open (true) if not in state
@@ -58,28 +58,28 @@ export function SubscriptionItem({
           className={cn(
             "flex w-full items-center rounded-md text-sm select-none",
             isSelected && "bg-accent",
-            collapsed && "justify-center"
+            collapsed && "justify-center",
           )}
           style={{ paddingLeft }}
         >
           <CollapsibleTrigger asChild>
             <button
-              className="flex items-center p-1.5 hover:bg-accent rounded-md"
+              className="flex items-center rounded-md p-1.5 hover:bg-accent"
               onClick={(e) => e.stopPropagation()}
             >
               <ChevronRight
                 className={cn(
                   "size-4 shrink-0 transition-transform",
                   isOpen && "rotate-90",
-                  collapsed && "hidden"
+                  collapsed && "hidden",
                 )}
               />
             </button>
           </CollapsibleTrigger>
           <button
             className={cn(
-              "flex min-w-0 flex-1 items-center gap-2 py-1.5 pr-2 hover:bg-accent rounded-md",
-              collapsed && "justify-center px-0"
+              "flex min-w-0 flex-1 items-center gap-2 rounded-md py-1.5 pr-2 hover:bg-accent",
+              collapsed && "justify-center px-0",
             )}
             onClick={() => onSelect?.(subscription.id)}
           >
@@ -118,16 +118,18 @@ export function SubscriptionItem({
     <button
       onClick={() => onSelect?.(subscription.id)}
       className={cn(
-        "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent select-none",
+        "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm select-none hover:bg-accent",
         isSelected && "bg-accent",
-        collapsed && "justify-center px-0"
+        collapsed && "justify-center px-0",
       )}
       style={{ paddingLeft }}
     >
       {icon}
       {!collapsed && (
         <>
-          <span className="flex-1 truncate text-left">{subscription.title}</span>
+          <span className="flex-1 truncate text-left">
+            {subscription.title}
+          </span>
           {subscription.count != null && subscription.count > 0 && (
             <span className="text-xs text-muted-foreground">
               {subscription.count}

@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     if (!Array.isArray(entryIds) || entryIds.length === 0) {
       return NextResponse.json(
         { error: "entryIds must be a non-empty array" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     if (!entryIds.every((id) => typeof id === "string")) {
       return NextResponse.json(
         { error: "All entryIds must be strings" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     log.error({ error }, "failed to mark entries as graph-added");
     return NextResponse.json(
       { error: "Failed to mark entries as graph-added" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -220,12 +220,8 @@
           "name": "entries_feed_id_feeds_id_fk",
           "tableFrom": "entries",
           "tableTo": "feeds",
-          "columnsFrom": [
-            "feed_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["feed_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -321,12 +317,8 @@
           "name": "feeds_category_id_categories_id_fk",
           "tableFrom": "feeds",
           "tableTo": "categories",
-          "columnsFrom": [
-            "category_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["category_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }

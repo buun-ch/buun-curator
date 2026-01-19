@@ -38,7 +38,7 @@ export function WebPageCard({
       className={cn(
         "group flex h-[100px] w-[320px] items-start gap-3 rounded-lg border p-3 transition-colors",
         isSelected ? "border-primary bg-primary/5" : "border-border",
-        isDeleting && "opacity-50"
+        isDeleting && "opacity-50",
       )}
     >
       {/* Selection checkbox */}
@@ -51,7 +51,7 @@ export function WebPageCard({
           isSelected
             ? "border-primary bg-primary text-primary-foreground"
             : "border-muted-foreground/30 hover:border-muted-foreground",
-          isDeleting && "cursor-not-allowed"
+          isDeleting && "cursor-not-allowed",
         )}
       >
         {isSelected && <Check className="h-3 w-3" />}
@@ -83,7 +83,7 @@ export function WebPageCard({
               className={cn(
                 "shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100",
                 "hover:bg-destructive/10 hover:text-destructive",
-                isDeleting && "cursor-not-allowed opacity-100"
+                isDeleting && "cursor-not-allowed opacity-100",
               )}
               title="Remove enrichment"
             >
@@ -97,14 +97,15 @@ export function WebPageCard({
         </div>
 
         {/* Line 2: Full URL */}
-        <p className="truncate text-xs text-muted-foreground">
-          {page.url}
-        </p>
+        <p className="truncate text-xs text-muted-foreground">{page.url}</p>
 
         {/* Line 3+: Content body (markdown) */}
         {page.content && (
           <div className="prose-compact mt-1 line-clamp-2 text-xs text-muted-foreground/80 [&_*]:m-0 [&_*]:text-xs [&_a]:text-muted-foreground/80 [&_a]:no-underline [&_code]:bg-transparent [&_code]:p-0 [&_h1]:text-xs [&_h2]:text-xs [&_h3]:text-xs [&_p]:inline">
-            <ReactMarkdown key={`web-page-${encodeURIComponent(page.url)}`} remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown
+              key={`web-page-${encodeURIComponent(page.url)}`}
+              remarkPlugins={[remarkGfm]}
+            >
               {page.content}
             </ReactMarkdown>
           </div>

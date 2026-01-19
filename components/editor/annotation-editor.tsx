@@ -94,7 +94,9 @@ export function AnnotationEditor({
     ({ value: newValue }: { value: Value }) => {
       if (onChange && !readOnly) {
         try {
-          const markdown = editor.getApi(MarkdownPlugin).markdown.serialize({ value: newValue });
+          const markdown = editor
+            .getApi(MarkdownPlugin)
+            .markdown.serialize({ value: newValue });
           onChange(markdown);
         } catch {
           // Fallback: extract plain text
@@ -104,14 +106,14 @@ export function AnnotationEditor({
                 ? (node.children as Array<{ text?: string }>)
                     .map((c) => c.text || "")
                     .join("")
-                : ""
+                : "",
             )
             .join("\n");
           onChange(text);
         }
       }
     },
-    [editor, onChange, readOnly]
+    [editor, onChange, readOnly],
   );
 
   return (
@@ -120,7 +122,7 @@ export function AnnotationEditor({
         className={cn(
           "rounded-md border border-input bg-background",
           "focus-within:ring-2 focus-within:ring-ring",
-          className
+          className,
         )}
       >
         {/* Toolbar */}
@@ -156,7 +158,10 @@ export function AnnotationEditor({
               <MarkToolbarButton nodeType="italic" tooltip="Italic (⌘+I)">
                 <Italic />
               </MarkToolbarButton>
-              <MarkToolbarButton nodeType="strikethrough" tooltip="Strikethrough">
+              <MarkToolbarButton
+                nodeType="strikethrough"
+                tooltip="Strikethrough"
+              >
                 <Strikethrough />
               </MarkToolbarButton>
               <MarkToolbarButton nodeType="code" tooltip="Code (⌘+E)">
@@ -193,9 +198,9 @@ export function AnnotationEditor({
             placeholder={placeholder}
             variant="none"
             className={cn(
-              "prose prose-sm prose-neutral dark:prose-invert max-w-none",
+              "prose prose-sm max-w-none prose-neutral dark:prose-invert",
               "min-h-[100px] w-full px-3 py-2",
-              "focus-visible:outline-none"
+              "focus-visible:outline-none",
             )}
           />
         </EditorContainer>

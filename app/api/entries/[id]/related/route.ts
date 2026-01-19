@@ -27,12 +27,15 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { searchParams } = new URL(request.url);
 
     const threshold = Math.min(
-      Math.max(parseFloat(searchParams.get("threshold") || "") || DEFAULT_THRESHOLD, 0),
-      2
+      Math.max(
+        parseFloat(searchParams.get("threshold") || "") || DEFAULT_THRESHOLD,
+        0,
+      ),
+      2,
     );
     const limit = Math.min(
       Math.max(parseInt(searchParams.get("limit") || "") || DEFAULT_LIMIT, 1),
-      MAX_LIMIT
+      MAX_LIMIT,
     );
 
     // Fetch the source entry's embedding
@@ -67,7 +70,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       thumbnail_url: string | null;
       published_at: Date | null;
       similarity_score: number;
-    }>(sql.raw(`
+    }>(
+      sql.raw(`
       SELECT
         e.id,
         e.feed_id,
@@ -85,7 +89,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         AND (e.embedding <=> '${vectorStr}'::vector) < ${threshold}
       ORDER BY similarity_score ASC
       LIMIT ${limit}
-    `));
+    `),
+    );
 
     // Transform results to camelCase
     const relatedEntries = result.rows.map((row) => ({
@@ -105,7 +110,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     log.error({ error }, "failed to fetch related entries");
     return NextResponse.json(
       { error: "Failed to fetch related entries" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

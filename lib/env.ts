@@ -49,7 +49,7 @@ export const { getPublicEnv, PublicEnv } = createPublicEnv(
         .default("false")
         .transform((v) => v === "true"),
     }),
-  }
+  },
 );
 
 /** Type for public environment variables. */

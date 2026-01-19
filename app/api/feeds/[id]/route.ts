@@ -32,7 +32,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     log.error({ error }, "failed to fetch feed");
     return NextResponse.json(
       { error: "Failed to fetch feed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -106,7 +106,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     log.error({ error }, "failed to update feed");
     return NextResponse.json(
       { error: "Failed to update feed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -130,7 +130,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     log.error({ error }, "failed to delete feed");
     return NextResponse.json(
       { error: "Failed to delete feed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

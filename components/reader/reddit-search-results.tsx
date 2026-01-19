@@ -51,8 +51,8 @@ function RedditPostItem({
         }
       }}
       className={cn(
-        "flex w-full cursor-pointer gap-3 p-3 text-left transition-colors hover:bg-accent select-none",
-        isSelected && "bg-accent"
+        "flex w-full cursor-pointer gap-3 p-3 text-left transition-colors select-none hover:bg-accent",
+        isSelected && "bg-accent",
       )}
     >
       {/* Vote count */}
@@ -76,7 +76,9 @@ function RedditPostItem({
           <span>•</span>
           <span>u/{post.author}</span>
           <span>•</span>
-          <span>{formatDistanceToNow(post.createdAt, { addSuffix: true })}</span>
+          <span>
+            {formatDistanceToNow(post.createdAt, { addSuffix: true })}
+          </span>
           <span>•</span>
           <span className="flex items-center gap-1">
             <MessageSquare className="size-3" />
@@ -130,9 +132,12 @@ export function RedditSearchResults({
     <div className="flex h-full flex-col bg-background">
       {/* Header with search */}
       <div className="flex h-12 shrink-0 items-center gap-2 border-b px-3">
-        <form onSubmit={handleSubmit} className="flex flex-1 items-center gap-2">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-1 items-center gap-2"
+        >
           <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search Reddit..."

@@ -67,7 +67,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     log.error({ error }, "failed to fetch entry");
     return NextResponse.json(
       { error: "Failed to fetch entry" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -143,7 +143,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     // Only call updateEntryApi if there are fields to update
     if (Object.keys(updateData).length === 0) {
-      return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+      return NextResponse.json(
+        { error: "No fields to update" },
+        { status: 400 },
+      );
     }
 
     const result = await updateEntryApi(entryId, updateData);
@@ -170,7 +173,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     log.error({ error }, "failed to update entry");
     return NextResponse.json(
       { error: "Failed to update entry" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

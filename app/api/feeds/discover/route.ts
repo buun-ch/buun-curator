@@ -11,10 +11,7 @@ export async function POST(request: Request) {
     const { url } = body;
 
     if (!url || typeof url !== "string") {
-      return NextResponse.json(
-        { error: "URL is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
 
     const result = await discoverFeeds(url);
@@ -24,7 +21,7 @@ export async function POST(request: Request) {
     log.error({ error }, "failed to discover feeds");
     return NextResponse.json(
       { error: "Failed to discover feeds" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

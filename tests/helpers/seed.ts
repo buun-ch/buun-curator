@@ -8,7 +8,7 @@ export interface SeedData {
 
 // Seed categories
 export async function seedCategories(
-  data: { name: string }[]
+  data: { name: string }[],
 ): Promise<(typeof schema.categories.$inferSelect)[]> {
   if (data.length === 0) return [];
   return testDb.insert(schema.categories).values(data).returning();
@@ -22,7 +22,7 @@ export async function seedFeeds(
     siteUrl?: string;
     categoryId?: string;
     type?: string;
-  }[]
+  }[],
 ): Promise<(typeof schema.feeds.$inferSelect)[]> {
   if (data.length === 0) return [];
   return testDb.insert(schema.feeds).values(data).returning();
@@ -41,7 +41,7 @@ export async function seedEntries(
     publishedAt?: Date;
     isRead?: boolean;
     isStarred?: boolean;
-  }[]
+  }[],
 ): Promise<(typeof schema.entries.$inferSelect)[]> {
   if (data.length === 0) return [];
   return testDb.insert(schema.entries).values(data).returning();
@@ -49,10 +49,7 @@ export async function seedEntries(
 
 // Seed all with default test data
 export async function seedAll(): Promise<SeedData> {
-  const categories = await seedCategories([
-    { name: "Tech" },
-    { name: "News" },
-  ]);
+  const categories = await seedCategories([{ name: "Tech" }, { name: "News" }]);
 
   const feeds = await seedFeeds([
     {

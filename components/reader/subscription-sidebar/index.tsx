@@ -79,7 +79,7 @@ export function SubscriptionSidebar({
       navigateToRedditSearch,
       navigateToRedditFavorites,
       navigateToSubreddit,
-    ]
+    ],
   );
 
   // Subscriptions data
@@ -133,7 +133,10 @@ export function SubscriptionSidebar({
 
       {/* Subscription list - hidden when collapsed */}
       {!collapsed && (
-        <div className="flex-1 overflow-auto px-1 pb-2 overflow-x-hidden" onScroll={handleScroll}>
+        <div
+          className="flex-1 overflow-auto overflow-x-hidden px-1 pb-2"
+          onScroll={handleScroll}
+        >
           {loading ? (
             <div className="flex items-center justify-center py-4">
               <span className="text-sm text-muted-foreground">Loading...</span>
@@ -190,9 +193,9 @@ export function SubscriptionSidebar({
           <button
             onClick={() => navigateToSettings()}
             className={cn(
-              "flex w-full items-center gap-2 rounded-md px-4 pb-1 pt-2.5 text-sm hover:bg-accent select-none",
+              "flex w-full items-center gap-2 rounded-md px-4 pt-2.5 pb-1 text-sm select-none hover:bg-accent",
               viewMode === "settings" && "bg-accent font-medium",
-              collapsed && "justify-center px-0"
+              collapsed && "justify-center px-0",
             )}
           >
             <Settings className="size-4" />
@@ -201,7 +204,7 @@ export function SubscriptionSidebar({
             )}
           </button>
           {debugEnabled && !collapsed && (
-            <div className="flex items-center gap-2 px-5 pt-2 pb-1 text-sm text-muted-foreground my-1 border-t">
+            <div className="my-1 flex items-center gap-2 border-t px-5 pt-2 pb-1 text-sm text-muted-foreground">
               <SSEStatusIndicator />
             </div>
           )}

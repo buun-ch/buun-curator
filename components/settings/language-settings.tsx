@@ -22,7 +22,8 @@ const TARGET_LANGUAGES = [
 ] as const;
 
 export function LanguageSettings() {
-  const [targetLanguage, setTargetLanguage] = React.useState<string>("__none__");
+  const [targetLanguage, setTargetLanguage] =
+    React.useState<string>("__none__");
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
 
@@ -105,7 +106,9 @@ export function LanguageSettings() {
                 ))}
               </SelectContent>
             </Select>
-            {saving && <Loader2 className="size-4 animate-spin text-muted-foreground" />}
+            {saving && (
+              <Loader2 className="size-4 animate-spin text-muted-foreground" />
+            )}
           </div>
         </div>
       </section>

@@ -24,7 +24,9 @@ const globalForSSE = globalThis as unknown as {
 
 const connections =
   globalForSSE.sseConnections ??
-  (globalForSSE.sseConnections = new Set<ReadableStreamDefaultController<Uint8Array>>());
+  (globalForSSE.sseConnections = new Set<
+    ReadableStreamDefaultController<Uint8Array>
+  >());
 
 // Event types
 export type SSEEventType =
@@ -48,7 +50,10 @@ export function broadcastEvent(event: SSEEvent): void {
   const message = `event: ${event.type}\ndata: ${JSON.stringify(event.data)}\n\n`;
   const encoded = encoder.encode(message);
 
-  log.debug({ type: event.type, connections: connections.size }, `broadcasting event ${event.type}`);
+  log.debug(
+    { type: event.type, connections: connections.size },
+    `broadcasting event ${event.type}`,
+  );
 
   for (const controller of connections) {
     try {
@@ -65,7 +70,7 @@ export function broadcastEvent(event: SSEEvent): void {
  */
 function sendEvent(
   controller: ReadableStreamDefaultController<Uint8Array>,
-  event: SSEEvent
+  event: SSEEvent,
 ): void {
   const encoder = new TextEncoder();
   const message = `event: ${event.type}\ndata: ${JSON.stringify(event.data)}\n\n`;
@@ -76,14 +81,16 @@ function sendEvent(
  * Validate session from request headers.
  */
 async function validateSession(
-  headers: Headers
+  headers: Headers,
 ): Promise<{ valid: boolean; userId?: string }> {
   try {
     const session = await auth.api.getSession({
       headers,
       query: { disableCookieCache: true }, // Force DB check for accurate validation
     });
-    return session ? { valid: true, userId: session.user.id } : { valid: false };
+    return session
+      ? { valid: true, userId: session.user.id }
+      : { valid: false };
   } catch {
     return { valid: false };
   }
@@ -115,7 +122,10 @@ export async function GET(request: Request): Promise<Response> {
     start(controller) {
       // Add to active connections
       connections.add(controller);
-      log.info({ userId: sessionResult.userId, connections: connections.size }, "client connected");
+      log.info(
+        { userId: sessionResult.userId, connections: connections.size },
+        "client connected",
+      );
 
       // Send initial connection confirmation
       sendEvent(controller, {
@@ -131,7 +141,10 @@ export async function GET(request: Request): Promise<Response> {
             const session = await validateSession(requestHeaders);
 
             if (!session.valid) {
-              log.info({ userId: sessionResult.userId }, "session expired, closing connection");
+              log.info(
+                { userId: sessionResult.userId },
+                "session expired, closing connection",
+              );
               sendEvent(controller, {
                 type: "auth-expired",
                 data: { message: "Session expired", timestamp: Date.now() },
@@ -167,7 +180,10 @@ export async function GET(request: Request): Promise<Response> {
         keepAliveIntervals.delete(controller);
       }
       connections.delete(controller);
-      log.info({ connections: connections.size }, "stream cancelled, client disconnected");
+      log.info(
+        { connections: connections.size },
+        "stream cancelled, client disconnected",
+      );
     },
   });
 

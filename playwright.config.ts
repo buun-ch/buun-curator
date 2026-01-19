@@ -18,7 +18,8 @@ export default defineConfig({
     // Base URL for tests (can be overridden by environment variable)
     // Default: E2E namespace via Toxiproxy
     baseURL:
-      process.env.BASE_URL || "http://buun-curator-toxiproxy.buun-curator-e2e:8080",
+      process.env.BASE_URL ||
+      "http://buun-curator-toxiproxy.buun-curator-e2e:8080",
     trace: "on-first-retry",
     // Navigation timeout
     navigationTimeout: 30000,

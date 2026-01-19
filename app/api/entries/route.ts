@@ -41,7 +41,10 @@ const SCORE_PRECISION = 15;
 
 function encodeRecommendedCursor(score: number, id: string): string {
   // Store score as fixed-precision string to avoid JSON floating-point issues
-  const cursor: RecommendedCursor = { score: score.toFixed(SCORE_PRECISION), id };
+  const cursor: RecommendedCursor = {
+    score: score.toFixed(SCORE_PRECISION),
+    id,
+  };
   return Buffer.from(JSON.stringify(cursor)).toString("base64url");
 }
 
@@ -113,16 +116,28 @@ function rowToNode(row: RecommendedResultRow) {
  */
 async function handleRecommendedSort(
   _request: NextRequest,
-  params: RecommendedSortParams
+  params: RecommendedSortParams,
 ): Promise<NextResponse> {
-  const { feedId, categoryId, unreadOnly, starredOnly, hasSummary, graphAdded, first, after, preserveIds } =
-    params;
+  const {
+    feedId,
+    categoryId,
+    unreadOnly,
+    starredOnly,
+    hasSummary,
+    graphAdded,
+    first,
+    after,
+    preserveIds,
+  } = params;
 
   // Get the keep vector (average of keep=true embeddings)
   const keepVector = await getKeepVector();
 
   if (!keepVector) {
-    log.error({ feedId, categoryId }, "No keep vector available, falling back to newest sort");
+    log.error(
+      { feedId, categoryId },
+      "No keep vector available, falling back to newest sort",
+    );
     return NextResponse.json({
       edges: [],
       pageInfo: {
@@ -146,7 +161,7 @@ async function handleRecommendedSort(
     }
     if (categoryId) {
       conds.push(
-        `feed_id IN (SELECT id FROM feeds WHERE category_id = '${categoryId}')`
+        `feed_id IN (SELECT id FROM feeds WHERE category_id = '${categoryId}')`,
       );
     }
     if (starredOnly) {
@@ -174,7 +189,7 @@ async function handleRecommendedSort(
         const cursorScoreSubquery = `(SELECT e2.embedding <=> '${vectorStr}'::vector FROM entries e2 WHERE e2.id = '${cursor.id}')`;
         conds.push(
           `(e.embedding <=> '${vectorStr}'::vector > ${cursorScoreSubquery} ` +
-          `OR (e.embedding <=> '${vectorStr}'::vector = ${cursorScoreSubquery} AND e.id > '${cursor.id}'))`
+            `OR (e.embedding <=> '${vectorStr}'::vector = ${cursorScoreSubquery} AND e.id > '${cursor.id}'))`,
         );
       }
     }
@@ -204,16 +219,20 @@ async function handleRecommendedSort(
 
   // Special handling for unreadOnly with preserveIds
   if (unreadOnly && preserveIds.length > 0) {
-    const escapedPreserveIds = preserveIds.map((id) => `'${id.replace(/'/g, "''")}'`).join(",");
+    const escapedPreserveIds = preserveIds
+      .map((id) => `'${id.replace(/'/g, "''")}'`)
+      .join(",");
 
     // 1. Count: unread entries + preserved entries
     const countConditions = buildCommonConditions();
     countConditions.push(`(is_read = false OR id IN (${escapedPreserveIds}))`);
-    const countResult = await db.execute<{ count: string }>(sql.raw(`
+    const countResult = await db.execute<{ count: string }>(
+      sql.raw(`
       SELECT COUNT(*) as count
       FROM entries
       WHERE ${countConditions.join(" AND ")}
-    `));
+    `),
+    );
     const totalCount = Number(countResult.rows[0]?.count || 0);
 
     // 2. Fetch unread entries (excluding preserveIds)
@@ -222,12 +241,14 @@ async function handleRecommendedSort(
     unreadConditions.push(`id NOT IN (${escapedPreserveIds})`);
     addCursorCondition(unreadConditions);
 
-    const unreadResult = await db.execute<RecommendedResultRow>(sql.raw(`
+    const unreadResult = await db.execute<RecommendedResultRow>(
+      sql.raw(`
       ${selectClause}
       WHERE ${unreadConditions.join(" AND ")}
       ORDER BY similarity_score ASC, e.id ASC
       LIMIT ${first + 1}
-    `));
+    `),
+    );
 
     const hasNextPageUnread = unreadResult.rows.length > first;
     const unreadRows = unreadResult.rows.slice(0, first);
@@ -239,11 +260,13 @@ async function handleRecommendedSort(
       preservedConditions.push("is_read = true");
       preservedConditions.push(`id IN (${escapedPreserveIds})`);
 
-      const preservedResult = await db.execute<RecommendedResultRow>(sql.raw(`
+      const preservedResult = await db.execute<RecommendedResultRow>(
+        sql.raw(`
         ${selectClause}
         WHERE ${preservedConditions.join(" AND ")}
         ORDER BY similarity_score ASC, e.id ASC
-      `));
+      `),
+      );
       preservedRows = preservedResult.rows;
     }
 
@@ -285,20 +308,24 @@ async function handleRecommendedSort(
   addCursorCondition(whereConditions);
 
   // Get total count
-  const countResult = await db.execute<{ count: string }>(sql.raw(`
+  const countResult = await db.execute<{ count: string }>(
+    sql.raw(`
     SELECT COUNT(*) as count
     FROM entries
     WHERE ${baseConditions.join(" AND ")}
-  `));
+  `),
+  );
   const totalCount = Number(countResult.rows[0]?.count || 0);
 
   // Query entries
-  const result = await db.execute<RecommendedResultRow>(sql.raw(`
+  const result = await db.execute<RecommendedResultRow>(
+    sql.raw(`
     ${selectClause}
     WHERE ${whereConditions.join(" AND ")}
     ORDER BY similarity_score ASC, e.id ASC
     LIMIT ${first + 1}
-  `));
+  `),
+  );
 
   const hasNextPage = result.rows.length > first;
   const edges = result.rows.slice(0, first).map((row) => ({
@@ -371,7 +398,9 @@ export async function GET(request: NextRequest) {
     const sort = (searchParams.get("sort") as SortMode) || "newest";
     // Parse preserveIds - comma-separated list of entry IDs to include even if read
     const preserveIdsParam = searchParams.get("preserveIds");
-    const preserveIds = preserveIdsParam ? preserveIdsParam.split(",").filter(Boolean) : [];
+    const preserveIds = preserveIdsParam
+      ? preserveIdsParam.split(",").filter(Boolean)
+      : [];
 
     // Handle recommended sort separately (uses embedding similarity)
     if (sort === "recommended") {
@@ -408,7 +437,9 @@ export async function GET(request: NextRequest) {
         conds.push(eq(entries.isStarred, true));
       }
       if (hasSummary === true) {
-        conds.push(sql`${entries.summary} IS NOT NULL AND ${entries.summary} != ''`);
+        conds.push(
+          sql`${entries.summary} IS NOT NULL AND ${entries.summary} != ''`,
+        );
       } else if (hasSummary === false) {
         conds.push(sql`${entries.summary} IS NULL OR ${entries.summary} = ''`);
       }
@@ -416,7 +447,9 @@ export async function GET(request: NextRequest) {
         conds.push(isNotNull(entries.graphAddedAt));
       } else if (graphAdded === false) {
         conds.push(isNull(entries.graphAddedAt));
-        conds.push(sql`${entries.filteredContent} IS NOT NULL AND ${entries.filteredContent} != ''`);
+        conds.push(
+          sql`${entries.filteredContent} IS NOT NULL AND ${entries.filteredContent} != ''`,
+        );
       }
       if (keepOnly) {
         conds.push(eq(entries.keep, true));
@@ -425,18 +458,20 @@ export async function GET(request: NextRequest) {
     };
 
     // Helper to add cursor condition
-    const addCursorCondition = (conds: ReturnType<typeof buildCommonConditions>) => {
+    const addCursorCondition = (
+      conds: ReturnType<typeof buildCommonConditions>,
+    ) => {
       if (after) {
         const cursor = decodeCursor(after);
         if (cursor) {
           const cursorDate = new Date(cursor.publishedAt);
           if (isAscending) {
             conds.push(
-              sql`(${entries.publishedAt} > ${cursorDate} OR (${entries.publishedAt} = ${cursorDate} AND ${entries.id} > ${cursor.id}))`
+              sql`(${entries.publishedAt} > ${cursorDate} OR (${entries.publishedAt} = ${cursorDate} AND ${entries.id} > ${cursor.id}))`,
             );
           } else {
             conds.push(
-              sql`(${entries.publishedAt} < ${cursorDate} OR (${entries.publishedAt} = ${cursorDate} AND ${entries.id} < ${cursor.id}))`
+              sql`(${entries.publishedAt} < ${cursorDate} OR (${entries.publishedAt} = ${cursorDate} AND ${entries.id} < ${cursor.id}))`,
             );
           }
         }
@@ -469,12 +504,14 @@ export async function GET(request: NextRequest) {
     // Special handling for unreadOnly with preserveIds:
     // Fetch unread entries and preserved entries separately, then merge
     if (unreadOnly && preserveIds.length > 0) {
-      const escapedPreserveIds = preserveIds.map((id) => `'${id.replace(/'/g, "''")}'`).join(",");
+      const escapedPreserveIds = preserveIds
+        .map((id) => `'${id.replace(/'/g, "''")}'`)
+        .join(",");
 
       // 1. Count: unread entries + preserved entries (for total)
       const baseConditions = buildCommonConditions();
       baseConditions.push(
-        sql`(${entries.isRead} = false OR ${entries.id} IN (${sql.raw(escapedPreserveIds)}))`
+        sql`(${entries.isRead} = false OR ${entries.id} IN (${sql.raw(escapedPreserveIds)}))`,
       );
       const countResult = await db
         .select({ count: sql<number>`count(*)` })
@@ -488,7 +525,7 @@ export async function GET(request: NextRequest) {
       unreadConditions.push(eq(entries.isRead, false));
       // Exclude preserveIds from unread query to avoid duplicates
       unreadConditions.push(
-        sql`${entries.id} NOT IN (${sql.raw(escapedPreserveIds)})`
+        sql`${entries.id} NOT IN (${sql.raw(escapedPreserveIds)})`,
       );
       addCursorCondition(unreadConditions);
 
@@ -510,7 +547,7 @@ export async function GET(request: NextRequest) {
         const preservedConditions = buildCommonConditions();
         preservedConditions.push(eq(entries.isRead, true));
         preservedConditions.push(
-          sql`${entries.id} IN (${sql.raw(escapedPreserveIds)})`
+          sql`${entries.id} IN (${sql.raw(escapedPreserveIds)})`,
         );
 
         preservedEntries = await db
@@ -532,7 +569,9 @@ export async function GET(request: NextRequest) {
           return isAscending ? dateA - dateB : dateB - dateA;
         }
         // Tiebreaker by id
-        return isAscending ? a.id.localeCompare(b.id) : b.id.localeCompare(a.id);
+        return isAscending
+          ? a.id.localeCompare(b.id)
+          : b.id.localeCompare(a.id);
       });
 
       const edges = allEntries.map((entry) => ({
@@ -608,10 +647,17 @@ export async function GET(request: NextRequest) {
       totalCount,
     });
   } catch (error) {
-    log.error({ error, message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined }, "failed to fetch entries");
+    log.error(
+      {
+        error,
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      },
+      "failed to fetch entries",
+    );
     return NextResponse.json(
       { error: "Failed to fetch entries" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -637,14 +683,11 @@ export async function POST(request: NextRequest) {
     if (!feedId || typeof feedId !== "string") {
       return NextResponse.json(
         { error: "feedId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     if (!title || typeof title !== "string") {
-      return NextResponse.json(
-        { error: "title is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "title is required" }, { status: 400 });
     }
     if (!url || typeof url !== "string") {
       return NextResponse.json({ error: "url is required" }, { status: 400 });
@@ -674,7 +717,7 @@ export async function POST(request: NextRequest) {
     log.error({ error }, "failed to create entry");
     return NextResponse.json(
       { error: "Failed to create entry" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

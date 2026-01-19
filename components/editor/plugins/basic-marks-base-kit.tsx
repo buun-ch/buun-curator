@@ -8,11 +8,11 @@ import {
   BaseSubscriptPlugin,
   BaseSuperscriptPlugin,
   BaseUnderlinePlugin,
-} from '@platejs/basic-nodes';
+} from "@platejs/basic-nodes";
 
-import { CodeLeafStatic } from '@/components/ui/plate/code-node-static';
-import { HighlightLeafStatic } from '@/components/ui/plate/highlight-node-static';
-import { KbdLeafStatic } from '@/components/ui/plate/kbd-node-static';
+import { CodeLeafStatic } from "@/components/ui/plate/code-node-static";
+import { HighlightLeafStatic } from "@/components/ui/plate/highlight-node-static";
+import { KbdLeafStatic } from "@/components/ui/plate/kbd-node-static";
 
 export const BaseBasicMarksKit = [
   BaseBoldPlugin,

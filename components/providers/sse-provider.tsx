@@ -230,7 +230,10 @@ export function SSEProvider({ children, enabled = true }: SSEProviderProps) {
     try {
       const response = await fetch("/api/workflows/active");
       if (!response.ok) {
-        log.warn({ status: response.status }, "failed to fetch active workflows");
+        log.warn(
+          { status: response.status },
+          "failed to fetch active workflows",
+        );
         return;
       }
       const workflows = await response.json();

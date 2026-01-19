@@ -20,11 +20,7 @@ const markdownComponents = {
       </a>
     );
   },
-  img: ({
-    src,
-    alt,
-    ...props
-  }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+  img: ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
     if (!src) return null;
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={src} alt={alt || ""} {...props} />;
@@ -52,7 +48,9 @@ export function TranslationPanel({
   onRetranslate,
   onClose,
 }: TranslationPanelProps) {
-  const hasTranslation = Boolean(translatedContent && translatedContent.length > 0);
+  const hasTranslation = Boolean(
+    translatedContent && translatedContent.length > 0,
+  );
 
   return (
     <div className="flex h-full flex-col border-l bg-background">
@@ -71,7 +69,9 @@ export function TranslationPanel({
             disabled={isTranslating}
             title="Re-translate"
           >
-            <RefreshCw className={cn("size-3.5", isTranslating && "animate-spin")} />
+            <RefreshCw
+              className={cn("size-3.5", isTranslating && "animate-spin")}
+            />
           </Button>
           <Button
             variant="ghost"
@@ -88,7 +88,7 @@ export function TranslationPanel({
       {/* Content */}
       <div className="flex-1 overflow-auto px-4 py-6">
         {hasTranslation ? (
-          <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <div className="prose max-w-none prose-neutral dark:prose-invert">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={markdownComponents}
@@ -98,17 +98,13 @@ export function TranslationPanel({
           </div>
         ) : isTranslating ? (
           <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
-            <Loader2 className="size-6 animate-spin mb-2" />
+            <Loader2 className="mb-2 size-6 animate-spin" />
             <p>Translating...</p>
           </div>
         ) : (
-          <div className="text-center text-muted-foreground py-8">
+          <div className="py-8 text-center text-muted-foreground">
             <p>Translation not available.</p>
-            <Button
-              variant="link"
-              className="mt-2"
-              onClick={onRetranslate}
-            >
+            <Button variant="link" className="mt-2" onClick={onRetranslate}>
               Start translation
             </Button>
           </div>

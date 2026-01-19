@@ -20,7 +20,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     log.error({ error }, "failed to get workflow status");
     return NextResponse.json(
       { error: "Failed to get workflow status" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -29,7 +29,7 @@ export async function GET() {
     log.error({ error }, "Failed to fetch subreddits");
     return NextResponse.json(
       { error: "Failed to fetch subreddits" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     if (!name || typeof name !== "string") {
       return NextResponse.json(
         { error: "Subreddit name is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     if (!normalizedName) {
       return NextResponse.json(
         { error: "Invalid subreddit name" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     if (existing.length > 0) {
       return NextResponse.json(
         { error: "Subreddit already in favorites" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
     log.error({ error }, "Failed to add subreddit");
     return NextResponse.json(
       { error: "Failed to add subreddit" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

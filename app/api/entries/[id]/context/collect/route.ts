@@ -22,7 +22,9 @@ export async function POST(_request: Request, { params }: RouteParams) {
   try {
     const { id: entryId } = await params;
 
-    const handle = await startContextCollectionWorkflow({ entryIds: [entryId] });
+    const handle = await startContextCollectionWorkflow({
+      entryIds: [entryId],
+    });
 
     return NextResponse.json({
       workflowId: handle.workflowId,
@@ -33,7 +35,7 @@ export async function POST(_request: Request, { params }: RouteParams) {
     log.error({ error }, "Failed to start context collection workflow");
     return NextResponse.json(
       { error: "Failed to start context collection workflow" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -51,7 +53,7 @@ export async function GET(request: Request) {
     if (!workflowId) {
       return NextResponse.json(
         { error: "workflowId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -62,7 +64,7 @@ export async function GET(request: Request) {
     log.error({ error }, "Failed to get workflow status");
     return NextResponse.json(
       { error: "Failed to get workflow status" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -17,7 +17,9 @@ export const auth = betterAuth({
   }),
   baseURL: process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET,
-  trustedOrigins: process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : [],
+  trustedOrigins: process.env.BETTER_AUTH_URL
+    ? [process.env.BETTER_AUTH_URL]
+    : [],
   advanced: {
     // Required when behind a reverse proxy (Traefik/nginx) with HTTPS termination
     useSecureCookies: process.env.NODE_ENV === "production",

@@ -345,7 +345,9 @@ describe("feed-discovery", () => {
         const rssXml = `<rss version="2.0"><channel><title>RSS</title></channel></rss>`;
 
         mockFetch.mockResolvedValueOnce({
-          headers: new Headers({ "content-type": "application/rss+xml; charset=utf-8" }),
+          headers: new Headers({
+            "content-type": "application/rss+xml; charset=utf-8",
+          }),
         });
         mockFetch.mockResolvedValueOnce({
           ok: true,
@@ -422,7 +424,9 @@ describe("feed-discovery", () => {
         const result = await discoverFeeds("https://medium.com/@michaellandis");
 
         expect(result.feeds).toHaveLength(1);
-        expect(result.feeds[0].url).toBe("https://medium.com/feed/@michaellandis");
+        expect(result.feeds[0].url).toBe(
+          "https://medium.com/feed/@michaellandis",
+        );
         expect(result.feeds[0].title).toBe("Michael Landis on Medium");
         expect(result.siteUrl).toBe("https://medium.com");
       });
@@ -451,10 +455,14 @@ describe("feed-discovery", () => {
           text: () => Promise.resolve(mediumRss),
         });
 
-        const result = await discoverFeeds("https://medium.com/towards-data-science");
+        const result = await discoverFeeds(
+          "https://medium.com/towards-data-science",
+        );
 
         expect(result.feeds).toHaveLength(1);
-        expect(result.feeds[0].url).toBe("https://medium.com/feed/towards-data-science");
+        expect(result.feeds[0].url).toBe(
+          "https://medium.com/feed/towards-data-science",
+        );
       });
 
       it("handles Medium URL with trailing slash", async () => {
@@ -535,13 +543,15 @@ describe("feed-discovery", () => {
             headers: new Headers({ "content-type": "text/html" }),
             ok: true,
             text: () => Promise.resolve(html),
-          })
+          }),
         );
 
         const result = await discoverFeeds("https://medium.com/");
 
         // should not find /feed/ since root path is skipped
-        expect(result.feeds.filter((f) => f.url === "https://medium.com/feed/")).toHaveLength(0);
+        expect(
+          result.feeds.filter((f) => f.url === "https://medium.com/feed/"),
+        ).toHaveLength(0);
       });
 
       it("skips Medium feed URL if already a feed URL", async () => {
@@ -582,7 +592,9 @@ describe("feed-discovery", () => {
           </rss>`;
 
         mockFetch.mockResolvedValueOnce({
-          headers: new Headers({ "content-type": "application/rss+xml; charset=UTF-8" }),
+          headers: new Headers({
+            "content-type": "application/rss+xml; charset=UTF-8",
+          }),
         });
         mockFetch.mockResolvedValueOnce({
           ok: true,

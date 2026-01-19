@@ -21,7 +21,10 @@ const log = createLogger("api:events:send");
 const PROGRESS_DEBOUNCE_MS = 100;
 
 /** Pending progress data keyed by workflowId. */
-const pendingProgress = new Map<string, { timer: NodeJS.Timeout; data: ProgressEventData }>();
+const pendingProgress = new Map<
+  string,
+  { timer: NodeJS.Timeout; data: ProgressEventData }
+>();
 
 /** Request body schema for sending events. */
 interface SendEventRequest {
@@ -93,7 +96,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!body.type || body.data === undefined) {
       return NextResponse.json(
         { error: "Missing required fields: type, data" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -107,8 +110,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     ];
     if (!validTypes.includes(body.type)) {
       return NextResponse.json(
-        { error: `Invalid event type. Must be one of: ${validTypes.join(", ")}` },
-        { status: 400 }
+        {
+          error: `Invalid event type. Must be one of: ${validTypes.join(", ")}`,
+        },
+        { status: 400 },
       );
     }
 
@@ -118,7 +123,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!progressData.workflowId || !progressData.progress) {
         return NextResponse.json(
           { error: "Missing workflowId or progress in progress event data" },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -138,7 +143,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     log.error({ error }, "failed to send event");
     return NextResponse.json(
       { error: "Failed to send event" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

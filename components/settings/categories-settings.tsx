@@ -142,8 +142,15 @@ export function CategoriesSettings() {
             }}
             className="flex-1"
           />
-          <Button onClick={handleAdd} disabled={saving || !newCategoryName.trim()}>
-            {saving ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
+          <Button
+            onClick={handleAdd}
+            disabled={saving || !newCategoryName.trim()}
+          >
+            {saving ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Plus className="size-4" />
+            )}
             <span className="ml-2">Add</span>
           </Button>
         </div>
@@ -162,57 +169,65 @@ export function CategoriesSettings() {
           </p>
         ) : (
           <div className="space-y-2">
-            {[...categories].sort((a, b) => a.name.localeCompare(b.name)).map((category) => (
-              <div
-                key={category.id}
-                className="flex items-center gap-2 rounded-lg border p-3"
-              >
-                {editingId === category.id ? (
-                  <>
-                    <Input
-                      value={editingName}
-                      onChange={(e) => setEditingName(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") handleUpdate(category.id);
-                        if (e.key === "Escape") cancelEditing();
-                      }}
-                      className="flex-1"
-                      autoFocus
-                    />
-                    <Button
-                      size="sm"
-                      onClick={() => handleUpdate(category.id)}
-                      disabled={saving || !editingName.trim()}
-                    >
-                      Save
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={cancelEditing}>
-                      Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <span className="flex-1 font-medium">{category.name}</span>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="size-8"
-                      onClick={() => startEditing(category)}
-                    >
-                      <Pencil className="size-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="size-8 text-destructive hover:text-destructive"
-                      onClick={() => handleDelete(category.id)}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
-                  </>
-                )}
-              </div>
-            ))}
+            {[...categories]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((category) => (
+                <div
+                  key={category.id}
+                  className="flex items-center gap-2 rounded-lg border p-3"
+                >
+                  {editingId === category.id ? (
+                    <>
+                      <Input
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleUpdate(category.id);
+                          if (e.key === "Escape") cancelEditing();
+                        }}
+                        className="flex-1"
+                        autoFocus
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => handleUpdate(category.id)}
+                        disabled={saving || !editingName.trim()}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={cancelEditing}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <span className="flex-1 font-medium">
+                        {category.name}
+                      </span>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="size-8"
+                        onClick={() => startEditing(category)}
+                      >
+                        <Pencil className="size-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="size-8 text-destructive hover:text-destructive"
+                        onClick={() => handleDelete(category.id)}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </>
+                  )}
+                </div>
+              ))}
           </div>
         )}
       </div>

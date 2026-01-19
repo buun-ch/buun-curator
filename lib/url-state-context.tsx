@@ -71,8 +71,10 @@ export interface UrlStateActions {
   /** Navigate to entry. */
   navigateToEntry: (
     entryId: string,
-    context?: { type: "category"; categoryId: string } | { type: "feed"; feedId: string },
-    options?: NavigationOptions
+    context?:
+      | { type: "category"; categoryId: string }
+      | { type: "feed"; feedId: string },
+    options?: NavigationOptions,
   ) => void;
   /** Navigate to Reddit home. */
   navigateToRedditHome: () => void;
@@ -102,7 +104,7 @@ const UrlStateContext = React.createContext<UrlStateContextValue | null>(null);
  */
 function parseUrlState(
   pathname: string,
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
 ): Omit<UrlStateValue, keyof UrlStateActions> {
   const filterMode = parseFilterMode(searchParams.get("f")) ?? "unread";
   const sortMode = parseSortMode(searchParams.get("s")) ?? "newest";
@@ -198,7 +200,7 @@ export function UrlStateProvider({ children }: UrlStateProviderProps) {
   // Parse current URL state
   const urlState = React.useMemo(
     () => parseUrlState(pathname, searchParams),
-    [pathname, searchParams]
+    [pathname, searchParams],
   );
 
   // Build current query options from state
@@ -208,7 +210,7 @@ export function UrlStateProvider({ children }: UrlStateProviderProps) {
       sort: urlState.sortMode,
       query: urlState.searchQuery,
     }),
-    [urlState.filterMode, urlState.sortMode, urlState.searchQuery]
+    [urlState.filterMode, urlState.sortMode, urlState.searchQuery],
   );
 
   // Navigation actions
@@ -216,32 +218,34 @@ export function UrlStateProvider({ children }: UrlStateProviderProps) {
     (options?: NavigationOptions) => {
       router.push(allEntriesUrl(options ?? currentOptions));
     },
-    [router, currentOptions]
+    [router, currentOptions],
   );
 
   const navigateToCategory = React.useCallback(
     (categoryId: string, options?: NavigationOptions) => {
       router.push(categoryUrl(categoryId, options ?? currentOptions));
     },
-    [router, currentOptions]
+    [router, currentOptions],
   );
 
   const navigateToFeed = React.useCallback(
     (feedId: string, options?: NavigationOptions) => {
       router.push(feedUrl(feedId, options ?? currentOptions));
     },
-    [router, currentOptions]
+    [router, currentOptions],
   );
 
   const navigateToEntry = React.useCallback(
     (
       entryId: string,
-      context?: { type: "category"; categoryId: string } | { type: "feed"; feedId: string },
-      options?: NavigationOptions
+      context?:
+        | { type: "category"; categoryId: string }
+        | { type: "feed"; feedId: string },
+      options?: NavigationOptions,
     ) => {
       router.push(entryUrl(entryId, context, options ?? currentOptions));
     },
-    [router, currentOptions]
+    [router, currentOptions],
   );
 
   const navigateToRedditHome = React.useCallback(() => {
@@ -252,7 +256,7 @@ export function UrlStateProvider({ children }: UrlStateProviderProps) {
     (query?: string) => {
       router.push(redditSearchUrl(query));
     },
-    [router]
+    [router],
   );
 
   const navigateToRedditFavorites = React.useCallback(() => {
@@ -263,14 +267,14 @@ export function UrlStateProvider({ children }: UrlStateProviderProps) {
     (subreddit: string) => {
       router.push(subredditUrl(subreddit));
     },
-    [router]
+    [router],
   );
 
   const navigateToSettings = React.useCallback(
     (category?: SettingsCategory) => {
       router.push(settingsUrl(category));
     },
-    [router]
+    [router],
   );
 
   // Shallow update actions (update query params without full navigation)
@@ -285,7 +289,7 @@ export function UrlStateProvider({ children }: UrlStateProviderProps) {
       const query = params.toString();
       router.push(`${pathname}${query ? `?${query}` : ""}`, { scroll: false });
     },
-    [router, pathname, searchParams]
+    [router, pathname, searchParams],
   );
 
   const setSortMode = React.useCallback(
@@ -299,7 +303,7 @@ export function UrlStateProvider({ children }: UrlStateProviderProps) {
       const query = params.toString();
       router.push(`${pathname}${query ? `?${query}` : ""}`, { scroll: false });
     },
-    [router, pathname, searchParams]
+    [router, pathname, searchParams],
   );
 
   const setSearchQuery = React.useCallback(
@@ -317,9 +321,11 @@ export function UrlStateProvider({ children }: UrlStateProviderProps) {
         }
       }
       const queryStr = params.toString();
-      router.push(`${pathname}${queryStr ? `?${queryStr}` : ""}`, { scroll: false });
+      router.push(`${pathname}${queryStr ? `?${queryStr}` : ""}`, {
+        scroll: false,
+      });
     },
-    [router, pathname, searchParams]
+    [router, pathname, searchParams],
   );
 
   const contextValue = React.useMemo(
@@ -352,7 +358,7 @@ export function UrlStateProvider({ children }: UrlStateProviderProps) {
       setFilterMode,
       setSortMode,
       setSearchQuery,
-    ]
+    ],
   );
 
   return (

@@ -43,7 +43,7 @@ export function GitHubRepoCard({
     <div
       className={cn(
         "flex h-[100px] w-[320px] items-start gap-3 rounded-lg border p-3 transition-colors",
-        isSelected ? "border-primary bg-primary/5" : "border-border"
+        isSelected ? "border-primary bg-primary/5" : "border-border",
       )}
     >
       {/* Selection checkbox */}
@@ -54,7 +54,7 @@ export function GitHubRepoCard({
           "mt-0.5 flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-sm border transition-colors",
           isSelected
             ? "border-primary bg-primary text-primary-foreground"
-            : "border-muted-foreground/30 hover:border-muted-foreground"
+            : "border-muted-foreground/30 hover:border-muted-foreground",
         )}
       >
         {isSelected && <Check className="h-3 w-3" />}

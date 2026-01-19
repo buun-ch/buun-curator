@@ -22,7 +22,10 @@ export async function GET(request: Request, { params }: RouteParams) {
       .limit(1);
 
     if (result.length === 0) {
-      return NextResponse.json({ error: "Category not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Category not found" },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json(result[0]);
@@ -30,7 +33,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     log.error({ error }, "failed to fetch category");
     return NextResponse.json(
       { error: "Failed to fetch category" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -54,7 +57,10 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       .returning();
 
     if (result.length === 0) {
-      return NextResponse.json({ error: "Category not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Category not found" },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json(result[0]);
@@ -62,7 +68,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     log.error({ error }, "failed to update category");
     return NextResponse.json(
       { error: "Failed to update category" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -78,7 +84,10 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       .returning();
 
     if (result.length === 0) {
-      return NextResponse.json({ error: "Category not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Category not found" },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json({ success: true });
@@ -86,7 +95,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     log.error({ error }, "failed to delete category");
     return NextResponse.json(
       { error: "Failed to delete category" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

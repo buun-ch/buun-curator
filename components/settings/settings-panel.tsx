@@ -14,7 +14,10 @@ interface SettingsPanelProps {
   onClose?: () => void;
 }
 
-export function SettingsPanel({ categoryId = "categories", onClose }: SettingsPanelProps) {
+export function SettingsPanel({
+  categoryId = "categories",
+  onClose,
+}: SettingsPanelProps) {
   const category = settingsCategories.find((c) => c.id === categoryId);
 
   const renderContent = () => {
@@ -36,7 +39,9 @@ export function SettingsPanel({ categoryId = "categories", onClose }: SettingsPa
     <div className="flex h-full flex-col bg-background">
       {/* Header */}
       <div className="flex h-12 shrink-0 items-center border-b px-6">
-        <h2 className="flex-1 select-none text-sm font-semibold">{category?.title || "Settings"}</h2>
+        <h2 className="flex-1 text-sm font-semibold select-none">
+          {category?.title || "Settings"}
+        </h2>
         <Button
           variant="ghost"
           size="icon"

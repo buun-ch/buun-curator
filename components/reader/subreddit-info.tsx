@@ -78,8 +78,8 @@ function PostItem({
         }
       }}
       className={cn(
-        "flex w-full cursor-pointer gap-3 p-3 text-left transition-colors hover:bg-accent select-none",
-        isSelected && "bg-accent"
+        "flex w-full cursor-pointer gap-3 p-3 text-left transition-colors select-none hover:bg-accent",
+        isSelected && "bg-accent",
       )}
     >
       {/* Content */}
@@ -133,10 +133,10 @@ export function SubredditInfo({
 
   // Filter mode from settings store
   const getSubredditFilterMode = useSettingsStore(
-    (state) => state.getSubredditFilterMode
+    (state) => state.getSubredditFilterMode,
   );
   const setSubredditFilterMode = useSettingsStore(
-    (state) => state.setSubredditFilterMode
+    (state) => state.setSubredditFilterMode,
   );
   const filterMode = subredditName
     ? getSubredditFilterMode(subredditName)
@@ -191,7 +191,7 @@ export function SubredditInfo({
         updateFavorite(favoriteId, { minScore: score });
       }
     },
-    [favoriteId, updateFavorite]
+    [favoriteId, updateFavorite],
   );
 
   // Filter mode handler
@@ -201,7 +201,7 @@ export function SubredditInfo({
         setSubredditFilterMode(subredditName, mode);
       }
     },
-    [subredditName, setSubredditFilterMode]
+    [subredditName, setSubredditFilterMode],
   );
 
   // Intersection Observer for infinite scroll
@@ -216,7 +216,7 @@ export function SubredditInfo({
           fetchMorePosts();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     const currentRef = loadMoreRef.current;
@@ -337,7 +337,7 @@ export function SubredditInfo({
       <div className="flex-1 overflow-auto p-4 pt-12">
         {/* Header */}
         <div className="flex items-center gap-2">
-          <h1 className="text-lg font-bold truncate flex-1">
+          <h1 className="flex-1 truncate text-lg font-bold">
             r/{subreddit.displayName}
           </h1>
           {subreddit.isNsfw && (
@@ -376,7 +376,7 @@ export function SubredditInfo({
           )}
         </div>
         {subreddit.title && subreddit.title !== subreddit.displayName && (
-          <p className="text-sm text-muted-foreground truncate">
+          <p className="truncate text-sm text-muted-foreground">
             {subreddit.title}
           </p>
         )}
@@ -413,14 +413,14 @@ export function SubredditInfo({
         {/* Description */}
         {subreddit.description && (
           <div className="mt-4">
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+            <p className="text-sm whitespace-pre-wrap text-muted-foreground">
               {subreddit.description}
             </p>
           </div>
         )}
 
         {/* Filter settings */}
-        <div className="mt-4 -mx-4 border-t pt-3 px-4">
+        <div className="-mx-4 mt-4 border-t px-4 pt-3">
           <div className="flex items-center gap-3">
             {/* Min score control */}
             <div className="flex items-center gap-1.5">
@@ -439,7 +439,7 @@ export function SubredditInfo({
                   type="number"
                   value={scoreInput}
                   onChange={handleScoreInputChange}
-                  className="h-6 w-12 rounded-none border-x-0 text-center text-xs [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  className="h-6 w-12 [appearance:textfield] rounded-none border-x-0 text-center text-xs [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   min={0}
                 />
                 <Button
@@ -493,7 +493,7 @@ export function SubredditInfo({
         </div>
 
         {/* Posts list */}
-        <div className="mt-4 -mx-4 border-t">
+        <div className="-mx-4 mt-4 border-t">
           {postsLoading ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="size-6 animate-spin text-muted-foreground" />

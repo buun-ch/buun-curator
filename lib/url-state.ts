@@ -16,20 +16,23 @@ import {
 import type { FilterMode, SortMode } from "./types";
 
 /** Filter mode options for URL parameter. */
-export const filterModeOptions: FilterMode[] = ["unread", "all", "starred", "search"];
+export const filterModeOptions: FilterMode[] = [
+  "unread",
+  "all",
+  "starred",
+  "search",
+];
 
 /** Sort mode options for URL parameter. */
 export const sortModeOptions: SortMode[] = ["newest", "oldest", "recommended"];
 
 /** Parser for filter mode query parameter (?f=). */
-export const filterParser = parseAsStringEnum(filterModeOptions).withDefault(
-  "unread"
-);
+export const filterParser =
+  parseAsStringEnum(filterModeOptions).withDefault("unread");
 
 /** Parser for sort mode query parameter (?s=). */
-export const sortParser = parseAsStringEnum(sortModeOptions).withDefault(
-  "newest"
-);
+export const sortParser =
+  parseAsStringEnum(sortModeOptions).withDefault("newest");
 
 /** Parser for search query parameter (?q=). */
 export const queryParser = parseAsString.withDefault("");
@@ -82,7 +85,7 @@ export interface UrlState {
  * @returns Legacy selectedSubscription string
  */
 export function selectionToLegacyFormat(
-  selection: SubscriptionSelection | undefined
+  selection: SubscriptionSelection | undefined,
 ): string {
   if (!selection) return "all";
   switch (selection.type) {
@@ -102,7 +105,7 @@ export function selectionToLegacyFormat(
  * @returns SubscriptionSelection object
  */
 export function legacyFormatToSelection(
-  legacyFormat: string
+  legacyFormat: string,
 ): SubscriptionSelection {
   if (legacyFormat === "all") {
     return { type: "all" };

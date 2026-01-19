@@ -1,7 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { Plus, Pencil, Trash2, Loader2, ExternalLink, Search, HelpCircle } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Loader2,
+  ExternalLink,
+  Search,
+  HelpCircle,
+} from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -82,13 +90,18 @@ export function FeedsSettings() {
   const [loading, setLoading] = React.useState(true);
   const [formData, setFormData] = React.useState<FeedFormData>(initialFormData);
   const [editingId, setEditingId] = React.useState<string | null>(null);
-  const [editFormData, setEditFormData] = React.useState<FeedFormData>(initialFormData);
+  const [editFormData, setEditFormData] =
+    React.useState<FeedFormData>(initialFormData);
   const [saving, setSaving] = React.useState(false);
 
   // Feed discovery state
   const [discovering, setDiscovering] = React.useState(false);
-  const [discoveredFeeds, setDiscoveredFeeds] = React.useState<DiscoveredFeed[]>([]);
-  const [discoveryError, setDiscoveryError] = React.useState<string | null>(null);
+  const [discoveredFeeds, setDiscoveredFeeds] = React.useState<
+    DiscoveredFeed[]
+  >([]);
+  const [discoveryError, setDiscoveryError] = React.useState<string | null>(
+    null,
+  );
   const [discoverySiteInfo, setDiscoverySiteInfo] = React.useState<{
     siteTitle?: string;
     siteUrl: string;
@@ -145,19 +158,31 @@ export function FeedsSettings() {
       const result: FeedDiscoveryResult = await response.json();
 
       if (result.httpError) {
-        setDiscoveryError(`HTTP ${result.httpError.status} ${result.httpError.statusText}`);
+        setDiscoveryError(
+          `HTTP ${result.httpError.status} ${result.httpError.statusText}`,
+        );
       } else if (result.feeds.length === 0) {
         setDiscoveryError("No feeds found at this URL");
       } else if (result.feeds.length === 1) {
         // Auto-fill if only one feed found
         const feed = result.feeds[0];
         // Use site title if feed title is just a feed type name
-        const feedTypeNames = ["atom", "rss", "feed", "rss 2.0", "rss2", "atom 1.0"];
-        const useFeedTitle = feed.title && !feedTypeNames.includes(feed.title.toLowerCase());
+        const feedTypeNames = [
+          "atom",
+          "rss",
+          "feed",
+          "rss 2.0",
+          "rss2",
+          "atom 1.0",
+        ];
+        const useFeedTitle =
+          feed.title && !feedTypeNames.includes(feed.title.toLowerCase());
         setFormData({
           ...formData,
           url: feed.url,
-          name: useFeedTitle ? feed.title! : (result.siteTitle || feed.title || ""),
+          name: useFeedTitle
+            ? feed.title!
+            : result.siteTitle || feed.title || "",
           siteUrl: result.siteUrl,
           type: feed.type !== "unknown" ? feed.type : "",
         });
@@ -181,12 +206,22 @@ export function FeedsSettings() {
   // Select a discovered feed
   const handleSelectDiscoveredFeed = (feed: DiscoveredFeed) => {
     // Use site title if feed title is just a feed type name
-    const feedTypeNames = ["atom", "rss", "feed", "rss 2.0", "rss2", "atom 1.0"];
-    const useFeedTitle = feed.title && !feedTypeNames.includes(feed.title.toLowerCase());
+    const feedTypeNames = [
+      "atom",
+      "rss",
+      "feed",
+      "rss 2.0",
+      "rss2",
+      "atom 1.0",
+    ];
+    const useFeedTitle =
+      feed.title && !feedTypeNames.includes(feed.title.toLowerCase());
     setFormData({
       ...formData,
       url: feed.url,
-      name: useFeedTitle ? feed.title! : (discoverySiteInfo?.siteTitle || feed.title || ""),
+      name: useFeedTitle
+        ? feed.title!
+        : discoverySiteInfo?.siteTitle || feed.title || "",
       siteUrl: discoverySiteInfo?.siteUrl || "",
       type: feed.type !== "unknown" ? feed.type : "",
     });
@@ -207,7 +242,9 @@ export function FeedsSettings() {
 
     setSaving(true);
     try {
-      const fetchLimit = formData.fetchLimit ? parseInt(formData.fetchLimit, 10) : 20;
+      const fetchLimit = formData.fetchLimit
+        ? parseInt(formData.fetchLimit, 10)
+        : 20;
 
       const response = await fetch("/api/feeds", {
         method: "POST",
@@ -216,7 +253,10 @@ export function FeedsSettings() {
           url: formData.url.trim(),
           name: formData.name.trim(),
           siteUrl: formData.siteUrl.trim() || null,
-          categoryId: formData.categoryId && formData.categoryId !== "none" ? formData.categoryId : null,
+          categoryId:
+            formData.categoryId && formData.categoryId !== "none"
+              ? formData.categoryId
+              : null,
           type: formData.type || null,
           fetchContent: formData.fetchContent,
           fetchLimit,
@@ -242,7 +282,9 @@ export function FeedsSettings() {
 
     setSaving(true);
     try {
-      const fetchLimit = editFormData.fetchLimit ? parseInt(editFormData.fetchLimit, 10) : 20;
+      const fetchLimit = editFormData.fetchLimit
+        ? parseInt(editFormData.fetchLimit, 10)
+        : 20;
 
       const response = await fetch(`/api/feeds/${id}`, {
         method: "PATCH",
@@ -251,7 +293,10 @@ export function FeedsSettings() {
           url: editFormData.url.trim(),
           name: editFormData.name.trim(),
           siteUrl: editFormData.siteUrl.trim() || null,
-          categoryId: editFormData.categoryId && editFormData.categoryId !== "none" ? editFormData.categoryId : null,
+          categoryId:
+            editFormData.categoryId && editFormData.categoryId !== "none"
+              ? editFormData.categoryId
+              : null,
           fetchContent: editFormData.fetchContent,
           fetchLimit,
         }),
@@ -360,7 +405,8 @@ export function FeedsSettings() {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Enter a website URL or feed URL. Click Discover to find feeds automatically.
+              Enter a website URL or feed URL. Click Discover to find feeds
+              automatically.
             </p>
           </div>
 
@@ -401,7 +447,9 @@ export function FeedsSettings() {
             <Input
               placeholder="Feed name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
             />
           </div>
           <div className="space-y-2">
@@ -409,25 +457,34 @@ export function FeedsSettings() {
             <Input
               placeholder="https://example.com"
               value={formData.siteUrl}
-              onChange={(e) => setFormData({ ...formData, siteUrl: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, siteUrl: e.target.value })
+              }
             />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Category</label>
             <Select
               value={formData.categoryId}
-              onValueChange={(value) => setFormData({ ...formData, categoryId: value })}
+              onValueChange={(value) =>
+                setFormData({ ...formData, categoryId: value })
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">Uncategorized</SelectItem>
-                {[...categories].sort((a, b) => a.name.localeCompare(b.name)).map((category) => (
-                  <SelectItem key={category.id} value={category.id.toString()}>
-                    {category.name}
-                  </SelectItem>
-                ))}
+                {[...categories]
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((category) => (
+                    <SelectItem
+                      key={category.id}
+                      value={category.id.toString()}
+                    >
+                      {category.name}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </div>
@@ -439,7 +496,9 @@ export function FeedsSettings() {
               min="1"
               max="100"
               value={formData.fetchLimit ?? ""}
-              onChange={(e) => setFormData({ ...formData, fetchLimit: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, fetchLimit: e.target.value })
+              }
             />
             <p className="text-xs text-muted-foreground">
               Maximum number of entries to fetch (1-100, default: 20)
@@ -455,7 +514,7 @@ export function FeedsSettings() {
             />
             <label
               htmlFor="fetchContent"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Fetch full content
             </label>
@@ -466,8 +525,8 @@ export function FeedsSettings() {
               <TooltipContent side="right" className="max-w-xs">
                 <p>
                   Please ensure the target site does not prohibit crawling.
-                  Sites requiring authentication or cookie
-                  consent cannot be fetched.
+                  Sites requiring authentication or cookie consent cannot be
+                  fetched.
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -477,7 +536,11 @@ export function FeedsSettings() {
             disabled={saving || !formData.url.trim() || !formData.name.trim()}
             className="w-fit"
           >
-            {saving ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
+            {saving ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Plus className="size-4" />
+            )}
             <span className="ml-2">Add Feed</span>
           </Button>
         </div>
@@ -497,17 +560,19 @@ export function FeedsSettings() {
         ) : (
           <div className="space-y-2">
             {feeds.map((feed) => (
-              <div
-                key={feed.id}
-                className="rounded-lg border p-4"
-              >
+              <div key={feed.id} className="rounded-lg border p-4">
                 {editingId === feed.id ? (
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Feed URL *</label>
                       <Input
                         value={editFormData.url}
-                        onChange={(e) => setEditFormData({ ...editFormData, url: e.target.value })}
+                        onChange={(e) =>
+                          setEditFormData({
+                            ...editFormData,
+                            url: e.target.value,
+                          })
+                        }
                         autoFocus
                       />
                     </div>
@@ -515,32 +580,52 @@ export function FeedsSettings() {
                       <label className="text-sm font-medium">Name *</label>
                       <Input
                         value={editFormData.name}
-                        onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                        onChange={(e) =>
+                          setEditFormData({
+                            ...editFormData,
+                            name: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Site URL</label>
                       <Input
                         value={editFormData.siteUrl}
-                        onChange={(e) => setEditFormData({ ...editFormData, siteUrl: e.target.value })}
+                        onChange={(e) =>
+                          setEditFormData({
+                            ...editFormData,
+                            siteUrl: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Category</label>
                       <Select
                         value={editFormData.categoryId}
-                        onValueChange={(value) => setEditFormData({ ...editFormData, categoryId: value })}
+                        onValueChange={(value) =>
+                          setEditFormData({
+                            ...editFormData,
+                            categoryId: value,
+                          })
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="none">Uncategorized</SelectItem>
-                          {[...categories].sort((a, b) => a.name.localeCompare(b.name)).map((category) => (
-                            <SelectItem key={category.id} value={category.id.toString()}>
-                              {category.name}
-                            </SelectItem>
-                          ))}
+                          {[...categories]
+                            .sort((a, b) => a.name.localeCompare(b.name))
+                            .map((category) => (
+                              <SelectItem
+                                key={category.id}
+                                value={category.id.toString()}
+                              >
+                                {category.name}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
                     </div>
@@ -552,7 +637,12 @@ export function FeedsSettings() {
                         min="1"
                         max="100"
                         value={editFormData.fetchLimit ?? ""}
-                        onChange={(e) => setEditFormData({ ...editFormData, fetchLimit: e.target.value })}
+                        onChange={(e) =>
+                          setEditFormData({
+                            ...editFormData,
+                            fetchLimit: e.target.value,
+                          })
+                        }
                       />
                       <p className="text-xs text-muted-foreground">
                         Maximum number of entries to fetch (1-100, default: 20)
@@ -563,12 +653,15 @@ export function FeedsSettings() {
                         id={`editFetchContent-${feed.id}`}
                         checked={editFormData.fetchContent}
                         onCheckedChange={(checked) =>
-                          setEditFormData({ ...editFormData, fetchContent: checked === true })
+                          setEditFormData({
+                            ...editFormData,
+                            fetchContent: checked === true,
+                          })
                         }
                       />
                       <label
                         htmlFor={`editFetchContent-${feed.id}`}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
                         Fetch full content
                       </label>
@@ -578,8 +671,9 @@ export function FeedsSettings() {
                         </TooltipTrigger>
                         <TooltipContent side="right" className="max-w-xs">
                           <p>
-                            Please ensure the target site does not prohibit crawling.
-                            Sites requiring authentication or cookie consent cannot be fetched.
+                            Please ensure the target site does not prohibit
+                            crawling. Sites requiring authentication or cookie
+                            consent cannot be fetched.
                           </p>
                         </TooltipContent>
                       </Tooltip>
@@ -588,11 +682,19 @@ export function FeedsSettings() {
                       <Button
                         size="sm"
                         onClick={() => handleUpdate(feed.id)}
-                        disabled={saving || !editFormData.url.trim() || !editFormData.name.trim()}
+                        disabled={
+                          saving ||
+                          !editFormData.url.trim() ||
+                          !editFormData.name.trim()
+                        }
                       >
                         Save
                       </Button>
-                      <Button size="sm" variant="outline" onClick={cancelEditing}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={cancelEditing}
+                      >
                         Cancel
                       </Button>
                     </div>
@@ -603,7 +705,7 @@ export function FeedsSettings() {
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{feed.name}</span>
                         {feed.type && (
-                          <span className="rounded bg-muted px-1.5 py-0.5 text-xs uppercase text-muted-foreground">
+                          <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground uppercase">
                             {feed.type}
                           </span>
                         )}

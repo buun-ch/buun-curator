@@ -78,7 +78,7 @@ export function ListHeader({
                 className={cn(
                   "truncate",
                   index === subscriptionInfo.breadcrumb.length - 1 &&
-                    "font-medium text-foreground"
+                    "font-medium text-foreground",
                 )}
               >
                 {item.title}

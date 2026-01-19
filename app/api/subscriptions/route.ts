@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
           ? eq(entries.isStarred, true)
           : filterMode === "unread"
             ? eq(entries.isRead, false)
-            : undefined
+            : undefined,
       );
 
     // Get starred count (for "Starred" special item - always show starred count)
@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
       const categoryFeeds = categoryMap.get(category.id) || [];
       const categoryCount = categoryFeeds.reduce(
         (sum, f) => sum + Number(f.count || 0),
-        0
+        0,
       );
 
       subscriptions.push({
@@ -137,7 +137,7 @@ export async function GET(request: NextRequest) {
         type: "category" as const,
         count: uncategorizedFeeds.reduce(
           (sum, f) => sum + Number(f.count || 0),
-          0
+          0,
         ),
         children: uncategorizedFeeds.map((feed) => ({
           id: `feed-${feed.id}`,
@@ -153,7 +153,7 @@ export async function GET(request: NextRequest) {
     log.error({ error }, "failed to fetch subscriptions");
     return NextResponse.json(
       { error: "Failed to fetch subscriptions" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

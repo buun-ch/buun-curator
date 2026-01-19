@@ -22,7 +22,9 @@ export function LanguageToggle({ value, onChange }: LanguageToggleProps) {
       <ToggleGroup
         type="single"
         value={value}
-        onValueChange={(newValue) => newValue && onChange(newValue as LanguageMode)}
+        onValueChange={(newValue) =>
+          newValue && onChange(newValue as LanguageMode)
+        }
         variant="outline"
         size="sm"
       >

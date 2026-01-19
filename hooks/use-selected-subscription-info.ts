@@ -86,7 +86,7 @@ interface SubscriptionLookup {
  */
 function findSubscriptionInfo(
   subscriptions: Subscription[],
-  id: string
+  id: string,
 ): SubscriptionLookup | null {
   // Handle special cases
   if (id === "all") {

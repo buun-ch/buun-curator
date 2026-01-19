@@ -55,7 +55,7 @@ export function EntryContent({
 
     if (isMarkdown) {
       return (
-        <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div className="prose max-w-none prose-neutral dark:prose-invert">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={markdownComponents}
@@ -68,7 +68,7 @@ export function EntryContent({
 
     return (
       <div
-        className="prose prose-neutral dark:prose-invert max-w-none"
+        className="prose max-w-none prose-neutral dark:prose-invert"
         dangerouslySetInnerHTML={{ __html: processedHtmlContent }}
       />
     );
@@ -91,7 +91,7 @@ export function EntryContent({
               className={cn("size-3.5", isTranslating && "animate-spin")}
             />
           </Button>
-          <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <div className="prose max-w-none prose-neutral dark:prose-invert">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={markdownComponents}

@@ -57,7 +57,7 @@ interface UseEntryReturn {
  */
 export function useEntry(
   entryId: string | null | undefined,
-  options?: UseEntryOptions
+  options?: UseEntryOptions,
 ): UseEntryReturn {
   const { enabled = true } = options ?? {};
 
@@ -100,7 +100,7 @@ interface UpdateEntryVariables {
  */
 async function updateEntryApi(
   entryId: string,
-  data: EntryUpdateData
+  data: EntryUpdateData,
 ): Promise<void> {
   const response = await fetch(`/api/entries/${entryId}`, {
     method: "PATCH",
@@ -172,4 +172,3 @@ export function useUpdateEntry(options?: UseUpdateEntryOptions) {
     },
   });
 }
-

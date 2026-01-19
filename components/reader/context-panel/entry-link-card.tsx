@@ -78,7 +78,7 @@ export function EntryLinkCard({
         isPending && "border-yellow-500/50 bg-yellow-500/5",
         isFetching && "border-blue-500/50 bg-blue-500/5",
         isError && "border-destructive/50 bg-destructive/5",
-        !isProcessing && !isError && "border-border"
+        !isProcessing && !isError && "border-border",
       )}
     >
       {/* Link icon or error icon */}
@@ -101,7 +101,7 @@ export function EntryLinkCard({
         <p
           className={cn(
             "truncate text-xs font-medium",
-            isError ? "text-destructive" : "text-foreground"
+            isError ? "text-destructive" : "text-foreground",
           )}
         >
           {link.url}
@@ -109,7 +109,10 @@ export function EntryLinkCard({
 
         {/* Error message */}
         {isError && errorMessage && (
-          <p className="truncate text-xs text-destructive/80" title={errorMessage}>
+          <p
+            className="truncate text-xs text-destructive/80"
+            title={errorMessage}
+          >
             {errorMessage}
           </p>
         )}
@@ -142,7 +145,7 @@ export function EntryLinkCard({
               ? "cursor-not-allowed text-muted-foreground/50"
               : isError
                 ? "text-destructive hover:bg-destructive/10 hover:text-destructive"
-                : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                : "text-muted-foreground hover:bg-accent hover:text-foreground",
           )}
           title={buttonTitle}
         >

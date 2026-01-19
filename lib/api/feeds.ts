@@ -80,7 +80,7 @@ export async function updateFeedChecked(
     etag?: string;
     lastModified?: string;
   } = {},
-  db: Db = defaultDb
+  db: Db = defaultDb,
 ) {
   const updateData: {
     checkedAt: Date;
@@ -135,7 +135,7 @@ export async function saveExtractionRule(
     value: string;
     description?: string;
   },
-  db: Db = defaultDb
+  db: Db = defaultDb,
 ): Promise<
   | ErrorResult
   | {
@@ -164,7 +164,7 @@ export async function saveExtractionRule(
 
   // Check for duplicate
   const isDuplicate = existingRules.some(
-    (r) => r.type === rule.type && r.value === rule.value
+    (r) => r.type === rule.type && r.value === rule.value,
   );
 
   if (isDuplicate) {

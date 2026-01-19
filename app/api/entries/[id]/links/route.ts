@@ -12,7 +12,7 @@ const createLinksSchema = z.object({
     z.object({
       url: z.string().min(1),
       title: z.string(),
-    })
+    }),
   ),
 });
 
@@ -23,7 +23,7 @@ const createLinksSchema = z.object({
  */
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 
@@ -34,7 +34,7 @@ export async function POST(
   if (!parseResult.success) {
     return NextResponse.json(
       { error: "Invalid request body", details: parseResult.error.issues },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -78,7 +78,7 @@ export async function POST(
  */
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 

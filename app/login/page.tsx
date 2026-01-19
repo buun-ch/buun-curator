@@ -35,12 +35,12 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center gap-4">
       <h1 className="text-2xl font-bold">Buun Curator</h1>
       {error && (
-        <p className="text-destructive text-sm">
+        <p className="text-sm text-destructive">
           Authentication failed. Please try again.
         </p>
       )}
       {clientError && (
-        <p className="text-destructive text-sm">Error: {clientError}</p>
+        <p className="text-sm text-destructive">Error: {clientError}</p>
       )}
       <Button onClick={handleLogin} size="lg" disabled={isLoading}>
         {isLoading ? "Signing in..." : "Sign in with Keycloak"}

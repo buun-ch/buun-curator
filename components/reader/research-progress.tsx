@@ -77,7 +77,7 @@ function StepHeader({
           ? "bg-destructive/10 text-destructive"
           : isInProgress
             ? "bg-primary/10 text-primary"
-            : "bg-muted/50 text-muted-foreground hover:bg-muted"
+            : "bg-muted/50 text-muted-foreground hover:bg-muted",
       )}
     >
       {isExpanded ? (
@@ -222,11 +222,7 @@ export function useResearchSteps() {
  * Use this component to display research progress within a custom
  * AssistantMessage component to control positioning.
  */
-export function ResearchStepsDisplay({
-  steps,
-}: {
-  steps: ResearchStep[];
-}) {
+export function ResearchStepsDisplay({ steps }: { steps: ResearchStep[] }) {
   if (steps.length === 0) {
     return null;
   }

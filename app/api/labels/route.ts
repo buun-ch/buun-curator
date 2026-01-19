@@ -23,7 +23,7 @@ export async function GET() {
     log.error({ error }, "failed to fetch labels");
     return NextResponse.json(
       { error: "Failed to fetch labels" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -35,24 +35,18 @@ export async function POST(request: NextRequest) {
     const { name, color } = body;
 
     if (!name || typeof name !== "string") {
-      return NextResponse.json(
-        { error: "name is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "name is required" }, { status: 400 });
     }
 
     if (!color || typeof color !== "string") {
-      return NextResponse.json(
-        { error: "color is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "color is required" }, { status: 400 });
     }
 
     // Validate color format (hex color)
     if (!/^#[0-9A-Fa-f]{6}$/.test(color)) {
       return NextResponse.json(
         { error: "color must be a valid hex color (e.g., #ff5733)" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -73,7 +67,7 @@ export async function POST(request: NextRequest) {
     log.error({ error }, "failed to create label");
     return NextResponse.json(
       { error: "Failed to create label" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -85,10 +79,7 @@ export async function PATCH(request: NextRequest) {
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { error: "id is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "id is required" }, { status: 400 });
     }
 
     const body = await request.json();
@@ -103,7 +94,7 @@ export async function PATCH(request: NextRequest) {
       if (typeof name !== "string" || !name.trim()) {
         return NextResponse.json(
           { error: "name must be a non-empty string" },
-          { status: 400 }
+          { status: 400 },
         );
       }
       updates.name = name.trim();
@@ -113,7 +104,7 @@ export async function PATCH(request: NextRequest) {
       if (typeof color !== "string" || !/^#[0-9A-Fa-f]{6}$/.test(color)) {
         return NextResponse.json(
           { error: "color must be a valid hex color (e.g., #ff5733)" },
-          { status: 400 }
+          { status: 400 },
         );
       }
       updates.color = color.toLowerCase();
@@ -130,10 +121,7 @@ export async function PATCH(request: NextRequest) {
       });
 
     if (!updatedLabel) {
-      return NextResponse.json(
-        { error: "Label not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Label not found" }, { status: 404 });
     }
 
     return NextResponse.json(updatedLabel);
@@ -141,7 +129,7 @@ export async function PATCH(request: NextRequest) {
     log.error({ error }, "failed to update label");
     return NextResponse.json(
       { error: "Failed to update label" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -153,10 +141,7 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { error: "id is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "id is required" }, { status: 400 });
     }
 
     const result = await db
@@ -165,10 +150,7 @@ export async function DELETE(request: NextRequest) {
       .returning({ id: labels.id });
 
     if (result.length === 0) {
-      return NextResponse.json(
-        { error: "Label not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Label not found" }, { status: 404 });
     }
 
     return NextResponse.json({ success: true });
@@ -176,7 +158,7 @@ export async function DELETE(request: NextRequest) {
     log.error({ error }, "failed to delete label");
     return NextResponse.json(
       { error: "Failed to delete label" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

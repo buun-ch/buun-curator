@@ -44,9 +44,9 @@ export function SidebarHeader({
   return (
     <div
       className={cn(
-        "flex h-11 shrink-0 items-center pl-3 pr-1 transition-[border-color] duration-200",
+        "flex h-11 shrink-0 items-center pr-1 pl-3 transition-[border-color] duration-200",
         isScrolled ? "border-b" : "border-b border-transparent",
-        collapsed && "justify-center px-0"
+        collapsed && "justify-center px-0",
       )}
     >
       {!collapsed && (

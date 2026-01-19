@@ -46,7 +46,7 @@ export function useFeedIngestion({
 }: UseFeedIngestionOptions = {}): UseFeedIngestionReturn {
   // Check if AllFeedsIngestion workflow is running via workflow store
   const isWorkflowRunning = useWorkflowStore(
-    selectIsWorkflowTypeRunning("AllFeedsIngestion")
+    selectIsWorkflowTypeRunning("AllFeedsIngestion"),
   );
 
   // Local state for API call in progress (before workflow starts)

@@ -44,7 +44,7 @@ function CommentItem({
     <div
       className={cn(
         "border-l-2 border-border pl-3",
-        comment.depth > 0 && "ml-3"
+        comment.depth > 0 && "ml-3",
       )}
     >
       {/* Comment header */}
@@ -59,7 +59,7 @@ function CommentItem({
           className={cn(
             "font-medium",
             comment.isSubmitter && "text-blue-500",
-            comment.author === "[deleted]" && "text-muted-foreground italic"
+            comment.author === "[deleted]" && "text-muted-foreground italic",
           )}
         >
           {comment.author}
@@ -68,15 +68,19 @@ function CommentItem({
         <span>•</span>
         <span>{formatNumber(comment.score)} points</span>
         <span>•</span>
-        <span>{formatDistanceToNow(comment.createdAt, { addSuffix: true })}</span>
+        <span>
+          {formatDistanceToNow(comment.createdAt, { addSuffix: true })}
+        </span>
       </div>
 
       {/* Comment body */}
       {!collapsed && (
         <>
           <div
-            className="mt-1 text-sm prose prose-sm dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: comment.bodyHtml || comment.body }}
+            className="prose prose-sm mt-1 max-w-none text-sm dark:prose-invert"
+            dangerouslySetInnerHTML={{
+              __html: comment.bodyHtml || comment.body,
+            }}
           />
 
           {/* Replies */}
@@ -139,7 +143,7 @@ export function RedditPostViewer({
             target="_blank"
             rel="noopener noreferrer"
           >
-            <ExternalLink className="size-4 mr-1" />
+            <ExternalLink className="mr-1 size-4" />
             Reddit
           </a>
         </Button>
@@ -149,7 +153,7 @@ export function RedditPostViewer({
       <div className="flex-1 overflow-auto">
         <article className="p-4">
           {/* Title */}
-          <h1 className="text-xl font-bold leading-tight">{post.title}</h1>
+          <h1 className="text-xl leading-tight font-bold">{post.title}</h1>
 
           {/* Flair */}
           {post.flair && (
@@ -215,7 +219,7 @@ export function RedditPostViewer({
           {/* Self text */}
           {post.isSelf && post.selftextHtml && (
             <div
-              className="mt-4 prose prose-sm dark:prose-invert max-w-none"
+              className="prose prose-sm mt-4 max-w-none dark:prose-invert"
               dangerouslySetInnerHTML={{ __html: post.selftextHtml }}
             />
           )}

@@ -114,7 +114,9 @@ interface WorkflowStoreState {
   /** Set panel open state. */
   setPanelOpen: (open: boolean) => void;
   /** Set connection status. */
-  setConnectionStatus: (status: "connected" | "disconnected" | "connecting") => void;
+  setConnectionStatus: (
+    status: "connected" | "disconnected" | "connecting",
+  ) => void;
   /** Set panel height (clamped to min/max). */
   setPanelHeight: (height: number) => void;
   /** Add an entry ID to refreshing set (for immediate loading feedback). */
@@ -151,7 +153,9 @@ function toNode(progress: WorkflowProgress): WorkflowProgressNode {
 /**
  * Check if any workflows are running (recursively including children).
  */
-function hasRunningWorkflows(workflows: Record<string, WorkflowProgressNode>): boolean {
+function hasRunningWorkflows(
+  workflows: Record<string, WorkflowProgressNode>,
+): boolean {
   for (const wf of Object.values(workflows)) {
     if (wf.status === "running") return true;
     if (hasRunningWorkflows(wf.children)) return true;
@@ -165,8 +169,11 @@ function hasRunningWorkflows(workflows: Record<string, WorkflowProgressNode>): b
  */
 function findWorkflowInTree(
   workflows: Record<string, WorkflowProgressNode>,
-  workflowId: string
-): { parent: Record<string, WorkflowProgressNode>; node: WorkflowProgressNode } | null {
+  workflowId: string,
+): {
+  parent: Record<string, WorkflowProgressNode>;
+  node: WorkflowProgressNode;
+} | null {
   if (workflows[workflowId]) {
     return { parent: workflows, node: workflows[workflowId] };
   }
@@ -183,7 +190,7 @@ function findWorkflowInTree(
  */
 function updateNode(
   existing: WorkflowProgressNode,
-  progress: WorkflowProgress
+  progress: WorkflowProgress,
 ): WorkflowProgressNode {
   return {
     ...progress,
@@ -197,8 +204,11 @@ function updateNode(
  */
 function collectOrphansForParent(
   orphans: Record<string, WorkflowProgressNode>,
-  parentId: string
-): { collected: Record<string, WorkflowProgressNode>; remaining: Record<string, WorkflowProgressNode> } {
+  parentId: string,
+): {
+  collected: Record<string, WorkflowProgressNode>;
+  remaining: Record<string, WorkflowProgressNode>;
+} {
   const collected: Record<string, WorkflowProgressNode> = {};
   const remaining: Record<string, WorkflowProgressNode> = {};
 
@@ -217,7 +227,7 @@ function collectOrphansForParent(
  * Filter workflows to only keep running ones (recursively).
  */
 function filterRunningWorkflows(
-  workflows: Record<string, WorkflowProgressNode>
+  workflows: Record<string, WorkflowProgressNode>,
 ): Record<string, WorkflowProgressNode> {
   const result: Record<string, WorkflowProgressNode> = {};
 
@@ -238,7 +248,7 @@ function filterRunningWorkflows(
  */
 function removeFromTree(
   workflows: Record<string, WorkflowProgressNode>,
-  workflowId: string
+  workflowId: string,
 ): Record<string, WorkflowProgressNode> {
   const result: Record<string, WorkflowProgressNode> = {};
 
@@ -260,7 +270,7 @@ function removeFromTree(
  */
 function filterStaleTopLevelWorkflows(
   workflows: Record<string, WorkflowProgressNode>,
-  thresholdMs: number = STALE_WORKFLOW_THRESHOLD_MS
+  thresholdMs: number = STALE_WORKFLOW_THRESHOLD_MS,
 ): Record<string, WorkflowProgressNode> {
   const now = Date.now();
   const result: Record<string, WorkflowProgressNode> = {};
@@ -309,7 +319,10 @@ export const useWorkflowStore = create<WorkflowStoreState>()((set, get) => ({
           // New top-level workflow
           const node = toNode(progress);
           // Check for orphans that belong to this workflow
-          const { collected, remaining } = collectOrphansForParent(newOrphans, workflowId);
+          const { collected, remaining } = collectOrphansForParent(
+            newOrphans,
+            workflowId,
+          );
           node.children = collected;
           newOrphans = remaining;
           newWorkflows[workflowId] = node;
@@ -323,7 +336,10 @@ export const useWorkflowStore = create<WorkflowStoreState>()((set, get) => ({
           const { node: parentNode } = parentFound;
           const existingChild = parentNode.children[workflowId];
           if (existingChild) {
-            parentNode.children[workflowId] = updateNode(existingChild, progress);
+            parentNode.children[workflowId] = updateNode(
+              existingChild,
+              progress,
+            );
           } else {
             parentNode.children[workflowId] = toNode(progress);
           }
@@ -339,7 +355,10 @@ export const useWorkflowStore = create<WorkflowStoreState>()((set, get) => ({
       }
 
       // Schedule auto-hide if no workflows are running
-      if (!hasRunningWorkflows(newWorkflows) && Object.keys(newOrphans).length === 0) {
+      if (
+        !hasRunningWorkflows(newWorkflows) &&
+        Object.keys(newOrphans).length === 0
+      ) {
         clearHideTimer();
         hideTimerId = setTimeout(() => {
           set({ statusBarVisible: false });
@@ -348,8 +367,9 @@ export const useWorkflowStore = create<WorkflowStoreState>()((set, get) => ({
 
       // Clean up refreshingEntries based on entryProgress
       let newRefreshingEntries = state.refreshingEntries;
-      const entryProgress = (progress as { entryProgress?: Record<string, EntryProgressState> })
-        .entryProgress;
+      const entryProgress = (
+        progress as { entryProgress?: Record<string, EntryProgressState> }
+      ).entryProgress;
       if (entryProgress) {
         for (const entry of Object.values(entryProgress)) {
           if (
@@ -416,9 +436,16 @@ export const useWorkflowStore = create<WorkflowStoreState>()((set, get) => ({
       const { [workflowId]: _, ...newOrphans } = state.orphanWorkflows;
 
       // Hide if no workflows remain
-      if (Object.keys(newWorkflows).length === 0 && Object.keys(newOrphans).length === 0) {
+      if (
+        Object.keys(newWorkflows).length === 0 &&
+        Object.keys(newOrphans).length === 0
+      ) {
         clearHideTimer();
-        return { workflows: newWorkflows, orphanWorkflows: newOrphans, statusBarVisible: false };
+        return {
+          workflows: newWorkflows,
+          orphanWorkflows: newOrphans,
+          statusBarVisible: false,
+        };
       }
       return { workflows: newWorkflows, orphanWorkflows: newOrphans };
     }),
@@ -427,13 +454,22 @@ export const useWorkflowStore = create<WorkflowStoreState>()((set, get) => ({
     set((state) => {
       const running = filterRunningWorkflows(state.workflows);
       const runningOrphans = Object.fromEntries(
-        Object.entries(state.orphanWorkflows).filter(([, wf]) => wf.status === "running")
+        Object.entries(state.orphanWorkflows).filter(
+          ([, wf]) => wf.status === "running",
+        ),
       );
 
       // Hide if no workflows remain
-      if (Object.keys(running).length === 0 && Object.keys(runningOrphans).length === 0) {
+      if (
+        Object.keys(running).length === 0 &&
+        Object.keys(runningOrphans).length === 0
+      ) {
         clearHideTimer();
-        return { workflows: running, orphanWorkflows: runningOrphans, statusBarVisible: false };
+        return {
+          workflows: running,
+          orphanWorkflows: runningOrphans,
+          statusBarVisible: false,
+        };
       }
       return { workflows: running, orphanWorkflows: runningOrphans };
     }),
@@ -446,7 +482,10 @@ export const useWorkflowStore = create<WorkflowStoreState>()((set, get) => ({
 
   setPanelHeight: (height) =>
     set({
-      panelHeight: Math.max(MIN_PANEL_HEIGHT, Math.min(MAX_PANEL_HEIGHT, height)),
+      panelHeight: Math.max(
+        MIN_PANEL_HEIGHT,
+        Math.min(MAX_PANEL_HEIGHT, height),
+      ),
     }),
 
   addRefreshingEntry: (entryId) =>
@@ -484,7 +523,9 @@ export const useWorkflowStore = create<WorkflowStoreState>()((set, get) => ({
     set((state) => {
       // Only filter top-level workflows; children are removed with their parent
       const filteredWorkflows = filterStaleTopLevelWorkflows(state.workflows);
-      const filteredOrphans = filterStaleTopLevelWorkflows(state.orphanWorkflows);
+      const filteredOrphans = filterStaleTopLevelWorkflows(
+        state.orphanWorkflows,
+      );
 
       // Hide status bar if no workflows remain
       if (
@@ -529,7 +570,9 @@ export const useWorkflowStore = create<WorkflowStoreState>()((set, get) => ({
 /**
  * Flatten all workflows including children into an array.
  */
-function flattenWorkflows(workflows: Record<string, WorkflowProgressNode>): WorkflowProgressNode[] {
+function flattenWorkflows(
+  workflows: Record<string, WorkflowProgressNode>,
+): WorkflowProgressNode[] {
   const result: WorkflowProgressNode[] = [];
   for (const wf of Object.values(workflows)) {
     result.push(wf);
@@ -548,20 +591,22 @@ export const selectTopLevelWorkflows = (state: WorkflowStoreState) =>
 
 /** Select count of running workflows (including children). */
 export const selectRunningCount = (state: WorkflowStoreState) =>
-  flattenWorkflows(state.workflows).filter((wf) => wf.status === "running").length;
+  flattenWorkflows(state.workflows).filter((wf) => wf.status === "running")
+    .length;
 
 /** Select a specific workflow by ID (searches tree). */
-export const selectWorkflowById = (workflowId: string) => (state: WorkflowStoreState) => {
-  const found = findWorkflowInTree(state.workflows, workflowId);
-  return found?.node ?? null;
-};
+export const selectWorkflowById =
+  (workflowId: string) => (state: WorkflowStoreState) => {
+    const found = findWorkflowInTree(state.workflows, workflowId);
+    return found?.node ?? null;
+  };
 
 /** Check if any workflow of a specific type is running. */
 export const selectIsWorkflowTypeRunning =
   (workflowType: string) => (state: WorkflowStoreState) => {
     const allWorkflows = flattenWorkflows(state.workflows);
     return allWorkflows.some(
-      (wf) => wf.workflowType === workflowType && wf.status === "running"
+      (wf) => wf.workflowType === workflowType && wf.status === "running",
     );
   };
 
@@ -580,7 +625,7 @@ export const selectIsFeedIngesting =
       (wf) =>
         wf.workflowType === "SingleFeedIngestion" &&
         wf.status === "running" &&
-        wf.workflowId.includes(`single-feed-${feedId}`)
+        wf.workflowId.includes(`single-feed-${feedId}`),
     );
   };
 
@@ -597,14 +642,24 @@ export const selectIsEntryRefreshing =
     const allWorkflows = flattenWorkflows(state.workflows);
     return allWorkflows.some((wf) => {
       if (wf.status !== "running") return false;
-      if (wf.workflowType !== "ReprocessEntries" && wf.workflowType !== "DomainFetch") {
+      if (
+        wf.workflowType !== "ReprocessEntries" &&
+        wf.workflowType !== "DomainFetch"
+      ) {
         return false;
       }
-      const entryProgress = (wf as { entryProgress?: Record<string, EntryProgressState> })
-        .entryProgress;
+      const entryProgress = (
+        wf as { entryProgress?: Record<string, EntryProgressState> }
+      ).entryProgress;
       if (!entryProgress) return false;
-      const entry = Object.values(entryProgress).find((e) => e.entryId === entryId);
-      return entry !== undefined && entry.status !== "completed" && entry.status !== "error";
+      const entry = Object.values(entryProgress).find(
+        (e) => e.entryId === entryId,
+      );
+      return (
+        entry !== undefined &&
+        entry.status !== "completed" &&
+        entry.status !== "error"
+      );
     });
   };
 
@@ -622,11 +677,18 @@ export const selectIsEntryTranslating =
     return allWorkflows.some((wf) => {
       if (wf.status !== "running") return false;
       if (wf.workflowType !== "Translation") return false;
-      const entryProgress = (wf as { entryProgress?: Record<string, EntryProgressState> })
-        .entryProgress;
+      const entryProgress = (
+        wf as { entryProgress?: Record<string, EntryProgressState> }
+      ).entryProgress;
       if (!entryProgress) return false;
-      const entry = Object.values(entryProgress).find((e) => e.entryId === entryId);
-      return entry !== undefined && entry.status !== "completed" && entry.status !== "error";
+      const entry = Object.values(entryProgress).find(
+        (e) => e.entryId === entryId,
+      );
+      return (
+        entry !== undefined &&
+        entry.status !== "completed" &&
+        entry.status !== "error"
+      );
     });
   };
 

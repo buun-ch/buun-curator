@@ -19,7 +19,7 @@ export async function POST() {
     log.error({ error }, "Failed to start ingestion workflow");
     return NextResponse.json(
       { error: "Failed to start ingestion workflow" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

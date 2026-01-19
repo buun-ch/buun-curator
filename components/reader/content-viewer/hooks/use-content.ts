@@ -22,7 +22,7 @@ interface UseContentResult {
 export function useContent(entry?: Entry | null): UseContentResult {
   // Check if entry has translation content (non-empty string)
   const hasTranslation = Boolean(
-    entry?.translatedContent && entry.translatedContent.length > 0
+    entry?.translatedContent && entry.translatedContent.length > 0,
   );
 
   // Determine content and format
@@ -50,7 +50,7 @@ export function useContent(entry?: Entry | null): UseContentResult {
     // Add target="_blank" and rel="noopener noreferrer" to all <a> tags
     return content.replace(
       /<a\s+([^>]*?)href=/gi,
-      '<a $1target="_blank" rel="noopener noreferrer" href='
+      '<a $1target="_blank" rel="noopener noreferrer" href=',
     );
   }, [content, isMarkdown]);
 

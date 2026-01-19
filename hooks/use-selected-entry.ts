@@ -19,7 +19,9 @@ interface UseSelectedEntryOptions {
   /** Current list of entries for navigation (lightweight list items). */
   entries: EntryListItem[];
   /** Function to update the entries list. */
-  setEntries: (updater: EntryListItem[] | ((prev: EntryListItem[]) => EntryListItem[])) => void;
+  setEntries: (
+    updater: EntryListItem[] | ((prev: EntryListItem[]) => EntryListItem[]),
+  ) => void;
   /** Callback when an entry is marked as read (feedId for subscription count update). */
   onMarkAsRead?: (feedId: string) => void;
   /** Callback when an entry is marked as read (entryId for preserving in unread mode). */
@@ -65,8 +67,12 @@ export function useSelectedEntry({
   const queryClient = useQueryClient();
 
   // Track selected entry ID and similarity score (from list)
-  const [selectedEntryId, setSelectedEntryId] = React.useState<string | null>(null);
-  const [similarityScore, setSimilarityScore] = React.useState<number | undefined>(undefined);
+  const [selectedEntryId, setSelectedEntryId] = React.useState<string | null>(
+    null,
+  );
+  const [similarityScore, setSimilarityScore] = React.useState<
+    number | undefined
+  >(undefined);
 
   // Track if we've marked the current entry as read (to avoid duplicate mutations)
   const markedAsReadRef = React.useRef<string | null>(null);
@@ -79,7 +85,7 @@ export function useSelectedEntry({
     onSuccess: async (entryId) => {
       // Update entries list
       setEntries((prev) =>
-        prev.map((e) => (e.id === entryId ? { ...e, isRead: true } : e))
+        prev.map((e) => (e.id === entryId ? { ...e, isRead: true } : e)),
       );
 
       // Notify parent to update subscription counts
@@ -131,21 +137,20 @@ export function useSelectedEntry({
   }, []);
 
   // setSelectedEntry - updates the query cache directly
-  const setSelectedEntry = React.useCallback<React.Dispatch<React.SetStateAction<Entry | null>>>(
+  const setSelectedEntry = React.useCallback<
+    React.Dispatch<React.SetStateAction<Entry | null>>
+  >(
     (action) => {
       if (!selectedEntryId) return;
 
-      queryClient.setQueryData<Entry>(
-        ["entry", selectedEntryId],
-        (old) => {
-          if (typeof action === "function") {
-            return action(old ?? null) ?? undefined;
-          }
-          return action ?? undefined;
+      queryClient.setQueryData<Entry>(["entry", selectedEntryId], (old) => {
+        if (typeof action === "function") {
+          return action(old ?? null) ?? undefined;
         }
-      );
+        return action ?? undefined;
+      });
     },
-    [selectedEntryId, queryClient]
+    [selectedEntryId, queryClient],
   );
 
   // Entry navigation

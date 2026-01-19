@@ -65,7 +65,7 @@ export interface PreviewExclusionResult {
  */
 export function findElementByText(
   html: string,
-  searchText: string
+  searchText: string,
 ): FindElementResult {
   const $ = cheerio.load(html);
   const results: SelectorCandidate[] = [];
@@ -80,13 +80,21 @@ export function findElementByText(
 
       // Check if this element or any direct child contains the text
       // (to avoid matching too high in the hierarchy)
-      const directText = $(this).clone().children().remove().end().text().toLowerCase();
+      const directText = $(this)
+        .clone()
+        .children()
+        .remove()
+        .end()
+        .text()
+        .toLowerCase();
       if (directText.includes(searchLower)) return true;
 
       // Check immediate children
-      const childrenWithText = $(this).children().filter(function () {
-        return $(this).text().toLowerCase().includes(searchLower);
-      });
+      const childrenWithText = $(this)
+        .children()
+        .filter(function () {
+          return $(this).text().toLowerCase().includes(searchLower);
+        });
       return childrenWithText.length > 0 && childrenWithText.length <= 3;
     })
     .each(function () {
@@ -114,7 +122,7 @@ export function findElementByText(
 
       // By data attribute
       const dataAttrs = Object.keys((this as Element).attribs || {}).filter(
-        (k) => k.startsWith("data-")
+        (k) => k.startsWith("data-"),
       );
       for (const attr of dataAttrs.slice(0, 2)) {
         const val = el.attr(attr);
@@ -129,8 +137,7 @@ export function findElementByText(
 
       // Get context (surrounding text)
       const text = el.text().trim();
-      const context =
-        text.length > 100 ? text.substring(0, 100) + "..." : text;
+      const context = text.length > 100 ? text.substring(0, 100) + "..." : text;
 
       // Get parent selector for context
       const parent = el.parent();
@@ -155,7 +162,7 @@ export function findElementByText(
   // Deduplicate and limit results
   const uniqueResults = results
     .filter(
-      (r, i, arr) => arr.findIndex((x) => x.selector === r.selector) === i
+      (r, i, arr) => arr.findIndex((x) => x.selector === r.selector) === i,
     )
     .slice(0, 10);
 
@@ -180,7 +187,7 @@ export function findElementByText(
 export function previewExclusion(
   html: string,
   selector: string,
-  existingSelectors: string[] = []
+  existingSelectors: string[] = [],
 ): PreviewExclusionResult {
   const $ = cheerio.load(html);
 
@@ -199,7 +206,7 @@ export function previewExclusion(
     const text = $(this).text().trim();
     if (text) {
       removedPreviews.push(
-        text.length > 200 ? text.substring(0, 200) + "..." : text
+        text.length > 200 ? text.substring(0, 200) + "..." : text,
       );
     }
   });
@@ -229,7 +236,9 @@ export function previewExclusion(
     remainingPreview,
     remainingHtml,
     originalLength: html.length,
-    combinedSelector: existingSelectors.length > 0 ? combinedSelector : undefined,
-    existingRulesCount: existingSelectors.length > 0 ? existingSelectors.length : undefined,
+    combinedSelector:
+      existingSelectors.length > 0 ? combinedSelector : undefined,
+    existingRulesCount:
+      existingSelectors.length > 0 ? existingSelectors.length : undefined,
   };
 }

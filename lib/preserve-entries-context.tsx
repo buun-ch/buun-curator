@@ -39,7 +39,7 @@ export function PreserveEntriesProvider({
   children,
 }: PreserveEntriesProviderProps) {
   const [preserveIds, setPreserveIds] = React.useState<Set<string>>(
-    () => new Set()
+    () => new Set(),
   );
 
   const addPreserveId = React.useCallback((id: string) => {
@@ -51,7 +51,10 @@ export function PreserveEntriesProvider({
       }
       const next = new Set(prev);
       next.add(id);
-      log.debug({ count: next.size, ids: Array.from(next) }, "addPreserveId: updated");
+      log.debug(
+        { count: next.size, ids: Array.from(next) },
+        "addPreserveId: updated",
+      );
       return next;
     });
   }, []);
@@ -67,7 +70,7 @@ export function PreserveEntriesProvider({
       addPreserveId,
       clearPreserveIds,
     }),
-    [preserveIds, addPreserveId, clearPreserveIds]
+    [preserveIds, addPreserveId, clearPreserveIds],
   );
 
   return (
@@ -87,7 +90,7 @@ export function usePreserveEntries(): PreserveEntriesContextValue {
   const context = React.useContext(PreserveEntriesContext);
   if (!context) {
     throw new Error(
-      "usePreserveEntries must be used within a PreserveEntriesProvider"
+      "usePreserveEntries must be used within a PreserveEntriesProvider",
     );
   }
   return context;

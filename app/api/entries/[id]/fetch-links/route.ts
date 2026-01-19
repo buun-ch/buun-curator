@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { createLogger } from "@/lib/logger";
-import { startFetchEntryLinksWorkflow, getWorkflowStatus } from "@/lib/temporal";
+import {
+  startFetchEntryLinksWorkflow,
+  getWorkflowStatus,
+} from "@/lib/temporal";
 
 const log = createLogger("api:entries:fetch-links");
 
@@ -33,7 +36,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     if (!parseResult.success) {
       return NextResponse.json(
         { error: "Invalid request body", details: parseResult.error.issues },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -55,7 +58,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     log.error({ error }, "Failed to start fetch entry links workflow");
     return NextResponse.json(
       { error: "Failed to start fetch entry links workflow" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -73,7 +76,7 @@ export async function GET(request: Request) {
     if (!workflowId) {
       return NextResponse.json(
         { error: "workflowId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -84,7 +87,7 @@ export async function GET(request: Request) {
     log.error({ error }, "Failed to get workflow status");
     return NextResponse.json(
       { error: "Failed to get workflow status" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

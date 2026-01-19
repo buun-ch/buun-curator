@@ -48,7 +48,7 @@ function truncate(text: string, maxLength: number = 30): string {
  * Type guard for ReprocessEntriesProgress.
  */
 function isReprocessEntriesProgress(
-  workflow: WorkflowProgressNode
+  workflow: WorkflowProgressNode,
 ): workflow is WorkflowProgressNode & ReprocessEntriesProgress {
   return workflow.workflowType === "ReprocessEntries";
 }
@@ -57,7 +57,7 @@ function isReprocessEntriesProgress(
  * Type guard for SingleFeedIngestionProgress.
  */
 function isSingleFeedIngestionProgress(
-  workflow: WorkflowProgressNode
+  workflow: WorkflowProgressNode,
 ): workflow is WorkflowProgressNode & SingleFeedIngestionProgress {
   return workflow.workflowType === "SingleFeedIngestion";
 }
@@ -66,7 +66,7 @@ function isSingleFeedIngestionProgress(
  * Type guard for AllFeedsIngestionProgress.
  */
 function isAllFeedsIngestionProgress(
-  workflow: WorkflowProgressNode
+  workflow: WorkflowProgressNode,
 ): workflow is WorkflowProgressNode & AllFeedsIngestionProgress {
   return workflow.workflowType === "AllFeedsIngestion";
 }
@@ -75,7 +75,7 @@ function isAllFeedsIngestionProgress(
  * Type guard for DomainFetchProgress.
  */
 function isDomainFetchProgress(
-  workflow: WorkflowProgressNode
+  workflow: WorkflowProgressNode,
 ): workflow is WorkflowProgressNode & DomainFetchProgress {
   return workflow.workflowType === "DomainFetch";
 }
@@ -84,7 +84,7 @@ function isDomainFetchProgress(
  * Type guard for TranslationProgress.
  */
 function isTranslationProgress(
-  workflow: WorkflowProgressNode
+  workflow: WorkflowProgressNode,
 ): workflow is WorkflowProgressNode & TranslationProgress {
   return workflow.workflowType === "Translation";
 }
@@ -93,7 +93,7 @@ function isTranslationProgress(
  * Type guard for ContentDistillationProgress.
  */
 function isContentDistillationProgress(
-  workflow: WorkflowProgressNode
+  workflow: WorkflowProgressNode,
 ): workflow is WorkflowProgressNode & ContentDistillationProgress {
   return workflow.workflowType === "ContentDistillation";
 }
@@ -102,7 +102,7 @@ function isContentDistillationProgress(
  * Type guard for ContextCollectionProgress.
  */
 function isContextCollectionProgress(
-  workflow: WorkflowProgressNode
+  workflow: WorkflowProgressNode,
 ): workflow is WorkflowProgressNode & ContextCollectionProgress {
   return workflow.workflowType === "ContextCollection";
 }
@@ -124,7 +124,7 @@ interface EntryStatusCounts {
  * Traverses: SingleFeedIngestion -> ScheduleFetch -> DomainFetch(s)
  */
 function collectEntryProgress(
-  workflow: WorkflowProgressNode
+  workflow: WorkflowProgressNode,
 ): Record<string, EntryProgressState> {
   const result: Record<string, EntryProgressState> = {};
 
@@ -145,7 +145,7 @@ function collectEntryProgress(
  * Count entries by status from entry_progress.
  */
 function countEntryStatuses(
-  entryProgress: Record<string, EntryProgressState>
+  entryProgress: Record<string, EntryProgressState>,
 ): EntryStatusCounts {
   const counts: EntryStatusCounts = {
     total: 0,
@@ -188,7 +188,7 @@ function countEntryStatuses(
  * Get the first entry title from ReprocessEntriesProgress.
  */
 function getFirstEntryTitle(
-  entryProgress: Record<string, EntryProgressState>
+  entryProgress: Record<string, EntryProgressState>,
 ): string | undefined {
   const entries = Object.values(entryProgress);
   if (entries.length === 1 && entries[0].title) {
@@ -201,9 +201,10 @@ function getFirstEntryTitle(
  * Generate toast message for ReprocessEntriesWorkflow.
  */
 function getReprocessEntriesToast(
-  workflow: WorkflowProgressNode & ReprocessEntriesProgress
+  workflow: WorkflowProgressNode & ReprocessEntriesProgress,
 ): WorkflowToastMessage {
-  const { status, entryProgress, totalEntries, entriesFetched, error } = workflow;
+  const { status, entryProgress, totalEntries, entriesFetched, error } =
+    workflow;
 
   // Get entry title for single-entry workflows
   const entryTitle = getFirstEntryTitle(entryProgress);
@@ -250,7 +251,7 @@ function getReprocessEntriesToast(
  * fetch/distill progress.
  */
 function getSingleFeedIngestionToast(
-  workflow: WorkflowProgressNode & SingleFeedIngestionProgress
+  workflow: WorkflowProgressNode & SingleFeedIngestionProgress,
 ): WorkflowToastMessage {
   const { status, feedName, entriesCreated, error } = workflow;
 
@@ -313,7 +314,7 @@ function getSingleFeedIngestionToast(
  * Generate toast message for AllFeedsIngestionWorkflow.
  */
 function getAllFeedsIngestionToast(
-  workflow: WorkflowProgressNode & AllFeedsIngestionProgress
+  workflow: WorkflowProgressNode & AllFeedsIngestionProgress,
 ): WorkflowToastMessage {
   const {
     status,
@@ -371,10 +372,16 @@ function getAllFeedsIngestionToast(
  * Generate toast message for TranslationWorkflow.
  */
 function getTranslationToast(
-  workflow: WorkflowProgressNode & TranslationProgress
+  workflow: WorkflowProgressNode & TranslationProgress,
 ): WorkflowToastMessage {
-  const { status, provider, entryProgress, totalEntries, entriesTranslated, error } =
-    workflow;
+  const {
+    status,
+    provider,
+    entryProgress,
+    totalEntries,
+    entriesTranslated,
+    error,
+  } = workflow;
 
   // Get provider name for display
   const providerLabel = provider === "deepl" ? "DeepL" : "Microsoft";
@@ -412,7 +419,9 @@ function getTranslationToast(
 
   // Error status
   return {
-    title: entryTitle ? `Translation failed: ${truncate(entryTitle)}` : "Translation failed",
+    title: entryTitle
+      ? `Translation failed: ${truncate(entryTitle)}`
+      : "Translation failed",
     description: error || undefined,
     type: "error",
   };
@@ -422,9 +431,10 @@ function getTranslationToast(
  * Generate toast message for ContentDistillationWorkflow.
  */
 function getContentDistillationToast(
-  workflow: WorkflowProgressNode & ContentDistillationProgress
+  workflow: WorkflowProgressNode & ContentDistillationProgress,
 ): WorkflowToastMessage {
-  const { status, entryProgress, totalEntries, entriesDistilled, error } = workflow;
+  const { status, entryProgress, totalEntries, entriesDistilled, error } =
+    workflow;
 
   // Get entry title for single-entry workflows
   const entryTitle = getFirstEntryTitle(entryProgress);
@@ -458,7 +468,9 @@ function getContentDistillationToast(
 
   // Error status
   return {
-    title: entryTitle ? `Distillation failed: ${truncate(entryTitle)}` : "Distillation failed",
+    title: entryTitle
+      ? `Distillation failed: ${truncate(entryTitle)}`
+      : "Distillation failed",
     description: error || undefined,
     type: "error",
   };
@@ -468,7 +480,7 @@ function getContentDistillationToast(
  * Generate toast message for ContextCollectionWorkflow.
  */
 function getContextCollectionToast(
-  workflow: WorkflowProgressNode & ContextCollectionProgress
+  workflow: WorkflowProgressNode & ContextCollectionProgress,
 ): WorkflowToastMessage {
   const {
     status,
@@ -516,8 +528,10 @@ function getContextCollectionToast(
 
   if (status === "completed") {
     const parts: string[] = [];
-    if (successfulExtractions > 0) parts.push(`${successfulExtractions} extracted`);
-    if (enrichmentCandidatesCount > 0) parts.push(`${enrichmentCandidatesCount} enriched`);
+    if (successfulExtractions > 0)
+      parts.push(`${successfulExtractions} extracted`);
+    if (enrichmentCandidatesCount > 0)
+      parts.push(`${enrichmentCandidatesCount} enriched`);
 
     return {
       title: "Context collection complete",
@@ -546,7 +560,7 @@ function getContextCollectionToast(
  * Generate toast message for a generic workflow (fallback).
  */
 function getGenericWorkflowToast(
-  workflow: WorkflowProgressNode
+  workflow: WorkflowProgressNode,
 ): WorkflowToastMessage {
   const { status, workflowType, message, error } = workflow;
 
@@ -606,7 +620,7 @@ function getWorkflowLabel(workflowType: string): string {
  * @returns Toast message to display
  */
 export function getWorkflowToastMessage(
-  workflow: WorkflowProgressNode
+  workflow: WorkflowProgressNode,
 ): WorkflowToastMessage {
   // Handle ReprocessEntriesWorkflow with type-specific logic
   if (isReprocessEntriesProgress(workflow)) {

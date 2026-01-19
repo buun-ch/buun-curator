@@ -11,7 +11,7 @@ const log = createLogger("api:reddit:subreddits:id");
 // DELETE /api/reddit/subreddits/[id] - Remove a favorite subreddit
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const disabled = checkRedditEnabled();
   if (disabled) return disabled;
@@ -27,7 +27,7 @@ export async function DELETE(
     if (deleted.length === 0) {
       return NextResponse.json(
         { error: "Subreddit not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -36,7 +36,7 @@ export async function DELETE(
     log.error({ error }, "Failed to delete subreddit");
     return NextResponse.json(
       { error: "Failed to delete subreddit" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -44,7 +44,7 @@ export async function DELETE(
 // PATCH /api/reddit/subreddits/[id] - Update subreddit settings (e.g., minScore)
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const disabled = checkRedditEnabled();
   if (disabled) return disabled;
@@ -76,7 +76,7 @@ export async function PATCH(
     if (!updated) {
       return NextResponse.json(
         { error: "Subreddit not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -85,7 +85,7 @@ export async function PATCH(
     log.error({ error }, "Failed to update subreddit");
     return NextResponse.json(
       { error: "Failed to update subreddit" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

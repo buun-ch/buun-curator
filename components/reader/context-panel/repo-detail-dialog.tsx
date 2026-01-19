@@ -29,7 +29,10 @@ interface RepoDetailDialogProps {
  *
  * Shows description, stats, topics, license, README, and links.
  */
-export function RepoDetailDialog({ repo, onOpenChange }: RepoDetailDialogProps) {
+export function RepoDetailDialog({
+  repo,
+  onOpenChange,
+}: RepoDetailDialogProps) {
   const hasReadme = repo?.readmeContent && repo.readmeContent.length > 0;
 
   return (
@@ -108,7 +111,7 @@ export function RepoDetailDialog({ repo, onOpenChange }: RepoDetailDialogProps) 
                   </span>
                 </div>
                 <div className="max-h-[400px] overflow-y-auto rounded-md border bg-muted/30 p-4">
-                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                  <div className="prose prose-sm max-w-none dark:prose-invert">
                     <ReactMarkdown
                       rehypePlugins={[
                         rehypeRaw,

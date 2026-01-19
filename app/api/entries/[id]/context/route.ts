@@ -17,7 +17,7 @@ const updateContextSchema = z.object({
  */
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 
@@ -84,7 +84,7 @@ export async function GET(
  */
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 
@@ -95,7 +95,7 @@ export async function PATCH(
   if (!parseResult.success) {
     return NextResponse.json(
       { error: "Invalid request body", details: parseResult.error.issues },
-      { status: 400 }
+      { status: 400 },
     );
   }
 

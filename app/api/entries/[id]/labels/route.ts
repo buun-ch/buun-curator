@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     log.error({ error }, "failed to fetch entry labels");
     return NextResponse.json(
       { error: "Failed to fetch entry labels" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     if (!labelId || typeof labelId !== "string") {
       return NextResponse.json(
         { error: "labelId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -57,10 +57,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       .limit(1);
 
     if (!entry) {
-      return NextResponse.json(
-        { error: "Entry not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Entry not found" }, { status: 404 });
     }
 
     // Verify label exists
@@ -71,10 +68,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       .limit(1);
 
     if (!label) {
-      return NextResponse.json(
-        { error: "Label not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Label not found" }, { status: 404 });
     }
 
     // Add the label to the entry (ignore if already exists)
@@ -87,17 +81,14 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       .onConflictDoNothing();
 
     // Automatically keep the entry when a label is added
-    await db
-      .update(entries)
-      .set({ keep: true })
-      .where(eq(entries.id, entryId));
+    await db.update(entries).set({ keep: true }).where(eq(entries.id, entryId));
 
     return NextResponse.json(label, { status: 201 });
   } catch (error) {
     log.error({ error }, "failed to add label to entry");
     return NextResponse.json(
       { error: "Failed to add label to entry" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -112,24 +103,21 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     if (!labelId) {
       return NextResponse.json(
         { error: "labelId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const result = await db
       .delete(entryLabels)
       .where(
-        and(
-          eq(entryLabels.entryId, entryId),
-          eq(entryLabels.labelId, labelId)
-        )
+        and(eq(entryLabels.entryId, entryId), eq(entryLabels.labelId, labelId)),
       )
       .returning({ id: entryLabels.id });
 
     if (result.length === 0) {
       return NextResponse.json(
         { error: "Entry-label association not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -138,7 +126,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     log.error({ error }, "failed to remove label from entry");
     return NextResponse.json(
       { error: "Failed to remove label from entry" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

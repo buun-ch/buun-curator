@@ -29,7 +29,9 @@ interface UseSubscriptionsReturn {
 }
 
 /** Fetches subscription tree from the API. */
-async function fetchSubscriptions(filterMode: FilterMode): Promise<Subscription[]> {
+async function fetchSubscriptions(
+  filterMode: FilterMode,
+): Promise<Subscription[]> {
   const response = await fetch(`/api/subscriptions?filterMode=${filterMode}`);
   if (!response.ok) {
     throw new Error("Failed to fetch subscriptions");
@@ -74,26 +76,28 @@ export function useSubscriptions(): UseSubscriptionsReturn {
             // Update category containing the feed
             if (sub.type === "category" && sub.children) {
               const hasFeed = sub.children.some(
-                (child) => child.id === `feed-${feedId}`
+                (child) => child.id === `feed-${feedId}`,
               );
               if (hasFeed) {
                 return {
                   ...sub,
                   count: sub.count && sub.count > 0 ? sub.count - 1 : 0,
                   children: sub.children.map((child) =>
-                    child.id === `feed-${feedId}` && child.count && child.count > 0
+                    child.id === `feed-${feedId}` &&
+                    child.count &&
+                    child.count > 0
                       ? { ...child, count: child.count - 1 }
-                      : child
+                      : child,
                   ),
                 };
               }
             }
             return sub;
           });
-        }
+        },
       );
     },
-    [filterMode, queryClient]
+    [filterMode, queryClient],
   );
 
   // Update subscription counts when read status is toggled
@@ -117,26 +121,29 @@ export function useSubscriptions(): UseSubscriptionsReturn {
             // Update category containing the feed
             if (sub.type === "category" && sub.children) {
               const hasFeed = sub.children.some(
-                (child) => child.id === `feed-${feedId}`
+                (child) => child.id === `feed-${feedId}`,
               );
               if (hasFeed) {
                 return {
                   ...sub,
-                  count: sub.count !== undefined ? Math.max(0, sub.count + delta) : 0,
+                  count:
+                    sub.count !== undefined
+                      ? Math.max(0, sub.count + delta)
+                      : 0,
                   children: sub.children.map((child) =>
                     child.id === `feed-${feedId}` && child.count !== undefined
                       ? { ...child, count: Math.max(0, child.count + delta) }
-                      : child
+                      : child,
                   ),
                 };
               }
             }
             return sub;
           });
-        }
+        },
       );
     },
-    [filterMode, queryClient]
+    [filterMode, queryClient],
   );
 
   return {
@@ -153,6 +160,8 @@ export function useSubscriptions(): UseSubscriptionsReturn {
  * Invalidate subscriptions query to trigger a refetch.
  * Call this after modifying feeds or categories.
  */
-export function invalidateSubscriptions(queryClient: ReturnType<typeof useQueryClient>) {
+export function invalidateSubscriptions(
+  queryClient: ReturnType<typeof useQueryClient>,
+) {
   return queryClient.invalidateQueries({ queryKey: ["subscriptions"] });
 }

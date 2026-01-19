@@ -125,11 +125,14 @@ export function ContextPanel({
       setDeletingWebPages((prev) => new Set(prev).add(url));
 
       try {
-        const response = await fetch(`/api/entries/${entryId}/delete-enrichment`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "web_page", source: url }),
-        });
+        const response = await fetch(
+          `/api/entries/${entryId}/delete-enrichment`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: "web_page", source: url }),
+          },
+        );
 
         if (!response.ok) {
           const errorData = await response.json();

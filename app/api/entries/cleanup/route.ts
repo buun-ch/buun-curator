@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     if (typeof olderThanDays !== "number" || olderThanDays < 1) {
       return NextResponse.json(
         { error: "olderThanDays must be a positive number" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       eq(entries.isRead, true),
       eq(entries.isStarred, false),
       eq(entries.keep, false),
-      lt(entries.publishedAt, cutoffDate)
+      lt(entries.publishedAt, cutoffDate),
     );
 
     if (dryRun) {
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
       log.info(
         { olderThanDays, cutoffDate: cutoffDate.toISOString(), count },
-        "dry run: counted entries for cleanup"
+        "dry run: counted entries for cleanup",
       );
 
       return NextResponse.json({
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
 
     log.info(
       { olderThanDays, cutoffDate: cutoffDate.toISOString(), deletedCount },
-      "deleted old entries"
+      "deleted old entries",
     );
 
     return NextResponse.json({
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
     log.error({ error }, "failed to cleanup old entries");
     return NextResponse.json(
       { error: "Failed to cleanup old entries" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

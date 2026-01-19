@@ -20,7 +20,9 @@ import { useUpdateEntry } from "./use-entry";
 /** Options for the useEntryActions hook. */
 interface UseEntryActionsOptions {
   /** Function to update the entries list (lightweight list items). */
-  setEntries: (updater: EntryListItem[] | ((prev: EntryListItem[]) => EntryListItem[])) => void;
+  setEntries: (
+    updater: EntryListItem[] | ((prev: EntryListItem[]) => EntryListItem[]),
+  ) => void;
   /** Callback to update subscription counts when read status changes. */
   onToggleRead?: (feedId: string, nowRead: boolean) => void;
   /** Callback when an entry is marked as read (for preserving in unread mode). */
@@ -66,7 +68,9 @@ export function useEntryActions({
   onMarkAsRead,
 }: UseEntryActionsOptions): UseEntryActionsReturn {
   const queryClient = useQueryClient();
-  const addRefreshingEntry = useWorkflowStore((state) => state.addRefreshingEntry);
+  const addRefreshingEntry = useWorkflowStore(
+    (state) => state.addRefreshingEntry,
+  );
 
   // Mutation for updating entry fields
   const updateEntry = useUpdateEntry();
@@ -79,8 +83,8 @@ export function useEntryActions({
       // Optimistic update for entries list
       setEntries((prev) =>
         prev.map((e) =>
-          e.id === entry.id ? { ...e, isStarred: newStarred } : e
-        )
+          e.id === entry.id ? { ...e, isStarred: newStarred } : e,
+        ),
       );
 
       // Mutation handles entry cache update with automatic rollback
@@ -91,14 +95,14 @@ export function useEntryActions({
             // Revert entries list on error
             setEntries((prev) =>
               prev.map((e) =>
-                e.id === entry.id ? { ...e, isStarred: !newStarred } : e
-              )
+                e.id === entry.id ? { ...e, isStarred: !newStarred } : e,
+              ),
             );
           },
-        }
+        },
       );
     },
-    [setEntries, updateEntry]
+    [setEntries, updateEntry],
   );
 
   // Toggle read/unread status
@@ -108,9 +112,7 @@ export function useEntryActions({
 
       // Optimistic update for entries list
       setEntries((prev) =>
-        prev.map((e) =>
-          e.id === entry.id ? { ...e, isRead: newIsRead } : e
-        )
+        prev.map((e) => (e.id === entry.id ? { ...e, isRead: newIsRead } : e)),
       );
 
       // Update subscription counts optimistically
@@ -136,16 +138,16 @@ export function useEntryActions({
             // Revert entries list on error
             setEntries((prev) =>
               prev.map((e) =>
-                e.id === entry.id ? { ...e, isRead: !newIsRead } : e
-              )
+                e.id === entry.id ? { ...e, isRead: !newIsRead } : e,
+              ),
             );
             // Revert subscription counts
             onToggleRead?.(entry.feedId, !newIsRead);
           },
-        }
+        },
       );
     },
-    [onMarkAsRead, onToggleRead, queryClient, setEntries, updateEntry]
+    [onMarkAsRead, onToggleRead, queryClient, setEntries, updateEntry],
   );
 
   // Toggle keep status (true = preserve from auto-cleanup)
@@ -155,9 +157,7 @@ export function useEntryActions({
 
       // Optimistic update for entries list
       setEntries((prev) =>
-        prev.map((e) =>
-          e.id === entry.id ? { ...e, keep: newKeep } : e
-        )
+        prev.map((e) => (e.id === entry.id ? { ...e, keep: newKeep } : e)),
       );
 
       // Mutation handles entry cache update with automatic rollback
@@ -168,14 +168,14 @@ export function useEntryActions({
             // Revert entries list on error
             setEntries((prev) =>
               prev.map((e) =>
-                e.id === entry.id ? { ...e, keep: !newKeep } : e
-              )
+                e.id === entry.id ? { ...e, keep: !newKeep } : e,
+              ),
             );
           },
-        }
+        },
       );
     },
-    [setEntries, updateEntry]
+    [setEntries, updateEntry],
   );
 
   // Refresh entry content via Temporal workflow
@@ -190,10 +190,9 @@ export function useEntryActions({
 
       try {
         // Trigger the Temporal workflow
-        const refetchResponse = await fetch(
-          `/api/entries/${entryId}/refetch`,
-          { method: "POST" }
-        );
+        const refetchResponse = await fetch(`/api/entries/${entryId}/refetch`, {
+          method: "POST",
+        });
 
         if (!refetchResponse.ok) {
           throw new Error("Failed to start refetch workflow");
@@ -218,7 +217,7 @@ export function useEntryActions({
         // cleaned up on next successful workflow update, or user can retry
       }
     },
-    [addRefreshingEntry, queryClient]
+    [addRefreshingEntry, queryClient],
   );
 
   return {

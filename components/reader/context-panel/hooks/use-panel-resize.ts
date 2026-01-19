@@ -19,7 +19,7 @@ interface UsePanelResizeResult {
  */
 export function usePanelResize(): UsePanelResizeResult {
   const height = useSettingsStore(
-    (state) => state.contextPanelHeight ?? DEFAULT_HEIGHT
+    (state) => state.contextPanelHeight ?? DEFAULT_HEIGHT,
   );
   const setHeight = useSettingsStore((state) => state.setContextPanelHeight);
 
@@ -40,7 +40,7 @@ export function usePanelResize(): UsePanelResizeResult {
       startYRef.current = e.clientY;
       startHeightRef.current = height;
     },
-    [height]
+    [height],
   );
 
   React.useEffect(() => {
@@ -52,7 +52,7 @@ export function usePanelResize(): UsePanelResizeResult {
       const delta = startYRef.current - e.clientY;
       const newHeight = Math.min(
         effectiveMax,
-        Math.max(MIN_HEIGHT, startHeightRef.current + delta)
+        Math.max(MIN_HEIGHT, startHeightRef.current + delta),
       );
       setHeight(newHeight);
     };

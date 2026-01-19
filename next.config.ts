@@ -14,11 +14,14 @@ const nextConfig: NextConfig = {
   },
   allowedDevOrigins: process.env.ALLOWED_DEV_ORIGINS?.split(","),
   // Disable health check request logs when DISABLE_HEALTH_REQUEST_LOGS=1
-  logging: process.env.DISABLE_HEALTH_REQUEST_LOGS === '1' ? {
-    incomingRequests: {
-      ignore: [/healthz/],
-    },
-  } : undefined,
+  logging:
+    process.env.DISABLE_HEALTH_REQUEST_LOGS === "1"
+      ? {
+          incomingRequests: {
+            ignore: [/healthz/],
+          },
+        }
+      : undefined,
   devIndicators: {
     position: "bottom-right",
   },

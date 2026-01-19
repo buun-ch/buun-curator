@@ -35,8 +35,12 @@ const ulidDefault = () => ulid();
 export const categories = pgTable("categories", {
   id: char("id", { length: 26 }).primaryKey().$defaultFn(ulidDefault),
   name: text("name").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });
 
 export const feeds = pgTable("feeds", {
@@ -44,9 +48,12 @@ export const feeds = pgTable("feeds", {
   name: text("name").notNull(),
   url: text("url").notNull(),
   siteUrl: text("site_url"),
-  categoryId: char("category_id", { length: 26 }).references(() => categories.id, {
-    onDelete: "set null",
-  }),
+  categoryId: char("category_id", { length: 26 }).references(
+    () => categories.id,
+    {
+      onDelete: "set null",
+    },
+  ),
   type: text("type"),
   fetchContent: boolean("fetch_content").default(true).notNull(),
   fetchLimit: integer("fetch_limit").default(20).notNull(),
@@ -54,8 +61,12 @@ export const feeds = pgTable("feeds", {
   etag: text("etag"),
   lastModified: text("last_modified"),
   checkedAt: timestamp("checked_at", { withTimezone: true }),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });
 
 export const entries = pgTable(
@@ -93,7 +104,7 @@ export const entries = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [uniqueIndex("entries_url_idx").on(table.url)]
+  (table) => [uniqueIndex("entries_url_idx").on(table.url)],
 );
 
 // Entry enrichments: additional context from external sources (web search, etc.)
@@ -113,7 +124,7 @@ export const entryEnrichments = pgTable(
       .notNull(),
     expiresAt: timestamp("expires_at", { withTimezone: true }), // null = no expiration
   },
-  (table) => [index("entry_enrichments_entry_id_idx").on(table.entryId)]
+  (table) => [index("entry_enrichments_entry_id_idx").on(table.entryId)],
 );
 
 // Entry links: URL candidates extracted from article content
@@ -135,15 +146,17 @@ export const entryLinks = pgTable(
     uniqueIndex("entry_links_entry_url_title_idx").on(
       table.entryId,
       table.url,
-      table.title
+      table.title,
     ),
-  ]
+  ],
 );
 
 export const appSettings = pgTable("app_settings", {
   id: char("id", { length: 26 }).primaryKey().$defaultFn(ulidDefault),
   targetLanguage: text("target_language"),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });
 
 // Reddit: Favorite subreddits
@@ -160,7 +173,7 @@ export const redditSubreddits = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [uniqueIndex("reddit_subreddits_name_idx").on(table.name)]
+  (table) => [uniqueIndex("reddit_subreddits_name_idx").on(table.name)],
 );
 
 // Reddit: Starred posts
@@ -179,7 +192,7 @@ export const redditPosts = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [uniqueIndex("reddit_posts_post_id_idx").on(table.postId)]
+  (table) => [uniqueIndex("reddit_posts_post_id_idx").on(table.postId)],
 );
 
 // =============================================================================
@@ -192,10 +205,14 @@ export const labels = pgTable(
     id: char("id", { length: 26 }).primaryKey().$defaultFn(ulidDefault),
     name: text("name").notNull(),
     color: text("color").notNull(), // hex color code (e.g., "#ff5733")
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
-  (table) => [uniqueIndex("labels_name_idx").on(table.name)]
+  (table) => [uniqueIndex("labels_name_idx").on(table.name)],
 );
 
 export const entryLabels = pgTable(
@@ -208,13 +225,18 @@ export const entryLabels = pgTable(
     labelId: char("label_id", { length: 26 })
       .references(() => labels.id, { onDelete: "cascade" })
       .notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => [
     index("entry_labels_entry_id_idx").on(table.entryId),
     index("entry_labels_label_id_idx").on(table.labelId),
-    uniqueIndex("entry_labels_entry_label_idx").on(table.entryId, table.labelId),
-  ]
+    uniqueIndex("entry_labels_entry_label_idx").on(
+      table.entryId,
+      table.labelId,
+    ),
+  ],
 );
 
 // =============================================================================
@@ -227,8 +249,12 @@ export const user = pgTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });
 
 export const session = pgTable(
@@ -237,15 +263,19 @@ export const session = pgTable(
     id: text("id").primaryKey(),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
     token: text("token").notNull().unique(),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
     ipAddress: text("ip_address"),
     userAgent: text("user_agent"),
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
   },
-  (table) => [index("session_user_id_idx").on(table.userId)]
+  (table) => [index("session_user_id_idx").on(table.userId)],
 );
 
 export const account = pgTable(
@@ -260,14 +290,22 @@ export const account = pgTable(
     accessToken: text("access_token"),
     refreshToken: text("refresh_token"),
     idToken: text("id_token"),
-    accessTokenExpiresAt: timestamp("access_token_expires_at", { withTimezone: true }),
-    refreshTokenExpiresAt: timestamp("refresh_token_expires_at", { withTimezone: true }),
+    accessTokenExpiresAt: timestamp("access_token_expires_at", {
+      withTimezone: true,
+    }),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
+      withTimezone: true,
+    }),
     scope: text("scope"),
     password: text("password"),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
-  (table) => [index("account_user_id_idx").on(table.userId)]
+  (table) => [index("account_user_id_idx").on(table.userId)],
 );
 
 export const verification = pgTable(
@@ -277,10 +315,14 @@ export const verification = pgTable(
     identifier: text("identifier").notNull(),
     value: text("value").notNull(),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
-  (table) => [index("verification_identifier_idx").on(table.identifier)]
+  (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
 // Better Auth Relations

@@ -157,7 +157,9 @@ export function DebugView({
             ))}
           </div>
         ) : (
-          <div className="text-xs text-muted-foreground">No enrichments yet</div>
+          <div className="text-xs text-muted-foreground">
+            No enrichments yet
+          </div>
         )}
       </section>
     </div>

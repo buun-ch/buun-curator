@@ -40,7 +40,9 @@ export interface UseRedditStateReturn {
 
   // Selected post
   selectedRedditPost: RedditPost | null;
-  setSelectedRedditPost: React.Dispatch<React.SetStateAction<RedditPost | null>>;
+  setSelectedRedditPost: React.Dispatch<
+    React.SetStateAction<RedditPost | null>
+  >;
   redditPostData:
     | { post: RedditPostDetail; comments: RedditComment[] }
     | undefined;
@@ -65,10 +67,7 @@ export interface UseRedditStateReturn {
   // Favorite management
   currentFavoriteId: string | null;
   currentFavoriteMinScore: number;
-  updateFavoriteSubreddit: (
-    id: string,
-    data: { minScore?: number }
-  ) => void;
+  updateFavoriteSubreddit: (id: string, data: { minScore?: number }) => void;
   handleRemoveFavorite: () => Promise<void>;
   isRemovingFavorite: boolean;
 
@@ -101,18 +100,18 @@ export function useRedditState({
 
   // Selected subreddit name (shared via store across components)
   const selectedSubredditName = useSettingsStore(
-    (state) => state.selectedSubredditName
+    (state) => state.selectedSubredditName,
   );
   const setSelectedSubredditName = useSettingsStore(
-    (state) => state.setSelectedSubredditName
+    (state) => state.setSelectedSubredditName,
   );
 
   // Settings from store (persisted to localStorage)
   const getSubredditFilterMode = useSettingsStore(
-    (state) => state.getSubredditFilterMode
+    (state) => state.getSubredditFilterMode,
   );
   const setSubredditFilterMode = useSettingsStore(
-    (state) => state.setSubredditFilterMode
+    (state) => state.setSubredditFilterMode,
   );
 
   // Get current subreddit filter mode from localStorage
@@ -181,7 +180,7 @@ export function useRedditState({
 
   // Fetch selected Reddit post details
   const { data: redditPostData, isLoading: redditPostLoading } = useRedditPost(
-    selectedRedditPost?.id
+    selectedRedditPost?.id,
   );
 
   // Track removing favorite state

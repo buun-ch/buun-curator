@@ -28,7 +28,7 @@ const createEnrichmentSchema = z.object({
  */
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 
@@ -39,7 +39,7 @@ export async function POST(
   if (!parseResult.success) {
     return NextResponse.json(
       { error: "Invalid request body", details: parseResult.error.issues },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -63,7 +63,7 @@ export async function POST(
     ? and(
         eq(entryEnrichments.entryId, id),
         eq(entryEnrichments.type, type),
-        eq(entryEnrichments.source, source)
+        eq(entryEnrichments.source, source),
       )
     : and(eq(entryEnrichments.entryId, id), eq(entryEnrichments.type, type));
 
@@ -104,7 +104,7 @@ export async function POST(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 
@@ -115,7 +115,7 @@ export async function DELETE(
   if (!parseResult.success) {
     return NextResponse.json(
       { error: "Invalid request body", details: parseResult.error.issues },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -127,7 +127,7 @@ export async function DELETE(
     ? and(
         eq(entryEnrichments.entryId, id),
         eq(entryEnrichments.type, type),
-        eq(entryEnrichments.source, source)
+        eq(entryEnrichments.source, source),
       )
     : and(eq(entryEnrichments.entryId, id), eq(entryEnrichments.type, type));
 
@@ -140,7 +140,7 @@ export async function DELETE(
   if (deleted.length === 0) {
     return NextResponse.json(
       { error: "Enrichment not found", deleted: false },
-      { status: 404 }
+      { status: 404 },
     );
   }
 

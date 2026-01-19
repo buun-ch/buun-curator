@@ -180,7 +180,11 @@ export function ContextView({
   const allWebPages: Array<WebPage & { url: string }> = [];
   const enrichedUrls = new Set<string>();
   for (const enrichment of data.enrichments) {
-    if (enrichment.type === "web_page" && enrichment.data && enrichment.source) {
+    if (
+      enrichment.type === "web_page" &&
+      enrichment.data &&
+      enrichment.source
+    ) {
       const page = enrichment.data as WebPageEnrichment;
       allWebPages.push({
         ...page,
@@ -231,7 +235,7 @@ export function ContextView({
                   <ChevronRight
                     className={cn(
                       "h-3 w-3 transition-transform",
-                      keyPointsOpen && "rotate-90"
+                      keyPointsOpen && "rotate-90",
                     )}
                   />
                   Key Points

@@ -57,7 +57,7 @@ export function ViewerToolbar({
     <div
       className={cn(
         "flex h-11 shrink-0 items-center gap-2 px-4 transition-[border-color] duration-200",
-        isScrolled ? "border-b" : "border-b border-transparent"
+        isScrolled ? "border-b" : "border-b border-transparent",
       )}
     >
       {/* Navigation */}
@@ -87,19 +87,11 @@ export function ViewerToolbar({
       <Button
         variant="ghost"
         size="icon"
-        className={cn(
-          "size-8",
-          entry.keep && "text-neutral-500"
-        )}
+        className={cn("size-8", entry.keep && "text-neutral-500")}
         onClick={() => onToggleKeep?.(entry)}
         title="Keep from auto-cleanup (p)"
       >
-        <Cross
-          className={cn(
-            "size-4",
-            entry.keep && "fill-current"
-          )}
-        />
+        <Cross className={cn("size-4", entry.keep && "fill-current")} />
       </Button>
 
       <Button

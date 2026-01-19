@@ -295,7 +295,8 @@ export function normalizeEntryListItem(entry: EntryListItem): EntryListItem {
 
   return {
     ...entry,
-    youtubeVideoId: metadata?.youtubeVideoId || extractYoutubeVideoId(entry.url),
+    youtubeVideoId:
+      metadata?.youtubeVideoId || extractYoutubeVideoId(entry.url),
   };
 }
 
@@ -314,6 +315,7 @@ export function normalizeEntry(entry: Entry): Entry {
 
   return {
     ...entry,
-    youtubeVideoId: metadata?.youtubeVideoId || extractYoutubeVideoId(entry.url),
+    youtubeVideoId:
+      metadata?.youtubeVideoId || extractYoutubeVideoId(entry.url),
   };
 }

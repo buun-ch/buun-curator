@@ -2,10 +2,7 @@
 
 import * as React from "react";
 
-import {
-  useWorkflowStore,
-  selectWorkflowById,
-} from "@/stores/workflow-store";
+import { useWorkflowStore, selectWorkflowById } from "@/stores/workflow-store";
 
 import type { EntryContext } from "../types";
 
@@ -43,7 +40,7 @@ export function useContextData({
 
   // Get workflow from store (SSE-updated)
   const workflow = useWorkflowStore(
-    workflowId ? selectWorkflowById(workflowId) : () => null
+    workflowId ? selectWorkflowById(workflowId) : () => null,
   );
 
   // Fetch context data

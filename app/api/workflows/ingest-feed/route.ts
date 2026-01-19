@@ -27,21 +27,21 @@ export async function POST(request: Request) {
     if (!feedId || typeof feedId !== "string") {
       return NextResponse.json(
         { error: "feedId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!feedName || typeof feedName !== "string") {
       return NextResponse.json(
         { error: "feedName is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!feedUrl || typeof feedUrl !== "string") {
       return NextResponse.json(
         { error: "feedUrl is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
     log.error({ error }, "Failed to start single feed ingestion workflow");
     return NextResponse.json(
       { error: "Failed to start single feed ingestion workflow" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

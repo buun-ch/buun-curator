@@ -23,7 +23,7 @@ export const testDb = drizzle(testPool, { schema });
 // Clean all tables
 export async function cleanDatabase() {
   await testDb.execute(
-    sql`TRUNCATE entries, feeds, categories RESTART IDENTITY CASCADE`
+    sql`TRUNCATE entries, feeds, categories RESTART IDENTITY CASCADE`,
   );
 }
 

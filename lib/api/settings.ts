@@ -24,7 +24,9 @@ export interface AppSettings {
  * @param database - Database instance (defaults to the main db)
  * @returns The application settings
  */
-export async function getSettings(database: Db = defaultDb): Promise<AppSettings> {
+export async function getSettings(
+  database: Db = defaultDb,
+): Promise<AppSettings> {
   const result = await database.select().from(appSettings).limit(1);
 
   if (result.length === 0) {

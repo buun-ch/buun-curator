@@ -41,7 +41,7 @@ interface UseSubredditPostsOptions {
  */
 export function useSubredditPosts(
   subredditName: string | undefined,
-  options: UseSubredditPostsOptions = {}
+  options: UseSubredditPostsOptions = {},
 ) {
   const { sort = "hot", time = "day", limit = 25, minScore = 0 } = options;
   const queryClient = useQueryClient();

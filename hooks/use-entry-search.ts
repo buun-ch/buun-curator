@@ -72,7 +72,7 @@ interface UseEntrySearchReturn {
  */
 async function fetchSearchResults(
   query: string,
-  selectedSubscription: string
+  selectedSubscription: string,
 ): Promise<SearchResponse> {
   const params = new URLSearchParams();
   params.set("q", query);

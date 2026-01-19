@@ -11,7 +11,10 @@
 "use client";
 
 import * as React from "react";
-import { useWorkflowStore, selectIsFeedIngesting } from "@/stores/workflow-store";
+import {
+  useWorkflowStore,
+  selectIsFeedIngesting,
+} from "@/stores/workflow-store";
 /** Options for the useSingleFeedIngestion hook. */
 export interface UseSingleFeedIngestionOptions {
   /** Feed ID to ingest. */
@@ -115,7 +118,16 @@ export function useSingleFeedIngestion({
       // Note: Feed stays in ingestingFeeds but that's OK - will be cleaned up
       // on next successful workflow update
     }
-  }, [addIngestingFeed, canIngest, feedId, feedName, feedUrl, enableThumbnail, domainFetchDelay, onStart]);
+  }, [
+    addIngestingFeed,
+    canIngest,
+    feedId,
+    feedName,
+    feedUrl,
+    enableThumbnail,
+    domainFetchDelay,
+    onStart,
+  ]);
 
   return {
     isIngesting,

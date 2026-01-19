@@ -25,7 +25,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     if (!progress) {
       return NextResponse.json(
         { error: "Workflow not found or does not support progress query" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -34,7 +34,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     log.error({ error }, "Failed to query workflow progress");
     return NextResponse.json(
       { error: "Failed to query workflow progress" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

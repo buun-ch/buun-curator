@@ -70,7 +70,7 @@ export function allEntriesUrl(options: NavigationOptions = {}): string {
  */
 export function categoryUrl(
   categoryId: string,
-  options: NavigationOptions = {}
+  options: NavigationOptions = {},
 ): string {
   return `/feeds/c/${categoryId}${buildQueryString(options)}`;
 }
@@ -84,7 +84,7 @@ export function categoryUrl(
  */
 export function feedUrl(
   feedId: string,
-  options: NavigationOptions = {}
+  options: NavigationOptions = {},
 ): string {
   return `/feeds/f/${feedId}${buildQueryString(options)}`;
 }
@@ -99,8 +99,10 @@ export function feedUrl(
  */
 export function entryUrl(
   entryId: string,
-  context?: { type: "category"; categoryId: string } | { type: "feed"; feedId: string },
-  options: NavigationOptions = {}
+  context?:
+    | { type: "category"; categoryId: string }
+    | { type: "feed"; feedId: string },
+  options: NavigationOptions = {},
 ): string {
   const query = buildQueryString(options);
 
@@ -214,7 +216,7 @@ export function parseSettingsCategory(pathname: string): SettingsCategory {
  */
 export function parseNavigationState(
   pathname: string,
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
 ): {
   section: "feeds" | "reddit" | "settings";
   categoryId?: string;

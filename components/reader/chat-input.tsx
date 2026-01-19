@@ -84,12 +84,7 @@ export function ChatInput({
           buttonIcon: <Send className="size-4" />,
           buttonAlt: "Send",
         };
-  }, [
-    isInProgress,
-    chatReady,
-    hideStopButton,
-    context.icons.spinnerIcon,
-  ]);
+  }, [isInProgress, chatReady, hideStopButton, context.icons.spinnerIcon]);
 
   const canSend = useMemo(() => {
     return !isInProgress && text.trim().length > 0;
@@ -181,7 +176,9 @@ export function ChatInput({
             onClick={isInProgress && !hideStopButton ? onStop : send}
             data-copilotkit-in-progress={inProgress}
             data-test-id={
-              inProgress ? "copilot-chat-request-in-progress" : "copilot-chat-ready"
+              inProgress
+                ? "copilot-chat-request-in-progress"
+                : "copilot-chat-ready"
             }
             className="copilotKitInputControlButton"
             aria-label={buttonAlt}

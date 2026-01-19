@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import type { AutoformatBlockRule, AutoformatRule } from '@platejs/autoformat';
-import type { SlateEditor } from 'platejs';
+import type { AutoformatBlockRule, AutoformatRule } from "@platejs/autoformat";
+import type { SlateEditor } from "platejs";
 
 import {
   autoformatArrow,
@@ -11,12 +11,12 @@ import {
   AutoformatPlugin,
   autoformatPunctuation,
   autoformatSmartQuotes,
-} from '@platejs/autoformat';
-import { insertEmptyCodeBlock } from '@platejs/code-block';
-import { toggleList, toggleTaskList, unwrapList } from '@platejs/list-classic';
-import { ElementApi, isType, KEYS } from 'platejs';
+} from "@platejs/autoformat";
+import { insertEmptyCodeBlock } from "@platejs/code-block";
+import { toggleList, toggleTaskList, unwrapList } from "@platejs/list-classic";
+import { ElementApi, isType, KEYS } from "platejs";
 
-const preFormat: AutoformatBlockRule['preFormat'] = (editor) =>
+const preFormat: AutoformatBlockRule["preFormat"] = (editor) =>
   unwrapList(editor);
 
 const format = (editor: SlateEditor, customFormatting: any) => {
@@ -41,129 +41,129 @@ const formatList = (editor: SlateEditor, elementType: string) => {
   format(editor, () =>
     toggleList(editor, {
       type: elementType,
-    })
+    }),
   );
 };
 
 const autoformatMarks: AutoformatRule[] = [
   {
-    match: '***',
-    mode: 'mark',
+    match: "***",
+    mode: "mark",
     type: [KEYS.bold, KEYS.italic],
   },
   {
-    match: '__*',
-    mode: 'mark',
+    match: "__*",
+    mode: "mark",
     type: [KEYS.underline, KEYS.italic],
   },
   {
-    match: '__**',
-    mode: 'mark',
+    match: "__**",
+    mode: "mark",
     type: [KEYS.underline, KEYS.bold],
   },
   {
-    match: '___***',
-    mode: 'mark',
+    match: "___***",
+    mode: "mark",
     type: [KEYS.underline, KEYS.bold, KEYS.italic],
   },
   {
-    match: '**',
-    mode: 'mark',
+    match: "**",
+    mode: "mark",
     type: KEYS.bold,
   },
   {
-    match: '__',
-    mode: 'mark',
+    match: "__",
+    mode: "mark",
     type: KEYS.underline,
   },
   {
-    match: '*',
-    mode: 'mark',
+    match: "*",
+    mode: "mark",
     type: KEYS.italic,
   },
   {
-    match: '_',
-    mode: 'mark',
+    match: "_",
+    mode: "mark",
     type: KEYS.italic,
   },
   {
-    match: '~~',
-    mode: 'mark',
+    match: "~~",
+    mode: "mark",
     type: KEYS.strikethrough,
   },
   {
-    match: '^',
-    mode: 'mark',
+    match: "^",
+    mode: "mark",
     type: KEYS.sup,
   },
   {
-    match: '~',
-    mode: 'mark',
+    match: "~",
+    mode: "mark",
     type: KEYS.sub,
   },
   {
-    match: '==',
-    mode: 'mark',
+    match: "==",
+    mode: "mark",
     type: KEYS.highlight,
   },
   {
-    match: '≡',
-    mode: 'mark',
+    match: "≡",
+    mode: "mark",
     type: KEYS.highlight,
   },
   {
-    match: '`',
-    mode: 'mark',
+    match: "`",
+    mode: "mark",
     type: KEYS.code,
   },
 ];
 
 const autoformatBlocks: AutoformatRule[] = [
   {
-    match: '# ',
-    mode: 'block',
+    match: "# ",
+    mode: "block",
     preFormat,
     type: KEYS.h1,
   },
   {
-    match: '## ',
-    mode: 'block',
+    match: "## ",
+    mode: "block",
     preFormat,
     type: KEYS.h2,
   },
   {
-    match: '### ',
-    mode: 'block',
+    match: "### ",
+    mode: "block",
     preFormat,
     type: KEYS.h3,
   },
   {
-    match: '#### ',
-    mode: 'block',
+    match: "#### ",
+    mode: "block",
     preFormat,
     type: KEYS.h4,
   },
   {
-    match: '##### ',
-    mode: 'block',
+    match: "##### ",
+    mode: "block",
     preFormat,
     type: KEYS.h5,
   },
   {
-    match: '###### ',
-    mode: 'block',
+    match: "###### ",
+    mode: "block",
     preFormat,
     type: KEYS.h6,
   },
   {
-    match: '> ',
-    mode: 'block',
+    match: "> ",
+    mode: "block",
     preFormat,
     type: KEYS.blockquote,
   },
   {
-    match: '```',
-    mode: 'block',
+    match: "```",
+    mode: "block",
     preFormat,
     type: KEYS.codeBlock,
     format: (editor) => {
@@ -180,13 +180,13 @@ const autoformatBlocks: AutoformatRule[] = [
   //   type: KEYS.toggle,
   // },
   {
-    match: ['---', '—-', '___ '],
-    mode: 'block',
+    match: ["---", "—-", "___ "],
+    mode: "block",
     type: KEYS.hr,
     format: (editor) => {
       editor.tf.setNodes({ type: KEYS.hr });
       editor.tf.insertNodes({
-        children: [{ text: '' }],
+        children: [{ text: "" }],
         type: KEYS.p,
       });
     },
@@ -195,8 +195,8 @@ const autoformatBlocks: AutoformatRule[] = [
 
 const autoformatLists: AutoformatRule[] = [
   {
-    match: ['* ', '- '],
-    mode: 'block',
+    match: ["* ", "- "],
+    mode: "block",
     preFormat,
     type: KEYS.li,
     format: (editor) => formatList(editor, KEYS.ulClassic),
@@ -204,20 +204,20 @@ const autoformatLists: AutoformatRule[] = [
   {
     match: [String.raw`^\d+\.$ `, String.raw`^\d+\)$ `],
     matchByRegex: true,
-    mode: 'block',
+    mode: "block",
     preFormat,
     type: KEYS.li,
     format: (editor) => formatList(editor, KEYS.olClassic),
   },
   {
-    match: '[] ',
-    mode: 'block',
+    match: "[] ",
+    mode: "block",
     type: KEYS.taskList,
     format: (editor) => formatTaskList(editor, false),
   },
   {
-    match: '[x] ',
-    mode: 'block',
+    match: "[x] ",
+    mode: "block",
     type: KEYS.taskList,
     format: (editor) => formatTaskList(editor, true),
   },

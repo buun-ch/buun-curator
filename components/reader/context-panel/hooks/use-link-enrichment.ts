@@ -2,10 +2,7 @@
 
 import * as React from "react";
 
-import {
-  useWorkflowStore,
-  selectWorkflowById,
-} from "@/stores/workflow-store";
+import { useWorkflowStore, selectWorkflowById } from "@/stores/workflow-store";
 import type { FetchEntryLinksProgress } from "@/lib/temporal";
 /** Debounce delay in milliseconds. */
 const DEBOUNCE_DELAY = 1000;
@@ -51,10 +48,12 @@ export function useLinkEnrichment({
   // Pending URLs waiting for debounce
   const [pendingUrls, setPendingUrls] = React.useState<Set<string>>(new Set());
   // URLs currently being fetched
-  const [fetchingUrls, setFetchingUrls] = React.useState<Set<string>>(new Set());
+  const [fetchingUrls, setFetchingUrls] = React.useState<Set<string>>(
+    new Set(),
+  );
   // URLs that failed to fetch (URL -> error message)
   const [failedUrls, setFailedUrls] = React.useState<Map<string, string>>(
-    new Map()
+    new Map(),
   );
   // Current workflow ID
   const [workflowId, setWorkflowId] = React.useState<string | null>(null);
@@ -65,7 +64,7 @@ export function useLinkEnrichment({
 
   // Get workflow from store (SSE-updated)
   const workflow = useWorkflowStore(
-    workflowId ? selectWorkflowById(workflowId) : () => null
+    workflowId ? selectWorkflowById(workflowId) : () => null,
   );
   // Ref to track current entryId for async operations
   const entryIdRef = React.useRef(entryId);
@@ -144,7 +143,10 @@ export function useLinkEnrichment({
             return merged;
           });
         }
-        onWorkflowCompleteRef.current?.(success, success ? undefined : "Workflow failed");
+        onWorkflowCompleteRef.current?.(
+          success,
+          success ? undefined : "Workflow failed",
+        );
       });
     }
   }, [workflow, workflowId]);
@@ -190,11 +192,14 @@ export function useLinkEnrichment({
     setFetchingUrls(new Set(urls));
 
     try {
-      const response = await fetch(`/api/entries/${currentEntryId}/fetch-links`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urls }),
-      });
+      const response = await fetch(
+        `/api/entries/${currentEntryId}/fetch-links`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ urls }),
+        },
+      );
 
       if (!response.ok) {
         const error = await response.json();
@@ -209,45 +214,51 @@ export function useLinkEnrichment({
       console.error("Failed to start fetch links workflow:", error);
       // Clear fetching on error
       setFetchingUrls(new Set());
-      onWorkflowCompleteRef.current?.(false, error instanceof Error ? error.message : "Unknown error");
+      onWorkflowCompleteRef.current?.(
+        false,
+        error instanceof Error ? error.message : "Unknown error",
+      );
     }
   }, []);
 
   // Add URL to pending queue with debounce
-  const addUrl = React.useCallback((url: string) => {
-    if (!entryId) return;
+  const addUrl = React.useCallback(
+    (url: string) => {
+      if (!entryId) return;
 
-    // Clear error state for this URL if retrying
-    setFailedUrls((prev) => {
-      if (prev.has(url)) {
-        const next = new Map(prev);
-        next.delete(url);
+      // Clear error state for this URL if retrying
+      setFailedUrls((prev) => {
+        if (prev.has(url)) {
+          const next = new Map(prev);
+          next.delete(url);
+          return next;
+        }
+        return prev;
+      });
+
+      // Update both state and ref
+      setPendingUrls((prev) => {
+        const next = new Set(prev);
+        next.add(url);
+        pendingUrlsRef.current = next;
         return next;
+      });
+
+      // Clear existing timer
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
-      return prev;
-    });
 
-    // Update both state and ref
-    setPendingUrls((prev) => {
-      const next = new Set(prev);
-      next.add(url);
-      pendingUrlsRef.current = next;
-      return next;
-    });
-
-    // Clear existing timer
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    // Set new timer - read from ref to avoid stale closure
-    timerRef.current = setTimeout(() => {
-      const currentPending = pendingUrlsRef.current;
-      if (currentPending.size > 0) {
-        startWorkflow(Array.from(currentPending));
-      }
-    }, DEBOUNCE_DELAY);
-  }, [entryId, startWorkflow]);
+      // Set new timer - read from ref to avoid stale closure
+      timerRef.current = setTimeout(() => {
+        const currentPending = pendingUrlsRef.current;
+        if (currentPending.size > 0) {
+          startWorkflow(Array.from(currentPending));
+        }
+      }, DEBOUNCE_DELAY);
+    },
+    [entryId, startWorkflow],
+  );
 
   return {
     addUrl,

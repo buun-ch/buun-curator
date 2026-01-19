@@ -39,7 +39,9 @@ interface ReaderPageProps {
   viewMode?: ViewMode;
 }
 
-export function ReaderPage({ viewMode: initialViewMode = "reader" }: ReaderPageProps) {
+export function ReaderPage({
+  viewMode: initialViewMode = "reader",
+}: ReaderPageProps) {
   const hydrated = useHydrated();
 
   // URL state for navigation
@@ -49,10 +51,14 @@ export function ReaderPage({ viewMode: initialViewMode = "reader" }: ReaderPageP
   const [viewMode, setViewMode] = React.useState<ViewMode>(initialViewMode);
 
   // Subscription collapse state
-  const [subscriptionCollapsed, setSubscriptionCollapsed] = React.useState(false);
-  const handleSubscriptionCollapsedChange = React.useCallback((collapsed: boolean) => {
-    setSubscriptionCollapsed(collapsed);
-  }, []);
+  const [subscriptionCollapsed, setSubscriptionCollapsed] =
+    React.useState(false);
+  const handleSubscriptionCollapsedChange = React.useCallback(
+    (collapsed: boolean) => {
+      setSubscriptionCollapsed(collapsed);
+    },
+    [],
+  );
 
   // Assistant state from Zustand (UI preference, kept in store)
   const assistantOpenRaw = useSettingsStore((state) => state.assistantOpen);
@@ -60,19 +66,28 @@ export function ReaderPage({ viewMode: initialViewMode = "reader" }: ReaderPageP
   const assistantOpen = hydrated ? assistantOpenRaw : false;
 
   // Panel sizes from store
-  const subscriptionPanelWidth = useSettingsStore((state) => state.subscriptionPanelWidth);
-  const setSubscriptionPanelWidth = useSettingsStore((state) => state.setSubscriptionPanelWidth);
-  const assistantPanelWidth = useSettingsStore((state) => state.assistantPanelWidth);
-  const setAssistantPanelWidth = useSettingsStore((state) => state.setAssistantPanelWidth);
+  const subscriptionPanelWidth = useSettingsStore(
+    (state) => state.subscriptionPanelWidth,
+  );
+  const setSubscriptionPanelWidth = useSettingsStore(
+    (state) => state.setSubscriptionPanelWidth,
+  );
+  const assistantPanelWidth = useSettingsStore(
+    (state) => state.assistantPanelWidth,
+  );
+  const setAssistantPanelWidth = useSettingsStore(
+    (state) => state.setAssistantPanelWidth,
+  );
 
   // Content panel mode (derived from URL section and selection)
-  const [contentPanelMode, setContentPanelMode] = React.useState<ContentPanelMode>(() => {
-    if (section === "reddit") {
-      if (subreddit) return "subreddit-info";
-      return "reddit-search";
-    }
-    return "entries";
-  });
+  const [contentPanelMode, setContentPanelMode] =
+    React.useState<ContentPanelMode>(() => {
+      if (section === "reddit") {
+        if (subreddit) return "subreddit-info";
+        return "reddit-search";
+      }
+      return "entries";
+    });
 
   // Update content panel mode when section changes
   React.useEffect(() => {
@@ -88,7 +103,9 @@ export function ReaderPage({ viewMode: initialViewMode = "reader" }: ReaderPageP
   }, [section, subreddit]);
 
   // Track current entry ID for AI context
-  const [currentEntryId, setCurrentEntryId] = React.useState<string | undefined>(entryId);
+  const [currentEntryId, setCurrentEntryId] = React.useState<
+    string | undefined
+  >(entryId);
 
   // Update currentEntryId when URL entryId changes
   React.useEffect(() => {
@@ -124,7 +141,8 @@ export function ReaderPage({ viewMode: initialViewMode = "reader" }: ReaderPageP
     : subscriptionPanelWidth;
 
   // Determine effective view mode
-  const effectiveViewMode = initialViewMode === "settings" ? "settings" : viewMode;
+  const effectiveViewMode =
+    initialViewMode === "settings" ? "settings" : viewMode;
 
   return (
     <PreserveEntriesProvider>

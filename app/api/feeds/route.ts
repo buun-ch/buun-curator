@@ -11,17 +11,14 @@ const log = createLogger("api:feeds");
 // GET /api/feeds - List all feeds
 export async function GET() {
   try {
-    const result = await db
-      .select()
-      .from(feeds)
-      .orderBy(asc(feeds.name));
+    const result = await db.select().from(feeds).orderBy(asc(feeds.name));
 
     return NextResponse.json(result);
   } catch (error) {
     log.error({ error }, "failed to fetch feeds");
     return NextResponse.json(
       { error: "Failed to fetch feeds" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -30,20 +27,15 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, url, siteUrl, categoryId, type, fetchContent, fetchLimit } = body;
+    const { name, url, siteUrl, categoryId, type, fetchContent, fetchLimit } =
+      body;
 
     if (!name || typeof name !== "string") {
-      return NextResponse.json(
-        { error: "Name is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
     if (!url || typeof url !== "string") {
-      return NextResponse.json(
-        { error: "URL is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
 
     const result = await db
@@ -93,7 +85,7 @@ export async function POST(request: Request) {
     log.error({ error }, "failed to create feed");
     return NextResponse.json(
       { error: "Failed to create feed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

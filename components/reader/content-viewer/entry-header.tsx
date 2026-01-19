@@ -37,7 +37,7 @@ export function EntryHeader({ entry }: EntryHeaderProps) {
         rel="noopener noreferrer"
         className="-mx-2 mb-4 block rounded-md p-2 transition-colors hover:bg-accent"
       >
-        <h1 className="text-3xl font-bold leading-tight">{entry.title}</h1>
+        <h1 className="text-3xl leading-tight font-bold">{entry.title}</h1>
       </a>
 
       {/* Labels */}

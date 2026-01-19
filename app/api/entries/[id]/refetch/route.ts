@@ -36,7 +36,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     log.debug(
       { entryId, feedId: entryWithFeed.feedId, shouldFetchContent },
-      "Refetch entry"
+      "Refetch entry",
     );
 
     // If fetchContent is disabled, clear fetched content fields first
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     log.error({ error }, "Failed to start refetch workflow");
     return NextResponse.json(
       { error: "Failed to start refetch workflow" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

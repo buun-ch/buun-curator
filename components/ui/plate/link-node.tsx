@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import type { TLinkElement } from 'platejs';
-import type { PlateElementProps } from 'platejs/react';
+import type { TLinkElement } from "platejs";
+import type { PlateElementProps } from "platejs/react";
 
-import { getLinkAttributes } from '@platejs/link';
-import { PlateElement } from 'platejs/react';
+import { getLinkAttributes } from "@platejs/link";
+import { PlateElement } from "platejs/react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 export function LinkElement(props: PlateElementProps<TLinkElement>) {
   return (
@@ -14,7 +14,7 @@ export function LinkElement(props: PlateElementProps<TLinkElement>) {
       {...props}
       as="a"
       className={cn(
-        'font-medium text-primary underline decoration-primary underline-offset-4'
+        "font-medium text-primary underline decoration-primary underline-offset-4",
       )}
       attributes={{
         ...props.attributes,

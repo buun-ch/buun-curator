@@ -29,7 +29,7 @@ export async function GET(): Promise<NextResponse> {
     log.error({ error }, "Failed to list active workflows");
     return NextResponse.json(
       { error: "Failed to list active workflows" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

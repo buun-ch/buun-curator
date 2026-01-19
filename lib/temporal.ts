@@ -88,7 +88,7 @@ export interface WorkflowHandle {
  * @returns Workflow handle with IDs for status tracking
  */
 export async function startReprocessEntriesWorkflow(
-  options: StartReprocessEntriesOptions
+  options: StartReprocessEntriesOptions,
 ): Promise<WorkflowHandle> {
   const { entryIds, fetchContent = true, summarize = true } = options;
   const client = await getTemporalClient();
@@ -98,9 +98,7 @@ export async function startReprocessEntriesWorkflow(
   // For single entry: reprocess-entries-{entryId}-{random}
   // For multiple: reprocess-entries-{count}-{random}
   const entrySuffix =
-    entryIds.length === 1
-      ? entryIds[0]
-      : `batch-${entryIds.length}`;
+    entryIds.length === 1 ? entryIds[0] : `batch-${entryIds.length}`;
   const workflowId = `reprocess-entries-${entrySuffix}-${Math.random().toString(36).slice(2, 10)}`;
 
   const handle = await client.workflow.start("ReprocessEntriesWorkflow", {
@@ -172,7 +170,7 @@ export interface StartSingleFeedIngestionOptions {
  * @returns Workflow handle with IDs for status tracking
  */
 export async function startSingleFeedIngestionWorkflow(
-  options: StartSingleFeedIngestionOptions
+  options: StartSingleFeedIngestionOptions,
 ): Promise<WorkflowHandle> {
   const {
     feedId,
@@ -256,7 +254,7 @@ export interface StartTranslationOptions {
  * @returns Workflow handle with IDs for status tracking
  */
 export async function startTranslationWorkflow(
-  options: StartTranslationOptions = {}
+  options: StartTranslationOptions = {},
 ): Promise<WorkflowHandle> {
   const { entryIds = null, provider = "microsoft" } = options;
   const client = await getTemporalClient();
@@ -293,7 +291,7 @@ export interface StartExtractEntryContextOptions {
  * @returns Workflow handle with IDs for status tracking
  */
 export async function startExtractEntryContextWorkflow(
-  options: StartExtractEntryContextOptions
+  options: StartExtractEntryContextOptions,
 ): Promise<WorkflowHandle> {
   const { entryId } = options;
   const client = await getTemporalClient();
@@ -331,7 +329,7 @@ export interface StartFetchEntryLinksOptions {
  * @returns Workflow handle with IDs for status tracking
  */
 export async function startFetchEntryLinksWorkflow(
-  options: StartFetchEntryLinksOptions
+  options: StartFetchEntryLinksOptions,
 ): Promise<WorkflowHandle> {
   const { entryId, urls, timeout = 60 } = options;
   const client = await getTemporalClient();
@@ -369,7 +367,7 @@ export interface StartContextCollectionOptions {
  * @returns Workflow handle with IDs for status tracking
  */
 export async function startContextCollectionWorkflow(
-  options: StartContextCollectionOptions
+  options: StartContextCollectionOptions,
 ): Promise<WorkflowHandle> {
   const { entryIds } = options;
   const client = await getTemporalClient();
@@ -407,7 +405,7 @@ export interface StartDeleteEnrichmentOptions {
  * @returns Workflow handle with IDs for status tracking
  */
 export async function startDeleteEnrichmentWorkflow(
-  options: StartDeleteEnrichmentOptions
+  options: StartDeleteEnrichmentOptions,
 ): Promise<WorkflowHandle> {
   const { entryId, enrichmentType, source } = options;
   const client = await getTemporalClient();
@@ -440,7 +438,7 @@ export async function startDeleteEnrichmentWorkflow(
  * @returns Status result with optional result data or error message
  */
 export async function getWorkflowStatus(
-  workflowId: string
+  workflowId: string,
 ): Promise<WorkflowStatusResult> {
   const client = await getTemporalClient();
   const handle = client.workflow.getHandle(workflowId);
@@ -495,7 +493,13 @@ export async function getWorkflowStatus(
 export interface EntryProgressState {
   entryId: string;
   title: string;
-  status: "pending" | "fetching" | "fetched" | "distilling" | "completed" | "error";
+  status:
+    | "pending"
+    | "fetching"
+    | "fetched"
+    | "distilling"
+    | "completed"
+    | "error";
   changedAt: string;
   error?: string;
 }
@@ -660,7 +664,7 @@ export interface ActiveWorkflowInfo {
  * @returns Workflow progress or null if query fails
  */
 export async function queryWorkflowProgress(
-  workflowId: string
+  workflowId: string,
 ): Promise<WorkflowProgress | null> {
   const client = await getTemporalClient();
   const handle = client.workflow.getHandle(workflowId);

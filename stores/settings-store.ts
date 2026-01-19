@@ -58,12 +58,18 @@ interface SettingsState {
   redditSearches: RedditSearch[];
   addRedditSearch: (title: string, query: string) => void;
   removeRedditSearch: (id: string) => void;
-  updateRedditSearch: (id: string, updates: Partial<Omit<RedditSearch, "id">>) => void;
+  updateRedditSearch: (
+    id: string,
+    updates: Partial<Omit<RedditSearch, "id">>,
+  ) => void;
 
   // Per-subreddit settings (keyed by subreddit name) - only filterMode in localStorage
   subredditSettings: Record<string, SubredditLocalSettings>;
   getSubredditFilterMode: (subredditName: string) => RedditFilterMode;
-  setSubredditFilterMode: (subredditName: string, mode: RedditFilterMode) => void;
+  setSubredditFilterMode: (
+    subredditName: string,
+    mode: RedditFilterMode,
+  ) => void;
 }
 
 const DEFAULT_SUBREDDIT_FILTER_MODE: RedditFilterMode = "all";
@@ -102,15 +108,19 @@ export const useSettingsStore = create<SettingsState>()(
 
       // Panel sizes (in pixels, for fixed-width panels)
       subscriptionPanelWidth: 250,
-      setSubscriptionPanelWidth: (width) => set({ subscriptionPanelWidth: width }),
+      setSubscriptionPanelWidth: (width) =>
+        set({ subscriptionPanelWidth: width }),
       contentListPanelWidth: 320,
-      setContentListPanelWidth: (width) => set({ contentListPanelWidth: width }),
+      setContentListPanelWidth: (width) =>
+        set({ contentListPanelWidth: width }),
       assistantPanelWidth: 300,
       setAssistantPanelWidth: (width) => set({ assistantPanelWidth: width }),
       translationPanelWidth: 400,
-      setTranslationPanelWidth: (width) => set({ translationPanelWidth: width }),
+      setTranslationPanelWidth: (width) =>
+        set({ translationPanelWidth: width }),
       settingsNavPanelWidth: 250,
-      setSettingsNavPanelWidth: (width) => set({ settingsNavPanelWidth: width }),
+      setSettingsNavPanelWidth: (width) =>
+        set({ settingsNavPanelWidth: width }),
       contextPanelHeight: 300,
       setContextPanelHeight: (height) => set({ contextPanelHeight: height }),
 
@@ -136,7 +146,7 @@ export const useSettingsStore = create<SettingsState>()(
       updateRedditSearch: (id, updates) =>
         set((state) => ({
           redditSearches: state.redditSearches.map((s) =>
-            s.id === id ? { ...s, ...updates } : s
+            s.id === id ? { ...s, ...updates } : s,
           ),
         })),
 
@@ -174,6 +184,6 @@ export const useSettingsStore = create<SettingsState>()(
         redditSearches: state.redditSearches,
         subredditSettings: state.subredditSettings,
       }),
-    }
-  )
+    },
+  ),
 );

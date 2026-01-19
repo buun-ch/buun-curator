@@ -72,7 +72,7 @@ function cleanDescription(text: string | undefined): string | undefined {
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ name: string }> }
+  { params }: { params: Promise<{ name: string }> },
 ) {
   const disabled = checkRedditEnabled();
   if (disabled) return disabled;
@@ -89,13 +89,13 @@ export async function GET(
         next: {
           revalidate: 300, // Cache for 5 minutes
         },
-      }
+      },
     );
 
     if (!response.ok) {
       return NextResponse.json(
         { error: `Failed to fetch subreddit: ${response.status}` },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -106,7 +106,9 @@ export async function GET(
       name: data.display_name.toLowerCase(),
       displayName: data.display_name,
       title: data.title,
-      description: cleanDescription(data.public_description || data.description),
+      description: cleanDescription(
+        data.public_description || data.description,
+      ),
       subscribers: data.subscribers,
       activeUsers: data.accounts_active,
       createdAt: new Date(data.created_utc * 1000).toISOString(),
@@ -120,7 +122,7 @@ export async function GET(
     log.error({ error }, "Failed to fetch subreddit");
     return NextResponse.json(
       { error: "Failed to fetch subreddit" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

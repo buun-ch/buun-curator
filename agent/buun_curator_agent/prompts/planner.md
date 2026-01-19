@@ -28,6 +28,7 @@ Your task is to analyze the user's query and create a search strategy.
 - **Use both** when the query has both specific terms and conceptual aspects
 
 Examples:
+
 - "LangGraph tutorial" → meilisearch (specific keyword)
 - "How do AI agents work?" → embedding (conceptual question)
 - "Best practices for RAG systems" → both (specific term "RAG" + conceptual "best practices")
@@ -49,6 +50,7 @@ Entry Context:
 ## Output
 
 Provide a SearchPlan with:
+
 - sub_queries: List of search queries
 - sources: List of sources to use (meilisearch, embedding, or both)
 - reasoning: Brief explanation of your strategy

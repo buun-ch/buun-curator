@@ -28,7 +28,7 @@ export function isMeilisearchEnabled(): boolean {
 function getMeilisearchClient(): MeiliSearch {
   if (!MEILISEARCH_HOST || !MEILISEARCH_API_KEY) {
     throw new Error(
-      "Meilisearch not configured. Set MEILISEARCH_HOST and MEILISEARCH_API_KEY."
+      "Meilisearch not configured. Set MEILISEARCH_HOST and MEILISEARCH_API_KEY.",
     );
   }
 
@@ -78,7 +78,7 @@ export async function searchEntries(
     feedId?: string;
     limit?: number;
     offset?: number;
-  } = {}
+  } = {},
 ): Promise<SearchResponse> {
   const client = getMeilisearchClient();
   const index = client.index(MEILISEARCH_INDEX);

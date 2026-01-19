@@ -77,7 +77,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     log.error({ error }, "Failed to generate markdown");
     return NextResponse.json(
       { error: "Failed to generate markdown" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

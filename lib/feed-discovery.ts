@@ -82,7 +82,10 @@ const COMMON_FEED_PATHS = [
  * @param url - Optional URL to check for type hints
  * @returns Detected feed type
  */
-function detectFeedType(contentType: string, url?: string): "rss" | "atom" | "unknown" {
+function detectFeedType(
+  contentType: string,
+  url?: string,
+): "rss" | "atom" | "unknown" {
   const ct = contentType.toLowerCase();
   if (ct.includes("atom")) return "atom";
   if (ct.includes("rss")) return "rss";
@@ -122,13 +125,17 @@ function extractTitleText(titleContent: string): string {
 function extractFeedTitle(xml: string): string | undefined {
   // Try RSS <title> (direct child of <channel>)
   // Match title content that may contain CDATA or plain text
-  const rssMatch = xml.match(/<channel[^>]*>[\s\S]*?<title[^>]*>([\s\S]*?)<\/title>/i);
+  const rssMatch = xml.match(
+    /<channel[^>]*>[\s\S]*?<title[^>]*>([\s\S]*?)<\/title>/i,
+  );
   if (rssMatch) {
     return extractTitleText(rssMatch[1]);
   }
 
   // Try Atom <title> (direct child of <feed>)
-  const atomMatch = xml.match(/<feed[^>]*>[\s\S]*?<title[^>]*>([\s\S]*?)<\/title>/i);
+  const atomMatch = xml.match(
+    /<feed[^>]*>[\s\S]*?<title[^>]*>([\s\S]*?)<\/title>/i,
+  );
   if (atomMatch) {
     return extractTitleText(atomMatch[1]);
   }
@@ -163,7 +170,7 @@ async function checkIfFeed(url: string): Promise<FeedCheckResult> {
 
     // Check if it's a feed content type
     const isFeed = FEED_CONTENT_TYPES.some((type) =>
-      contentType.toLowerCase().includes(type.split("/")[1])
+      contentType.toLowerCase().includes(type.split("/")[1]),
     );
 
     if (isFeed) {
@@ -219,7 +226,7 @@ async function checkIfFeed(url: string): Promise<FeedCheckResult> {
  */
 function extractFeedLinks(
   html: string,
-  baseUrl: string
+  baseUrl: string,
 ): { feeds: DiscoveredFeed[]; siteTitle?: string } {
   const { document } = parseHTML(html);
 
@@ -232,7 +239,7 @@ function extractFeedLinks(
 
   // Find <link rel="alternate"> tags with feed types
   const linkElements = document.querySelectorAll(
-    'link[rel="alternate"], link[rel="feed"]'
+    'link[rel="alternate"], link[rel="feed"]',
   );
 
   for (const link of linkElements) {
@@ -245,7 +252,7 @@ function extractFeedLinks(
     // Check if it's a feed type
     const isFeedType =
       FEED_LINK_TYPES.some((feedType) =>
-        type.toLowerCase().includes(feedType.split("/")[1])
+        type.toLowerCase().includes(feedType.split("/")[1]),
       ) || link.getAttribute("rel") === "feed";
 
     if (isFeedType) {
@@ -318,15 +325,16 @@ async function tryCommonPaths(baseUrl: string): Promise<DiscoveredFeed[]> {
         return { url, type: result.type };
       }
       return null;
-    })
+    }),
   );
 
   for (const result of results) {
     if (result.status === "fulfilled" && result.value) {
       // If type is unknown, try to detect from URL
-      const feedType = result.value.type === "unknown"
-        ? detectFeedType("", result.value.url)
-        : result.value.type;
+      const feedType =
+        result.value.type === "unknown"
+          ? detectFeedType("", result.value.url)
+          : result.value.type;
       feeds.push({
         url: result.value.url,
         type: feedType,
@@ -351,7 +359,10 @@ async function tryCommonPaths(baseUrl: string): Promise<DiscoveredFeed[]> {
 export async function discoverFeeds(url: string): Promise<FeedDiscoveryResult> {
   // Normalize URL
   let normalizedUrl = url.trim();
-  if (!normalizedUrl.startsWith("http://") && !normalizedUrl.startsWith("https://")) {
+  if (
+    !normalizedUrl.startsWith("http://") &&
+    !normalizedUrl.startsWith("https://")
+  ) {
     normalizedUrl = "https://" + normalizedUrl;
   }
 
@@ -362,7 +373,13 @@ export async function discoverFeeds(url: string): Promise<FeedDiscoveryResult> {
   const directCheck = await checkIfFeed(normalizedUrl);
   if (directCheck.isFeed) {
     return {
-      feeds: [{ url: normalizedUrl, title: directCheck.title, type: directCheck.type }],
+      feeds: [
+        {
+          url: normalizedUrl,
+          title: directCheck.title,
+          type: directCheck.type,
+        },
+      ],
       siteTitle: directCheck.title,
       siteUrl,
     };
@@ -374,7 +391,13 @@ export async function discoverFeeds(url: string): Promise<FeedDiscoveryResult> {
     const mediumCheck = await checkIfFeed(mediumFeedUrl);
     if (mediumCheck.isFeed) {
       return {
-        feeds: [{ url: mediumFeedUrl, title: mediumCheck.title, type: mediumCheck.type }],
+        feeds: [
+          {
+            url: mediumFeedUrl,
+            title: mediumCheck.title,
+            type: mediumCheck.type,
+          },
+        ],
         siteTitle: mediumCheck.title,
         siteUrl,
       };

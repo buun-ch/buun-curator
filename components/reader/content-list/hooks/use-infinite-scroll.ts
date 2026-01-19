@@ -28,7 +28,7 @@ export function useInfiniteScroll({
           onLoadMore();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     const currentRef = loadMoreRef.current;

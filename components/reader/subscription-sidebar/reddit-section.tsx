@@ -1,14 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  ChevronRight,
-  Plus,
-  Check,
-  X,
-  Loader2,
-  Trash2,
-} from "lucide-react";
+import { ChevronRight, Plus, Check, X, Loader2, Trash2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -121,9 +114,9 @@ function FavoriteSubredditItem({
   return (
     <div
       className={cn(
-        "group flex w-full items-center rounded-md text-sm hover:bg-accent select-none",
+        "group flex w-full items-center rounded-md text-sm select-none hover:bg-accent",
         isSelected && "bg-accent",
-        collapsed && "justify-center"
+        collapsed && "justify-center",
       )}
       style={{ paddingLeft: collapsed ? undefined : "44px" }}
     >
@@ -139,7 +132,7 @@ function FavoriteSubredditItem({
         <Button
           variant="ghost"
           size="icon"
-          className="mr-1 size-6 shrink-0 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
+          className="mr-1 size-6 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive"
           onClick={(e) => {
             e.stopPropagation();
             onDelete();
@@ -202,27 +195,27 @@ export function RedditSection({
         className={cn(
           "flex w-full items-center rounded-md text-sm font-medium select-none",
           isRedditSelected && "bg-accent",
-          collapsed && "justify-center"
+          collapsed && "justify-center",
         )}
       >
         <CollapsibleTrigger asChild>
           <button
-            className="flex items-center p-1.5 hover:bg-accent rounded-md"
+            className="flex items-center rounded-md p-1.5 hover:bg-accent"
             onClick={(e) => e.stopPropagation()}
           >
             <ChevronRight
               className={cn(
                 "size-4 shrink-0 transition-transform",
                 isOpen && "rotate-90",
-                collapsed && "hidden"
+                collapsed && "hidden",
               )}
             />
           </button>
         </CollapsibleTrigger>
         <button
           className={cn(
-            "flex flex-1 items-center gap-2 py-1.5 hover:bg-accent rounded-md",
-            collapsed && "justify-center px-0"
+            "flex flex-1 items-center gap-2 rounded-md py-1.5 hover:bg-accent",
+            collapsed && "justify-center px-0",
           )}
           onClick={() => onSelect?.("reddit-search")}
         >

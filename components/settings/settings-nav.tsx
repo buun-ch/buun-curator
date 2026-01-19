@@ -1,13 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Rss,
-  FolderTree,
-  Languages,
-  Tags,
-  X,
-} from "lucide-react";
+import { Rss, FolderTree, Languages, Tags, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useUrlState } from "@/lib/url-state-context";
@@ -59,7 +53,7 @@ export function SettingsNav({ onClose }: SettingsNavProps) {
     <div className="flex h-full flex-col bg-background">
       {/* Header */}
       <div className="flex h-12 shrink-0 items-center border-b px-4">
-        <h2 className="flex-1 select-none text-sm font-semibold">Settings</h2>
+        <h2 className="flex-1 text-sm font-semibold select-none">Settings</h2>
         <Button
           variant="ghost"
           size="icon"
@@ -79,7 +73,7 @@ export function SettingsNav({ onClose }: SettingsNavProps) {
               onClick={() => navigateToSettings(category.id)}
               className={cn(
                 "flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-accent",
-                settingsCategory === category.id && "bg-accent font-medium"
+                settingsCategory === category.id && "bg-accent font-medium",
               )}
             >
               {category.icon}

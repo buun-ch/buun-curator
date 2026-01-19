@@ -301,26 +301,23 @@ export function useSSE(options: UseSSEOptions = {}) {
   ]);
 
   // Force reconnect when keep-alive timeout is detected
-  const forceReconnect = useCallback(
-    (reason: string) => {
-      log.info(
-        {
-          elapsed: Date.now() - lastKeepAliveRef.current,
-          threshold: KEEPALIVE_TIMEOUT_MS,
-        },
-        `${reason}, reconnecting`,
-      );
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-        abortControllerRef.current = null;
-      }
-      isConnectingRef.current = false;
-      reconnectCountRef.current = 0;
-      lastKeepAliveRef.current = Date.now();
-      setReconnectTrigger((t) => t + 1);
-    },
-    [],
-  );
+  const forceReconnect = useCallback((reason: string) => {
+    log.info(
+      {
+        elapsed: Date.now() - lastKeepAliveRef.current,
+        threshold: KEEPALIVE_TIMEOUT_MS,
+      },
+      `${reason}, reconnecting`,
+    );
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    isConnectingRef.current = false;
+    reconnectCountRef.current = 0;
+    lastKeepAliveRef.current = Date.now();
+    setReconnectTrigger((t) => t + 1);
+  }, []);
 
   // Periodic keep-alive timeout check (detects stale connections while tab is visible)
   useEffect(() => {

@@ -26,7 +26,7 @@ interface KeyboardShortcutsDialogProps {
 
 /** Groups shortcuts by category. */
 function groupByCategory(
-  shortcuts: KeyboardShortcut[]
+  shortcuts: KeyboardShortcut[],
 ): Record<string, KeyboardShortcut[]> {
   return shortcuts.reduce(
     (acc, shortcut) => {
@@ -36,7 +36,7 @@ function groupByCategory(
       acc[shortcut.category].push(shortcut);
       return acc;
     },
-    {} as Record<string, KeyboardShortcut[]>
+    {} as Record<string, KeyboardShortcut[]>,
   );
 }
 

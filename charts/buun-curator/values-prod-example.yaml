@@ -41,7 +41,7 @@ worker:
     maxLocalActivities: 0
 
   s3:
-    endpoint: ""  # Empty for AWS S3, URL for MinIO/other S3-compatible
+    endpoint: "" # Empty for AWS S3, URL for MinIO/other S3-compatible
     accessKey: ""
     secretKey: ""
     bucket: buun-curator
@@ -86,7 +86,7 @@ ingress:
           pathType: ImplementationSpecific
   tls:
     - hosts:
-      - buun-curator.example.com
+        - buun-curator.example.com
 
 postgres:
   app:

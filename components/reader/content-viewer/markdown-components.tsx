@@ -18,11 +18,7 @@ export const markdownComponents: Components = {
   },
   // Filter out images with empty src to avoid browser warnings
   // Center images horizontally
-  img: ({
-    src,
-    alt,
-    ...props
-  }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+  img: ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
     if (!src) return null;
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={src} alt={alt || ""} className="mx-auto" {...props} />;

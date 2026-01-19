@@ -63,7 +63,7 @@ export const ContentViewer = forwardRef(function ContentViewer(
     onSelectEntry,
     onUpdateAnnotation,
   }: ContentViewerProps,
-  ref: Ref<ContentViewerRef>
+  ref: Ref<ContentViewerRef>,
 ) {
   // Ref to the scrollable content container
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -89,7 +89,7 @@ export const ContentViewer = forwardRef(function ContentViewer(
         }
       },
     }),
-    []
+    [],
   );
 
   // Content determination hook
@@ -121,7 +121,7 @@ export const ContentViewer = forwardRef(function ContentViewer(
         await onUpdateAnnotation(entry.id, annotation);
       }
     },
-    [entry, onUpdateAnnotation]
+    [entry, onUpdateAnnotation],
   );
 
   if (!entry) {
@@ -196,7 +196,7 @@ export const ContentViewer = forwardRef(function ContentViewer(
               {/* Summary (if available) */}
               {entry.summary && (
                 <div className="mb-8 rounded-lg border bg-muted/50 p-4">
-                  <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none">
+                  <div className="prose prose-sm max-w-none prose-neutral dark:prose-invert">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={markdownComponents}
@@ -234,7 +234,9 @@ export const ContentViewer = forwardRef(function ContentViewer(
               {/* Annotation */}
               <AnnotationSection
                 entry={entry}
-                onUpdate={onUpdateAnnotation ? handleAnnotationUpdate : undefined}
+                onUpdate={
+                  onUpdateAnnotation ? handleAnnotationUpdate : undefined
+                }
               />
 
               {/* Debug Panel */}

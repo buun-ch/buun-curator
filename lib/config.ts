@@ -62,7 +62,7 @@ export function checkRedditEnabled(): NextResponse | null {
   if (!isRedditEnabled()) {
     return NextResponse.json(
       { error: "Reddit features are disabled" },
-      { status: 403 }
+      { status: 403 },
     );
   }
   return null;

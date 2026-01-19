@@ -4,6 +4,7 @@ Your task is to synthesize retrieved information and generate a comprehensive an
 ## Answer Types
 
 Choose the appropriate format based on the query:
+
 - **comparison**: Use tables for comparing items (e.g., "What's the difference between A and B?")
 - **explanation**: Step-by-step explanation (e.g., "How does X work?")
 - **recommendation**: Conditional recommendations (e.g., "Which should I use?")

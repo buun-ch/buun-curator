@@ -40,12 +40,12 @@ export function UserMenu({ collapsed }: UserMenuProps) {
       <div
         className={cn(
           "flex w-full items-center gap-2 rounded-md px-3 py-1.5",
-          collapsed && "justify-center px-0"
+          collapsed && "justify-center px-0",
         )}
       >
         <Skeleton className="size-8 rounded-full" />
         {!collapsed && (
-          <div className="flex-1 min-w-0 space-y-1">
+          <div className="min-w-0 flex-1 space-y-1">
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-3 w-32" />
           </div>
@@ -68,8 +68,8 @@ export function UserMenu({ collapsed }: UserMenuProps) {
         <button
           key="user-menu-trigger-button"
           className={cn(
-            "flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm hover:bg-accent select-none",
-            collapsed && "justify-center px-0"
+            "flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm select-none hover:bg-accent",
+            collapsed && "justify-center px-0",
           )}
         >
           <Avatar className="size-8 border">
@@ -78,13 +78,13 @@ export function UserMenu({ collapsed }: UserMenuProps) {
           </Avatar>
           {!collapsed && (
             <>
-              <div className="flex-1 min-w-0 text-left">
+              <div className="min-w-0 flex-1 text-left">
                 <div className="truncate font-medium">{user.name}</div>
                 <div className="truncate text-xs text-muted-foreground">
                   {user.email}
                 </div>
               </div>
-              <ChevronsUpDown className="size-4 text-muted-foreground shrink-0" />
+              <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" />
             </>
           )}
         </button>
@@ -97,10 +97,13 @@ export function UserMenu({ collapsed }: UserMenuProps) {
         <DropdownMenuLabel className="font-normal">
           <div className="flex items-center gap-2">
             <Avatar className="size-8 border">
-              <AvatarImage src={user.image || undefined} alt={user.name || ""} />
+              <AvatarImage
+                src={user.image || undefined}
+                alt={user.name || ""}
+              />
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="truncate font-medium">{user.name}</div>
               <div className="truncate text-xs text-muted-foreground">
                 {user.email}
@@ -110,7 +113,7 @@ export function UserMenu({ collapsed }: UserMenuProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>
-          <LogOut className="size-4 mr-2" />
+          <LogOut className="mr-2 size-4" />
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>

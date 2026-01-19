@@ -71,7 +71,7 @@ export async function createEntry(
     publishedAt?: Date | null;
     metadata?: Record<string, unknown> | null;
   },
-  db: Db = defaultDb
+  db: Db = defaultDb,
 ) {
   return await db.transaction(async (tx) => {
     // Verify feed exists
@@ -145,7 +145,7 @@ export async function updateEntry(
     thumbnailUrl?: string;
     metadata?: Record<string, unknown>;
   },
-  db: Db = defaultDb
+  db: Db = defaultDb,
 ) {
   // Use transaction only when metadata merge is needed
   if (data.metadata !== undefined) {
@@ -333,7 +333,7 @@ export async function listEntries(
     unreadOnly?: boolean;
     hasSummary?: boolean;
   } = {},
-  db: Db = defaultDb
+  db: Db = defaultDb,
 ) {
   const { feedId, offset = 0, unreadOnly = false, hasSummary } = options;
   let { limit } = options;
@@ -389,7 +389,7 @@ export async function listEntries(
   // doesn't support empty string check easily)
   if (hasSummary !== undefined) {
     return result.filter((entry) =>
-      hasSummary ? entry.summary && entry.summary.length > 0 : !entry.summary
+      hasSummary ? entry.summary && entry.summary.length > 0 : !entry.summary,
     );
   }
 

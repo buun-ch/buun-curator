@@ -45,7 +45,7 @@ function cleanThumbnail(thumbnail: string | undefined): string | undefined {
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ name: string }> }
+  { params }: { params: Promise<{ name: string }> },
 ) {
   const disabled = checkRedditEnabled();
   if (disabled) return disabled;
@@ -79,7 +79,7 @@ export async function GET(
     if (!response.ok) {
       return NextResponse.json(
         { error: `Failed to fetch posts: ${response.status}` },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -108,7 +108,7 @@ export async function GET(
     log.error({ error }, "Failed to fetch posts");
     return NextResponse.json(
       { error: "Failed to fetch posts" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

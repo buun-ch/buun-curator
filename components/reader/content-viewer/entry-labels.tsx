@@ -65,7 +65,11 @@ function getColorForLabel(name: string): string {
  *
  * Displays labels as colored tags with autocomplete for existing labels.
  */
-export function EntryLabels({ entryId, labels: initialLabels, onLabelsChange }: EntryLabelsProps) {
+export function EntryLabels({
+  entryId,
+  labels: initialLabels,
+  onLabelsChange,
+}: EntryLabelsProps) {
   const tagifyRef = useRef<Tagify>(null!);
 
   // Local state for optimistic updates
@@ -77,8 +81,12 @@ export function EntryLabels({ entryId, labels: initialLabels, onLabelsChange }: 
 
   // Sync with props when they change from outside (compare by IDs to avoid infinite loops)
   const initialLabelIds = useMemo(
-    () => initialLabels.map((l) => l.id).sort().join(","),
-    [initialLabels]
+    () =>
+      initialLabels
+        .map((l) => l.id)
+        .sort()
+        .join(","),
+    [initialLabels],
   );
   useEffect(() => {
     setLocalLabels(initialLabels);
@@ -96,7 +104,7 @@ export function EntryLabels({ entryId, labels: initialLabels, onLabelsChange }: 
         id: label.id,
         color: label.color,
       })),
-    [allLabels]
+    [allLabels],
   );
 
   // Tagify settings (whitelist is passed as separate prop for dynamic updates)
@@ -182,7 +190,9 @@ export function EntryLabels({ entryId, labels: initialLabels, onLabelsChange }: 
           await addLabel(existingLabel.id);
         } else {
           // Create new label first, then add to entry
-          const color = (tagData as { color?: string }).color || getColorForLabel(tagData.value);
+          const color =
+            (tagData as { color?: string }).color ||
+            getColorForLabel(tagData.value);
           const newLabel = await createLabel({ name: tagData.value, color });
           // Optimistic update
           const newLabels = [...localLabelsRef.current, newLabel];
@@ -198,7 +208,7 @@ export function EntryLabels({ entryId, labels: initialLabels, onLabelsChange }: 
         tagifyRef.current?.removeTags(tagData.value);
       }
     },
-    [allLabels, addLabel, createLabel, onLabelsChange]
+    [allLabels, addLabel, createLabel, onLabelsChange],
   );
 
   // Handle tag removal
@@ -232,14 +242,16 @@ export function EntryLabels({ entryId, labels: initialLabels, onLabelsChange }: 
           return prev;
         });
         // Re-add the tag since removal failed
-        tagifyRef.current?.addTags([{
-          value: label.name,
-          id: label.id,
-          color: label.color,
-        }]);
+        tagifyRef.current?.addTags([
+          {
+            value: label.name,
+            id: label.id,
+            color: label.color,
+          },
+        ]);
       }
     },
-    [removeLabel, onLabelsChange]
+    [removeLabel, onLabelsChange],
   );
 
   // Convert current labels to tagify format (memoized to prevent re-renders)
@@ -251,7 +263,7 @@ export function EntryLabels({ entryId, labels: initialLabels, onLabelsChange }: 
         color: label.color,
         style: `--tag-bg: ${label.color}`,
       })),
-    [localLabels]
+    [localLabels],
   );
 
   // Handle dropdown selection - Tagify React wrapper doesn't automatically add tags from dropdown
@@ -293,7 +305,7 @@ export function EntryLabels({ entryId, labels: initialLabels, onLabelsChange }: 
         console.error("Failed to add label from dropdown:", error);
       }
     },
-    [allLabels, addLabel, createLabel, onLabelsChange]
+    [allLabels, addLabel, createLabel, onLabelsChange],
   );
 
   // Keyboard shortcut: 'l' to focus label input
@@ -302,7 +314,7 @@ export function EntryLabels({ entryId, labels: initialLabels, onLabelsChange }: 
     () => {
       tagifyRef.current?.DOM.input.focus();
     },
-    { preventDefault: true }
+    { preventDefault: true },
   );
 
   return (

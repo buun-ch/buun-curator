@@ -4,7 +4,10 @@ import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FixedWidthPanel } from "@/components/ui/fixed-width-panel";
 import { ContentList } from "@/components/reader/content-list";
-import { ContentViewer, type ContentViewerRef } from "@/components/reader/content-viewer";
+import {
+  ContentViewer,
+  type ContentViewerRef,
+} from "@/components/reader/content-viewer";
 import { RedditSearchResults } from "@/components/reader/reddit-search-results";
 import { SubredditInfo } from "@/components/reader/subreddit-info";
 import { RedditPostViewer } from "@/components/reader/reddit-post-viewer";
@@ -21,10 +24,19 @@ import { useSelectedSubscriptionInfo } from "@/hooks/use-selected-subscription-i
 import { useSingleFeedIngestion } from "@/hooks/use-single-feed-ingestion";
 import { useTranslation } from "@/hooks/use-translation";
 import { useSettingsStore } from "@/stores/settings-store";
-import { useWorkflowStore, selectIsEntryRefreshing, selectIsEntryDistilled } from "@/stores/workflow-store";
+import {
+  useWorkflowStore,
+  selectIsEntryRefreshing,
+  selectIsEntryDistilled,
+} from "@/stores/workflow-store";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { isRedditEnabled } from "@/lib/config";
-import { type ContentPanelMode, type Entry, type EntryListItem, type LanguageMode } from "@/lib/types";
+import {
+  type ContentPanelMode,
+  type Entry,
+  type EntryListItem,
+  type LanguageMode,
+} from "@/lib/types";
 import { useUrlState } from "@/lib/url-state-context";
 import { usePreserveEntries } from "@/lib/preserve-entries-context";
 import { createLogger } from "@/lib/logger";
@@ -76,21 +88,24 @@ export function ReaderContent({
 
   // Settings from store (UI preferences only)
   const contentListPanelWidth = useSettingsStore(
-    (state) => state.contentListPanelWidth
+    (state) => state.contentListPanelWidth,
   );
   const setContentListPanelWidth = useSettingsStore(
-    (state) => state.setContentListPanelWidth
+    (state) => state.setContentListPanelWidth,
   );
   const translationPanelWidth = useSettingsStore(
-    (state) => state.translationPanelWidth
+    (state) => state.translationPanelWidth,
   );
   const setTranslationPanelWidth = useSettingsStore(
-    (state) => state.setTranslationPanelWidth
+    (state) => state.setTranslationPanelWidth,
   );
 
   // Subscriptions data (for updating unread counts)
-  const { updateCountOnRead, updateCountOnToggleRead, refetch: refetchSubscriptions } =
-    useSubscriptions();
+  const {
+    updateCountOnRead,
+    updateCountOnToggleRead,
+    refetch: refetchSubscriptions,
+  } = useSubscriptions();
 
   // Selected subscription info (title, type, feed details for refetch)
   const { info: subscriptionInfo } = useSelectedSubscriptionInfo();
@@ -100,7 +115,10 @@ export function ReaderContent({
 
   // Clear preserved IDs when filter mode or subscription changes
   React.useEffect(() => {
-    log.debug({ filter: feedFilterMode, subscription: selectedSubscription }, "clearing preserveIds due to filter/subscription change");
+    log.debug(
+      { filter: feedFilterMode, subscription: selectedSubscription },
+      "clearing preserveIds due to filter/subscription change",
+    );
     clearPreserveIds();
   }, [feedFilterMode, selectedSubscription, clearPreserveIds]);
 
@@ -139,7 +157,7 @@ export function ReaderContent({
   // - Other modes: show regular entries
   const displayEntries = React.useMemo(
     () => (isSearchMode ? (isSearching ? searchResults : []) : entries),
-    [isSearchMode, isSearching, searchResults, entries]
+    [isSearchMode, isSearching, searchResults, entries],
   );
   const displayLoading = isSearchMode ? searchLoading : entriesLoading;
 
@@ -171,7 +189,7 @@ export function ReaderContent({
       // Always update the main entries list (for read status sync)
       setEntries(updater);
     },
-    [setEntries]
+    [setEntries],
   );
 
   // Selected entry - use displayEntries for navigation
@@ -192,17 +210,20 @@ export function ReaderContent({
   });
 
   // Build entry URL helper
-  const buildEntryUrl = React.useCallback((entryId: string) => {
-    let newPath: string;
-    if (feedId) {
-      newPath = `/feeds/f/${feedId}/e/${entryId}`;
-    } else if (categoryId) {
-      newPath = `/feeds/c/${categoryId}/e/${entryId}`;
-    } else {
-      newPath = `/feeds/e/${entryId}`;
-    }
-    return `${newPath}${window.location.search}`;
-  }, [feedId, categoryId]);
+  const buildEntryUrl = React.useCallback(
+    (entryId: string) => {
+      let newPath: string;
+      if (feedId) {
+        newPath = `/feeds/f/${feedId}/e/${entryId}`;
+      } else if (categoryId) {
+        newPath = `/feeds/c/${categoryId}/e/${entryId}`;
+      } else {
+        newPath = `/feeds/e/${entryId}`;
+      }
+      return `${newPath}${window.location.search}`;
+    },
+    [feedId, categoryId],
+  );
 
   // Update URL when selected entry changes (using pushState to preserve history)
   const prevEntryIdRef = React.useRef<string | undefined>(initialEntryId);
@@ -233,7 +254,7 @@ export function ReaderContent({
 
       if (urlEntryId && urlEntryId !== selectedEntry?.id) {
         // Find the entry in the list and select it
-        const entry = displayEntries.find(e => e.id === urlEntryId);
+        const entry = displayEntries.find((e) => e.id === urlEntryId);
         isPopstateNavigation.current = true;
         if (entry) {
           selectEntry(entry);
@@ -270,12 +291,11 @@ export function ReaderContent({
   const handleNextEntry = goToNext;
 
   // Entry actions
-  const { toggleStar, toggleKeep, toggleRead, refreshEntry } =
-    useEntryActions({
-      setEntries,
-      onToggleRead: updateCountOnToggleRead,
-      onMarkAsRead: addPreserveId,
-    });
+  const { toggleStar, toggleKeep, toggleRead, refreshEntry } = useEntryActions({
+    setEntries,
+    onToggleRead: updateCountOnToggleRead,
+    onMarkAsRead: addPreserveId,
+  });
 
   // Entry update mutation for annotation
   const updateEntryMutation = useUpdateEntry();
@@ -285,37 +305,46 @@ export function ReaderContent({
     async (entryId: string, annotation: string) => {
       await updateEntryMutation.mutateAsync({ entryId, data: { annotation } });
     },
-    [updateEntryMutation]
+    [updateEntryMutation],
   );
 
   // Check if selected entry is being refreshed via workflow store
   const isEntryRefreshingViaWorkflow = useWorkflowStore(
-    selectIsEntryRefreshing(selectedEntry?.id)
+    selectIsEntryRefreshing(selectedEntry?.id),
   );
 
   // Check if selected entry has been distilled (summary generated)
   const isEntryDistilled = useWorkflowStore(
-    selectIsEntryDistilled(selectedEntry?.id)
+    selectIsEntryDistilled(selectedEntry?.id),
   );
-  const clearDistilledEntryId = useWorkflowStore((state) => state.clearDistilledEntryId);
+  const clearDistilledEntryId = useWorkflowStore(
+    (state) => state.clearDistilledEntryId,
+  );
 
   // Track previous refreshing state to detect completion
   const wasRefreshingRef = React.useRef(false);
 
   // Refetch entry by ID (called when translation or refresh completes)
-  const handleEntryUpdated = React.useCallback(async (entryId: string) => {
-    // Invalidate the entry query - TanStack Query will refetch
-    await queryClient.invalidateQueries({ queryKey: ["entry", entryId] });
-    // Mark entries list as stale (for summary changes etc.)
-    await queryClient.invalidateQueries({
-      queryKey: ["entries"],
-      refetchType: "none",
-    });
-  }, [queryClient]);
+  const handleEntryUpdated = React.useCallback(
+    async (entryId: string) => {
+      // Invalidate the entry query - TanStack Query will refetch
+      await queryClient.invalidateQueries({ queryKey: ["entry", entryId] });
+      // Mark entries list as stale (for summary changes etc.)
+      await queryClient.invalidateQueries({
+        queryKey: ["entries"],
+        refetchType: "none",
+      });
+    },
+    [queryClient],
+  );
 
   // Refetch entry when refresh completes (was refreshing, now not)
   React.useEffect(() => {
-    if (wasRefreshingRef.current && !isEntryRefreshingViaWorkflow && selectedEntry?.id) {
+    if (
+      wasRefreshingRef.current &&
+      !isEntryRefreshingViaWorkflow &&
+      selectedEntry?.id
+    ) {
       handleEntryUpdated(selectedEntry.id);
     }
     wasRefreshingRef.current = isEntryRefreshingViaWorkflow;
@@ -327,10 +356,16 @@ export function ReaderContent({
       handleEntryUpdated(selectedEntry.id);
       clearDistilledEntryId(selectedEntry.id);
     }
-  }, [isEntryDistilled, selectedEntry?.id, handleEntryUpdated, clearDistilledEntryId]);
+  }, [
+    isEntryDistilled,
+    selectedEntry?.id,
+    handleEntryUpdated,
+    clearDistilledEntryId,
+  ]);
 
   // Language mode state (resets when entry changes)
-  const [languageMode, setLanguageMode] = React.useState<LanguageMode>("original");
+  const [languageMode, setLanguageMode] =
+    React.useState<LanguageMode>("original");
 
   // Reset language mode when entry changes
   React.useEffect(() => {
@@ -339,7 +374,8 @@ export function ReaderContent({
 
   // Check if entry has translation
   const hasTranslation = Boolean(
-    selectedEntry?.translatedContent && selectedEntry.translatedContent.length > 0
+    selectedEntry?.translatedContent &&
+    selectedEntry.translatedContent.length > 0,
   );
 
   // Translation hook
@@ -365,7 +401,9 @@ export function ReaderContent({
     if (selectedEntry) {
       // Entry selected: <Entry.title> | <Feed.name>
       const entryTitle = truncate(selectedEntry.title);
-      const feedName = selectedEntry.feedName ? truncate(selectedEntry.feedName) : "";
+      const feedName = selectedEntry.feedName
+        ? truncate(selectedEntry.feedName)
+        : "";
       title = feedName ? `${entryTitle} | ${feedName}` : entryTitle;
     } else if (subscriptionInfo) {
       // Feed or Category selected

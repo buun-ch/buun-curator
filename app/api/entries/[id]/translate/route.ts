@@ -17,7 +17,8 @@ interface RouteParams {
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     const { id: entryId } = await params;
-    const provider = (process.env.TRANSLATION_PROVIDER || "microsoft") as TranslationProvider;
+    const provider = (process.env.TRANSLATION_PROVIDER ||
+      "microsoft") as TranslationProvider;
 
     // Start the unified translation workflow with provider
     const handle = await startTranslationWorkflow({
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     log.error({ error }, "Failed to start translation workflow");
     return NextResponse.json(
       { error: "Failed to start translation workflow" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -48,7 +49,7 @@ export async function GET(request: NextRequest) {
     if (!workflowId) {
       return NextResponse.json(
         { error: "workflowId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -59,7 +60,7 @@ export async function GET(request: NextRequest) {
     log.error({ error }, "Failed to get translation status");
     return NextResponse.json(
       { error: "Failed to get translation status" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

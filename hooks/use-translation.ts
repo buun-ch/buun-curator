@@ -3,10 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 
 import type { LanguageMode } from "@/lib/types";
-import {
-  useWorkflowStore,
-  selectWorkflowById,
-} from "@/stores/workflow-store";
+import { useWorkflowStore, selectWorkflowById } from "@/stores/workflow-store";
 interface UseTranslationOptions {
   /** The entry ID to translate. */
   entryId?: string;
@@ -49,12 +46,12 @@ export function useTranslation({
 
   // Get workflow from store (SSE-updated)
   const workflow = useWorkflowStore(
-    workflowId ? selectWorkflowById(workflowId) : () => null
+    workflowId ? selectWorkflowById(workflowId) : () => null,
   );
 
   // Get action to register immediate translating state
   const addTranslatingEntry = useWorkflowStore(
-    (state) => state.addTranslatingEntry
+    (state) => state.addTranslatingEntry,
   );
 
   // Check if we've already triggered for this entry
@@ -110,7 +107,13 @@ export function useTranslation({
       triggerTranslation();
     }, 0);
     return () => clearTimeout(timeoutId);
-  }, [languageMode, entryId, hasTranslation, hasTriggeredForCurrentEntry, triggerTranslation]);
+  }, [
+    languageMode,
+    entryId,
+    hasTranslation,
+    hasTriggeredForCurrentEntry,
+    triggerTranslation,
+  ]);
 
   // Watch workflow status via SSE (replaces polling)
   // Use ref to track previous status and avoid duplicate processing
@@ -145,7 +148,8 @@ export function useTranslation({
 
   // Reset isTranslating when entry changes (to avoid showing spinner for new entry)
   // This is safe because it's tied to entryId, not just any prop change
-  const currentIsTranslating = triggeredEntryId === entryId ? isTranslating : false;
+  const currentIsTranslating =
+    triggeredEntryId === entryId ? isTranslating : false;
 
   return {
     isTranslating: currentIsTranslating,

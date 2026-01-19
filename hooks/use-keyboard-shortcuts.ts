@@ -27,8 +27,16 @@ export const KEYBOARD_SHORTCUTS: KeyboardShortcut[] = [
   // Navigation
   { key: "j", description: "Next entry", category: "navigation" },
   { key: "k", description: "Previous entry", category: "navigation" },
-  { key: "shift+j / space", description: "Scroll down", category: "navigation" },
-  { key: "shift+k / shift+space", description: "Scroll up", category: "navigation" },
+  {
+    key: "shift+j / space",
+    description: "Scroll down",
+    category: "navigation",
+  },
+  {
+    key: "shift+k / shift+space",
+    description: "Scroll up",
+    category: "navigation",
+  },
   { key: "gg", description: "Scroll to top", category: "navigation" },
   { key: "G", description: "Scroll to bottom", category: "navigation" },
   { key: "o", description: "Open entry in new tab", category: "navigation" },
@@ -145,11 +153,11 @@ export function useKeyboardShortcuts({
         setKeySequence("g");
         sequenceTimeoutRef.current = setTimeout(
           () => setKeySequence(""),
-          SEQUENCE_TIMEOUT
+          SEQUENCE_TIMEOUT,
         );
       }
     },
-    options
+    options,
   );
 
   // "G" (shift+g) for scroll to bottom

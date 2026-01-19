@@ -10,10 +10,10 @@ import { useUrlState } from "@/lib/url-state-context";
 export function SettingsContent() {
   const { navigateToAllEntries, settingsCategory } = useUrlState();
   const settingsNavPanelWidth = useSettingsStore(
-    (state) => state.settingsNavPanelWidth
+    (state) => state.settingsNavPanelWidth,
   );
   const setSettingsNavPanelWidth = useSettingsStore(
-    (state) => state.setSettingsNavPanelWidth
+    (state) => state.setSettingsNavPanelWidth,
   );
 
   const handleClose = () => {

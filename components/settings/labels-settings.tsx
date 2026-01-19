@@ -102,7 +102,12 @@ export function LabelsSettings() {
 
   // Delete label
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this label? It will be removed from all entries.")) return;
+    if (
+      !confirm(
+        "Are you sure you want to delete this label? It will be removed from all entries.",
+      )
+    )
+      return;
 
     try {
       const response = await fetch(`/api/labels?id=${id}`, {
@@ -162,7 +167,11 @@ export function LabelsSettings() {
             className="flex-1"
           />
           <Button onClick={handleAdd} disabled={saving || !newLabelName.trim()}>
-            {saving ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
+            {saving ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Plus className="size-4" />
+            )}
             <span className="ml-2">Add</span>
           </Button>
         </div>
@@ -181,69 +190,75 @@ export function LabelsSettings() {
           </p>
         ) : (
           <div className="space-y-2">
-            {[...labels].sort((a, b) => a.name.localeCompare(b.name)).map((label) => (
-              <div
-                key={label.id}
-                className="flex items-center gap-2 rounded-lg border p-3"
-              >
-                {editingId === label.id ? (
-                  <>
-                    <input
-                      type="color"
-                      value={editingColor}
-                      onChange={(e) => setEditingColor(e.target.value)}
-                      className="h-9 w-12 cursor-pointer rounded border bg-transparent p-1"
-                      title="Choose color"
-                    />
-                    <Input
-                      value={editingName}
-                      onChange={(e) => setEditingName(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") handleUpdate(label.id);
-                        if (e.key === "Escape") cancelEditing();
-                      }}
-                      className="flex-1"
-                      autoFocus
-                    />
-                    <Button
-                      size="sm"
-                      onClick={() => handleUpdate(label.id)}
-                      disabled={saving || !editingName.trim()}
-                    >
-                      Save
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={cancelEditing}>
-                      Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <span
-                      className="size-4 shrink-0 rounded-full border"
-                      style={{ backgroundColor: label.color }}
-                      title={label.color}
-                    />
-                    <span className="flex-1 font-medium">{label.name}</span>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="size-8"
-                      onClick={() => startEditing(label)}
-                    >
-                      <Pencil className="size-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="size-8 text-destructive hover:text-destructive"
-                      onClick={() => handleDelete(label.id)}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
-                  </>
-                )}
-              </div>
-            ))}
+            {[...labels]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((label) => (
+                <div
+                  key={label.id}
+                  className="flex items-center gap-2 rounded-lg border p-3"
+                >
+                  {editingId === label.id ? (
+                    <>
+                      <input
+                        type="color"
+                        value={editingColor}
+                        onChange={(e) => setEditingColor(e.target.value)}
+                        className="h-9 w-12 cursor-pointer rounded border bg-transparent p-1"
+                        title="Choose color"
+                      />
+                      <Input
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleUpdate(label.id);
+                          if (e.key === "Escape") cancelEditing();
+                        }}
+                        className="flex-1"
+                        autoFocus
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => handleUpdate(label.id)}
+                        disabled={saving || !editingName.trim()}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={cancelEditing}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <span
+                        className="size-4 shrink-0 rounded-full border"
+                        style={{ backgroundColor: label.color }}
+                        title={label.color}
+                      />
+                      <span className="flex-1 font-medium">{label.name}</span>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="size-8"
+                        onClick={() => startEditing(label)}
+                      >
+                        <Pencil className="size-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="size-8 text-destructive hover:text-destructive"
+                        onClick={() => handleDelete(label.id)}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </>
+                  )}
+                </div>
+              ))}
           </div>
         )}
       </div>

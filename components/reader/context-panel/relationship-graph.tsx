@@ -112,7 +112,7 @@ const CyGraph = React.memo(function CyGraph({
         },
       },
     ],
-    []
+    [],
   );
 
   // Handle Cytoscape instance
@@ -165,7 +165,9 @@ export function RelationshipGraph({
   entities = [],
   className,
 }: RelationshipGraphProps) {
-  const [selectedEntity, setSelectedEntity] = React.useState<Entity | null>(null);
+  const [selectedEntity, setSelectedEntity] = React.useState<Entity | null>(
+    null,
+  );
 
   // Build entity lookup map
   const entityMap = React.useMemo(() => {
@@ -219,7 +221,7 @@ export function RelationshipGraph({
         });
       }
     },
-    [entityMap]
+    [entityMap],
   );
 
   const handleBackgroundClick = React.useCallback(() => {

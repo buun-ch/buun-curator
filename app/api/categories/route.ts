@@ -19,7 +19,7 @@ export async function GET() {
     log.error({ error }, "failed to fetch categories");
     return NextResponse.json(
       { error: "Failed to fetch categories" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -31,23 +31,17 @@ export async function POST(request: Request) {
     const { name } = body;
 
     if (!name || typeof name !== "string") {
-      return NextResponse.json(
-        { error: "Name is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
-    const result = await db
-      .insert(categories)
-      .values({ name })
-      .returning();
+    const result = await db.insert(categories).values({ name }).returning();
 
     return NextResponse.json(result[0], { status: 201 });
   } catch (error) {
     log.error({ error }, "failed to create category");
     return NextResponse.json(
       { error: "Failed to create category" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

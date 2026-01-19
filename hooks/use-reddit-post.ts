@@ -23,19 +23,18 @@ import type { RedditPostDetail, RedditComment } from "@/lib/types";
  * @returns Query result with post detail and comments
  */
 export function useRedditPost(postId: string | undefined) {
-  return useQuery<
-    { post: RedditPostDetail; comments: RedditComment[] },
-    Error
-  >({
-    queryKey: ["reddit-post", postId],
-    queryFn: () => {
-      if (!postId) {
-        throw new Error("Post ID is required");
-      }
-      return fetchRedditPost(postId);
+  return useQuery<{ post: RedditPostDetail; comments: RedditComment[] }, Error>(
+    {
+      queryKey: ["reddit-post", postId],
+      queryFn: () => {
+        if (!postId) {
+          throw new Error("Post ID is required");
+        }
+        return fetchRedditPost(postId);
+      },
+      enabled: Boolean(postId),
+      staleTime: 60 * 1000, // 1 minute
+      gcTime: 5 * 60 * 1000, // 5 minutes
     },
-    enabled: Boolean(postId),
-    staleTime: 60 * 1000, // 1 minute
-    gcTime: 5 * 60 * 1000, // 5 minutes
-  });
+  );
 }

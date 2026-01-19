@@ -14,7 +14,7 @@ import { markdownComponents } from "./markdown-components";
 const AnnotationEditor = dynamic(
   () =>
     import("@/components/editor/annotation-editor").then(
-      (mod) => mod.AnnotationEditor
+      (mod) => mod.AnnotationEditor,
     ),
   {
     ssr: false,
@@ -23,7 +23,7 @@ const AnnotationEditor = dynamic(
         <Loader2 className="size-5 animate-spin text-muted-foreground" />
       </div>
     ),
-  }
+  },
 );
 
 /** Props for the AnnotationSection component. */
@@ -73,7 +73,9 @@ export function AnnotationSection({ entry, onUpdate }: AnnotationSectionProps) {
     <section className="mt-8 border-t border-border/50 pt-6">
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-muted-foreground">Annotation</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">
+          Annotation
+        </h3>
         <div className="flex gap-2">
           {isEditing ? (
             <>
@@ -117,7 +119,7 @@ export function AnnotationSection({ entry, onUpdate }: AnnotationSectionProps) {
           placeholder="Add your notes, thoughts, or additional content..."
         />
       ) : hasAnnotation ? (
-        <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none">
+        <div className="prose prose-sm max-w-none prose-neutral dark:prose-invert">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={markdownComponents}

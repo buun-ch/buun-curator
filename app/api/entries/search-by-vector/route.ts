@@ -33,25 +33,28 @@ export async function POST(request: NextRequest) {
     if (!embedding || !Array.isArray(embedding)) {
       return NextResponse.json(
         { error: "embedding is required and must be an array" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (embedding.length !== EMBEDDING_DIM) {
       return NextResponse.json(
         { error: `embedding must be ${EMBEDDING_DIM}-dimensional` },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Validate and clamp parameters
     const threshold = Math.min(
-      Math.max(typeof rawThreshold === "number" ? rawThreshold : DEFAULT_THRESHOLD, 0),
-      2
+      Math.max(
+        typeof rawThreshold === "number" ? rawThreshold : DEFAULT_THRESHOLD,
+        0,
+      ),
+      2,
     );
     const limit = Math.min(
       Math.max(typeof rawLimit === "number" ? rawLimit : DEFAULT_LIMIT, 1),
-      MAX_LIMIT
+      MAX_LIMIT,
     );
 
     // Format embedding for pgvector
@@ -70,7 +73,8 @@ export async function POST(request: NextRequest) {
       published_at: Date | null;
       created_at: Date;
       similarity_score: number;
-    }>(sql.raw(`
+    }>(
+      sql.raw(`
       SELECT
         e.id,
         e.feed_id,
@@ -89,15 +93,18 @@ export async function POST(request: NextRequest) {
         AND (e.embedding <=> '${vectorStr}'::vector) < ${threshold}
       ORDER BY similarity_score ASC
       LIMIT ${limit}
-    `));
+    `),
+    );
 
     // Get total count within threshold
-    const countResult = await db.execute<{ count: string }>(sql.raw(`
+    const countResult = await db.execute<{ count: string }>(
+      sql.raw(`
       SELECT COUNT(*) as count
       FROM entries
       WHERE embedding IS NOT NULL
         AND (embedding <=> '${vectorStr}'::vector) < ${threshold}
-    `));
+    `),
+    );
     const totalCount = Number(countResult.rows[0]?.count || 0);
 
     // Transform results to camelCase
@@ -117,7 +124,7 @@ export async function POST(request: NextRequest) {
 
     log.info(
       { limit, threshold, resultCount: matchedEntries.length, totalCount },
-      "vector search completed"
+      "vector search completed",
     );
 
     return NextResponse.json({
@@ -128,7 +135,7 @@ export async function POST(request: NextRequest) {
     log.error({ error }, "failed to search entries by vector");
     return NextResponse.json(
       { error: "Failed to search entries" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

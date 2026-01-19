@@ -51,7 +51,7 @@ export function ContextPanelHeader({
                 ? "animate-pulse text-primary"
                 : viewMode === "context"
                   ? "text-primary"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground",
             )}
           />
         </Button>
@@ -65,7 +65,7 @@ export function ContextPanelHeader({
           <Bug
             className={cn(
               "h-4 w-4",
-              viewMode === "debug" ? "text-primary" : "text-muted-foreground"
+              viewMode === "debug" ? "text-primary" : "text-muted-foreground",
             )}
           />
         </Button>

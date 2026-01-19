@@ -50,27 +50,27 @@ export function FeedsSection({
         className={cn(
           "flex w-full items-center rounded-md text-sm font-medium select-none",
           isFeedsSelected && "bg-accent",
-          collapsed && "justify-center"
+          collapsed && "justify-center",
         )}
       >
         <CollapsibleTrigger asChild>
           <button
-            className="flex items-center p-1.5 hover:bg-accent rounded-md"
+            className="flex items-center rounded-md p-1.5 hover:bg-accent"
             onClick={(e) => e.stopPropagation()}
           >
             <ChevronRight
               className={cn(
                 "size-4 shrink-0 transition-transform",
                 isOpen && "rotate-90",
-                collapsed && "hidden"
+                collapsed && "hidden",
               )}
             />
           </button>
         </CollapsibleTrigger>
         <button
           className={cn(
-            "flex flex-1 items-center gap-2 py-1.5 pr-2 hover:bg-accent rounded-md",
-            collapsed && "justify-center px-0"
+            "flex flex-1 items-center gap-2 rounded-md py-1.5 pr-2 hover:bg-accent",
+            collapsed && "justify-center px-0",
           )}
           onClick={() => onSelect?.("all")}
         >
@@ -79,7 +79,7 @@ export function FeedsSection({
             <>
               <span className="flex-1 truncate text-left">Feeds</span>
               {totalCount > 0 && (
-                <span className="text-xs text-muted-foreground font-normal">
+                <span className="text-xs font-normal text-muted-foreground">
                   {totalCount}
                 </span>
               )}

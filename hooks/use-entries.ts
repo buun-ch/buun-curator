@@ -41,7 +41,7 @@ interface UseEntriesReturn {
   entries: EntryListItem[];
   /** Updates the entries list (for optimistic updates). */
   setEntries: (
-    updater: EntryListItem[] | ((prev: EntryListItem[]) => EntryListItem[])
+    updater: EntryListItem[] | ((prev: EntryListItem[]) => EntryListItem[]),
   ) => void;
   /** True during initial data load. */
   loading: boolean;
@@ -82,7 +82,7 @@ function buildEntriesParams(
   filterMode: FilterMode,
   sortMode: SortMode,
   after?: string | null,
-  preserveIds?: Set<string>
+  preserveIds?: Set<string>,
 ): URLSearchParams {
   const params = new URLSearchParams();
 
@@ -136,14 +136,14 @@ async function fetchEntriesPage(
   filterMode: FilterMode,
   sortMode: SortMode,
   pageParam?: string | null,
-  preserveIds?: Set<string>
+  preserveIds?: Set<string>,
 ): Promise<EntriesConnection> {
   const params = buildEntriesParams(
     selectedSubscription,
     filterMode,
     sortMode,
     pageParam,
-    preserveIds
+    preserveIds,
   );
   const url = "/api/entries" + (params.toString() ? "?" + params : "");
 
@@ -195,7 +195,7 @@ export function useEntries({
 
   const queryKey = React.useMemo(
     () => ["entries", selectedSubscription, filterMode, sortMode] as const,
-    [selectedSubscription, filterMode, sortMode]
+    [selectedSubscription, filterMode, sortMode],
   );
 
   const {
@@ -209,7 +209,13 @@ export function useEntries({
   } = useInfiniteQuery({
     queryKey,
     queryFn: ({ pageParam }) =>
-      fetchEntriesPage(selectedSubscription, filterMode, sortMode, pageParam, preserveIdsRef.current),
+      fetchEntriesPage(
+        selectedSubscription,
+        filterMode,
+        sortMode,
+        pageParam,
+        preserveIdsRef.current,
+      ),
     initialPageParam: null as string | null,
     getNextPageParam: (lastPage) =>
       lastPage.pageInfo.hasNextPage ? lastPage.pageInfo.endCursor : undefined,
@@ -227,20 +233,22 @@ export function useEntries({
   const entries = React.useMemo(() => {
     if (!data?.pages) return [];
     return data.pages.flatMap((page) =>
-      page.edges.map((edge) => normalizeEntryListItem(edge.node))
+      page.edges.map((edge) => normalizeEntryListItem(edge.node)),
     );
   }, [data?.pages]);
 
   // Set entries by updating cache
   const setEntries = React.useCallback(
-    (updater: EntryListItem[] | ((prev: EntryListItem[]) => EntryListItem[])) => {
+    (
+      updater: EntryListItem[] | ((prev: EntryListItem[]) => EntryListItem[]),
+    ) => {
       queryClient.setQueryData<InfiniteData<EntriesConnection>>(
         queryKey,
         (oldData) => {
           if (!oldData) return oldData;
 
           const currentEntries = oldData.pages.flatMap((page) =>
-            page.edges.map((edge) => normalizeEntryListItem(edge.node))
+            page.edges.map((edge) => normalizeEntryListItem(edge.node)),
           );
 
           const newEntries =
@@ -272,10 +280,10 @@ export function useEntries({
             ...oldData,
             pages: newPages,
           };
-        }
+        },
       );
     },
-    [queryClient, queryKey]
+    [queryClient, queryKey],
   );
 
   // Load more entries

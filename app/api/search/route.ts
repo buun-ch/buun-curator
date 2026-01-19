@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     if (!isMeilisearchEnabled()) {
       return NextResponse.json(
         { error: "Search is not configured" },
-        { status: 503 }
+        { status: 503 },
       );
     }
 
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     if (!query || query.trim() === "") {
       return NextResponse.json(
         { error: "Search query is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -48,7 +48,10 @@ export async function GET(request: NextRequest) {
     // Fetch current isRead/isStarred status from DB
     const entryIds = result.hits.map((hit) => hit.id);
     const feedIds = [...new Set(result.hits.map((hit) => hit.feedId))];
-    const statusMap = new Map<string, { isRead: boolean; isStarred: boolean }>();
+    const statusMap = new Map<
+      string,
+      { isRead: boolean; isStarred: boolean }
+    >();
     const feedNameMap = new Map<string, string>();
 
     if (entryIds.length > 0) {

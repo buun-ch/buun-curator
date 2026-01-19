@@ -21,15 +21,15 @@ export type {
 export { DEFAULT_FETCH_LIMIT, MAX_FETCH_LIMIT, isError } from "./types";
 
 // Feed functions
-export { listFeeds, getFeed, updateFeedChecked, saveExtractionRule } from "./feeds";
+export {
+  listFeeds,
+  getFeed,
+  updateFeedChecked,
+  saveExtractionRule,
+} from "./feeds";
 
 // Entry functions
-export {
-  getEntry,
-  createEntry,
-  updateEntry,
-  listEntries,
-} from "./entries";
+export { getEntry, createEntry, updateEntry, listEntries } from "./entries";
 
 // Extraction functions
 export type {

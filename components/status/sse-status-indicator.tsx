@@ -56,8 +56,8 @@ export function SSEStatusIndicator({ className }: { className?: string }) {
         disabled={status === "connecting"}
         className={cn(
           "ml-auto rounded p-0.5 text-muted-foreground hover:bg-accent hover:text-foreground",
-          "disabled:opacity-50 disabled:cursor-not-allowed",
-          status === "connecting" && "animate-spin"
+          "disabled:cursor-not-allowed disabled:opacity-50",
+          status === "connecting" && "animate-spin",
         )}
         title="Reconnect"
         data-testid="sse-reconnect"

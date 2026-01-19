@@ -72,7 +72,7 @@ export function AssistantSidebar({
     (newMode: ChatMode) => {
       onModeChange(newMode);
     },
-    [onModeChange]
+    [onModeChange],
   );
 
   const handleNewChat = useCallback(() => {
@@ -86,7 +86,7 @@ export function AssistantSidebar({
       <Button
         variant="default"
         size="icon"
-        className="fixed bottom-6 right-6 z-[99999] size-10 rounded-full shadow-lg"
+        className="fixed right-6 bottom-6 z-[99999] size-10 rounded-full shadow-lg"
         onClick={() => onOpenChange?.(true)}
       >
         <Bot className="size-5" />
@@ -100,7 +100,9 @@ export function AssistantSidebar({
       {/* Header */}
       <div className="flex h-12 shrink-0 items-center border-b px-3">
         <Bot className="mr-2 size-5" />
-        <h2 className="flex-1 select-none text-sm font-semibold">AI Assistant</h2>
+        <h2 className="flex-1 text-sm font-semibold select-none">
+          AI Assistant
+        </h2>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -133,11 +135,7 @@ export function AssistantSidebar({
           className="h-full"
           AssistantMessage={CustomAssistantMessage}
           Input={(props) => (
-            <ChatInput
-              {...props}
-              mode={mode}
-              onModeChange={handleModeChange}
-            />
+            <ChatInput {...props} mode={mode} onModeChange={handleModeChange} />
           )}
           ErrorMessage={({ error }) => (
             <ErrorMessage

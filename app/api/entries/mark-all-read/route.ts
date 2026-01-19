@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     log.error({ error }, "failed to mark entries as read");
     return NextResponse.json(
       { error: "Failed to mark entries as read" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -80,14 +80,20 @@ function cleanUrl(url: string | undefined): string | undefined {
   return url.replace(/&amp;/g, "&");
 }
 
-function transformComment(data: RedditCommentData, maxDepth: number): object | null {
+function transformComment(
+  data: RedditCommentData,
+  maxDepth: number,
+): object | null {
   if (data.depth > maxDepth) return null;
 
   const replies: object[] = [];
   if (data.replies?.data?.children) {
     for (const child of data.replies.data.children) {
       if (child.kind === "t1") {
-        const reply = transformComment(child.data as RedditCommentData, maxDepth);
+        const reply = transformComment(
+          child.data as RedditCommentData,
+          maxDepth,
+        );
         if (reply) replies.push(reply);
       }
     }
@@ -109,7 +115,7 @@ function transformComment(data: RedditCommentData, maxDepth: number): object | n
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const disabled = checkRedditEnabled();
   if (disabled) return disabled;
@@ -120,11 +126,11 @@ export async function GET(
   const commentSort = searchParams.get("sort") || "best";
   const commentLimit = Math.min(
     parseInt(searchParams.get("limit") || "50", 10),
-    200
+    200,
   );
   const commentDepth = Math.min(
     parseInt(searchParams.get("depth") || "5", 10),
-    10
+    10,
   );
 
   try {
@@ -143,7 +149,7 @@ export async function GET(
     if (!response.ok) {
       return NextResponse.json(
         { error: `Failed to fetch post: ${response.status}` },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -159,7 +165,7 @@ export async function GET(
         if (child.kind === "t1") {
           const comment = transformComment(
             child.data as RedditCommentData,
-            commentDepth
+            commentDepth,
           );
           if (comment) comments.push(comment);
         }
@@ -206,7 +212,7 @@ export async function GET(
     log.error({ error }, "Failed to fetch post");
     return NextResponse.json(
       { error: "Failed to fetch post" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

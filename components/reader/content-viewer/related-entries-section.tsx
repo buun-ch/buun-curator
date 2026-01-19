@@ -32,7 +32,7 @@ function RelatedEntryCard({ entry, onClick }: RelatedEntryCardProps) {
       onClick={onClick}
       className={cn(
         "group flex w-48 shrink-0 cursor-pointer flex-col gap-2 rounded-lg border border-border/50 p-3",
-        "text-left transition-colors hover:bg-accent"
+        "text-left transition-colors hover:bg-accent",
       )}
     >
       {/* Thumbnail */}
