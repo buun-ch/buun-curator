@@ -29,6 +29,8 @@ export interface ContentViewerProps {
   onContextPanelOpenChange?: (open: boolean) => void;
   /** Callback when a related entry is selected for navigation. */
   onSelectEntry?: (entry: { id: string }) => void;
+  /** Callback when annotation is updated. */
+  onUpdateAnnotation?: (entryId: string, annotation: string) => Promise<void>;
 }
 
 /** Methods exposed via ref for external control. */

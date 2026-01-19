@@ -240,6 +240,7 @@ export interface Entry extends EntryListItem {
   fullContent?: string;
   filteredContent?: string;
   translatedContent?: string;
+  annotation?: string;
   labels: Label[];
   updatedAt?: string;
 }

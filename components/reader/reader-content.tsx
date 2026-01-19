@@ -14,6 +14,7 @@ import { useEntries } from "@/hooks/use-entries";
 import { useEntrySearch } from "@/hooks/use-entry-search";
 import { useSelectedEntry } from "@/hooks/use-selected-entry";
 import { useEntryActions } from "@/hooks/use-entry-actions";
+import { useUpdateEntry } from "@/hooks/use-entry";
 import { useRedditState } from "@/hooks/use-reddit-state";
 import { useSubscriptions } from "@/hooks/use-subscriptions";
 import { useSelectedSubscriptionInfo } from "@/hooks/use-selected-subscription-info";
@@ -276,6 +277,17 @@ export function ReaderContent({
       onMarkAsRead: addPreserveId,
     });
 
+  // Entry update mutation for annotation
+  const updateEntryMutation = useUpdateEntry();
+
+  // Update annotation handler
+  const handleUpdateAnnotation = React.useCallback(
+    async (entryId: string, annotation: string) => {
+      await updateEntryMutation.mutateAsync({ entryId, data: { annotation } });
+    },
+    [updateEntryMutation]
+  );
+
   // Check if selected entry is being refreshed via workflow store
   const isEntryRefreshingViaWorkflow = useWorkflowStore(
     selectIsEntryRefreshing(selectedEntry?.id)
@@ -484,6 +496,7 @@ export function ReaderContent({
             contextPanelOpen={contextPanelOpen}
             onContextPanelOpenChange={onContextPanelOpenChange}
             onSelectEntry={(entry) => selectEntry(entry as EntryListItem)}
+            onUpdateAnnotation={handleUpdateAnnotation}
           />
         ) : isRedditEnabled() ? (
           <RedditPostViewer

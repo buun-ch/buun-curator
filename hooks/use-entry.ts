@@ -83,6 +83,7 @@ export interface EntryUpdateData {
   isRead?: boolean;
   isStarred?: boolean;
   keep?: boolean;
+  annotation?: string;
 }
 
 /** Variables for the update entry mutation. */

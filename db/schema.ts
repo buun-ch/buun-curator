@@ -85,6 +85,7 @@ export const entries = pgTable(
     keepContext: boolean("keep_context").default(false).notNull(), // false = subject to auto-cleanup
     graphAddedAt: timestamp("graph_added_at", { withTimezone: true }), // null = not added to knowledge graph
     embedding: vector("embedding"), // 768-dim vector for recommendation
+    annotation: text("annotation").default("").notNull(), // User annotation (Markdown)
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),

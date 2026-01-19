@@ -30,6 +30,7 @@ import { LanguageToggle } from "./language-toggle";
 import { EntryContent } from "./entry-content";
 import { DebugPanel } from "./debug-panel";
 import { RelatedEntriesSection } from "./related-entries-section";
+import { AnnotationSection } from "./annotation-section";
 import { markdownComponents } from "./markdown-components";
 
 // Re-export types for external use
@@ -60,6 +61,7 @@ export const ContentViewer = forwardRef(function ContentViewer(
     contextPanelOpen = false,
     onContextPanelOpenChange,
     onSelectEntry,
+    onUpdateAnnotation,
   }: ContentViewerProps,
   ref: Ref<ContentViewerRef>
 ) {
@@ -111,6 +113,16 @@ export const ContentViewer = forwardRef(function ContentViewer(
       el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     }
   }, []);
+
+  // Handle annotation update
+  const handleAnnotationUpdate = useCallback(
+    async (annotation: string) => {
+      if (entry && onUpdateAnnotation) {
+        await onUpdateAnnotation(entry.id, annotation);
+      }
+    },
+    [entry, onUpdateAnnotation]
+  );
 
   if (!entry) {
     return (
@@ -217,6 +229,12 @@ export const ContentViewer = forwardRef(function ContentViewer(
               <RelatedEntriesSection
                 entryId={entry.id}
                 onEntryClick={(entryId) => onSelectEntry?.({ id: entryId })}
+              />
+
+              {/* Annotation */}
+              <AnnotationSection
+                entry={entry}
+                onUpdate={onUpdateAnnotation ? handleAnnotationUpdate : undefined}
               />
 
               {/* Debug Panel */}

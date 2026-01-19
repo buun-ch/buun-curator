@@ -38,10 +38,9 @@ const buttonVariants = cva(
 
 function Button({
   className,
-  variant,
-  size,
+  variant = "default",
+  size = "default",
   asChild = false,
-  onClick,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
@@ -49,21 +48,12 @@ function Button({
   }) {
   const Comp = asChild ? Slot : "button";
 
-  // Blur after click to prevent focus from interfering with keyboard shortcuts
-  const handleClick = React.useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      onClick?.(e);
-      // Blur the button after click to release focus
-      e.currentTarget.blur();
-    },
-    [onClick]
-  );
-
   return (
     <Comp
       data-slot="button"
+      data-variant={variant}
+      data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
-      onClick={asChild ? onClick : handleClick}
       {...props}
     />
   );

@@ -138,6 +138,7 @@ export async function updateEntry(
     filteredContent?: string;
     rawHtml?: string;
     summary?: string;
+    annotation?: string;
     isRead?: boolean;
     isStarred?: boolean;
     keep?: boolean;
@@ -155,6 +156,7 @@ export async function updateEntry(
         filteredContent?: string;
         rawHtml?: string;
         summary?: string;
+        annotation?: string;
         isRead?: boolean;
         isStarred?: boolean;
         keep?: boolean;
@@ -179,6 +181,9 @@ export async function updateEntry(
       // }
       if (data.summary !== undefined) {
         updateData.summary = data.summary;
+      }
+      if (data.annotation !== undefined) {
+        updateData.annotation = data.annotation;
       }
       if (data.isRead !== undefined) {
         updateData.isRead = data.isRead;
@@ -225,6 +230,7 @@ export async function updateEntry(
         filteredContent: updated.filteredContent,
         rawHtml: updated.rawHtml,
         summary: updated.summary,
+        annotation: updated.annotation,
         isRead: updated.isRead,
         isStarred: updated.isStarred,
         keep: updated.keep,
@@ -241,6 +247,7 @@ export async function updateEntry(
     filteredContent?: string;
     rawHtml?: string;
     summary?: string;
+    annotation?: string;
     isRead?: boolean;
     isStarred?: boolean;
     keep?: boolean;
@@ -264,6 +271,9 @@ export async function updateEntry(
   }
   if (data.summary !== undefined) {
     updateData.summary = data.summary;
+  }
+  if (data.annotation !== undefined) {
+    updateData.annotation = data.annotation;
   }
   if (data.isRead !== undefined) {
     updateData.isRead = data.isRead;
@@ -296,6 +306,7 @@ export async function updateEntry(
     filteredContent: updated.filteredContent,
     rawHtml: updated.rawHtml,
     summary: updated.summary,
+    annotation: updated.annotation,
     isRead: updated.isRead,
     isStarred: updated.isStarred,
     keep: updated.keep,

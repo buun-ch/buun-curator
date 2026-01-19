@@ -28,6 +28,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         fullContent: entries.fullContent,
         filteredContent: entries.filteredContent,
         translatedContent: entries.translatedContent,
+        annotation: entries.annotation,
         summary: entries.summary,
         author: entries.author,
         publishedAt: entries.publishedAt,
@@ -86,6 +87,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       filteredContent,
       rawHtml,
       summary,
+      annotation,
       thumbnailUrl,
       metadata,
     } = body;
@@ -100,6 +102,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       filteredContent?: string;
       rawHtml?: string;
       summary?: string;
+      annotation?: string;
       thumbnailUrl?: string;
       metadata?: Record<string, unknown>;
     } = {};
@@ -127,6 +130,9 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     }
     if (typeof summary === "string") {
       updateData.summary = summary;
+    }
+    if (typeof annotation === "string") {
+      updateData.annotation = annotation;
     }
     if (typeof thumbnailUrl === "string") {
       updateData.thumbnailUrl = thumbnailUrl;
@@ -156,6 +162,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       filteredContent: result.filteredContent,
       rawHtml: result.rawHtml,
       summary: result.summary,
+      annotation: result.annotation,
       thumbnailUrl: result.thumbnailUrl,
       metadata: result.metadata,
     });

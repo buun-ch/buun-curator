@@ -176,6 +176,13 @@
       "when": 1768396401961,
       "tag": "0024_add_thumbnail_url",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1768828855475,
+      "tag": "0025_add_entry_annotation",
+      "breakpoints": true
     }
   ]
 }
