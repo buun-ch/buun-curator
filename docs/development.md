@@ -29,16 +29,16 @@ This installs the following tools with pinned versions (see `mise.toml`):
 
 Telepresence is not managed by mise because if you use it in other projects, the version of the agent may conflict.
 
-### Setting Up Pre-commit Hooks
+### Setting Up Git Hooks
 
-This project uses [Lefthook](https://github.com/evilmartians/lefthook) for pre-commit hooks.
+This project uses [Lefthook](https://github.com/evilmartians/lefthook) for git hooks.
 After cloning the repository, install the hooks:
 
 ```bash
 lefthook install
 ```
 
-The pre-commit hook automatically runs on staged files:
+**pre-commit** (runs on staged files):
 
 | Files               | Tools                                  |
 | ------------------- | -------------------------------------- |
@@ -46,14 +46,28 @@ The pre-commit hook automatically runs on staged files:
 | `worker/**/*.py`    | Ruff (organize imports → fix → format) |
 | `agent/**/*.py`     | Ruff (organize imports → fix → format) |
 
-To run the hooks manually (without committing):
+**pre-push** (runs on push files):
+
+| Files               | Tools               |
+| ------------------- | ------------------- |
+| `*.{ts,tsx,js,jsx}` | `bun test:unit:run` |
+| `worker/**/*.py`    | `uv run pytest`     |
+| `agent/**/*.py`     | `uv run pytest`     |
+
+To run the hooks manually:
 
 ```bash
-# Run on currently staged files
+# Run pre-commit on staged files
 lefthook run pre-commit
 
-# Run on all files (ignores staging)
+# Run pre-commit on all files
 lefthook run pre-commit --all-files
+
+# Run pre-push
+lefthook run pre-push
+
+# Skip hooks when needed
+git push --no-verify
 ```
 
 ### Recommended: buun-stack

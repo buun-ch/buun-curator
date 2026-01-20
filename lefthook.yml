@@ -33,3 +33,20 @@ pre-commit:
         uv run ruff check --fix --force-exclude --exit-zero --no-cache {staged_files} &&
         uv run ruff format --force-exclude {staged_files}
       stage_fixed: true
+
+pre-push:
+  parallel: true
+  commands:
+    test-ts:
+      glob: "*.{ts,tsx,js,jsx}"
+      run: bun test:unit:run
+
+    test-python-worker:
+      glob: "worker/**/*.py"
+      root: "worker/"
+      run: uv run pytest
+
+    test-python-agent:
+      glob: "agent/**/*.py"
+      root: "agent/"
+      run: uv run pytest
