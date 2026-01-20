@@ -166,9 +166,7 @@ class FeedCrawler:
                 max_age_days = max_entry_age_days
 
             cutoff_date = (
-                datetime.now(UTC) - timedelta(days=max_age_days)
-                if max_age_days > 0
-                else None
+                datetime.now(UTC) - timedelta(days=max_age_days) if max_age_days > 0 else None
             )
 
             for entry in parsed.entries[:limit]:
@@ -212,8 +210,7 @@ class FeedCrawler:
             total_elapsed = (time.perf_counter() - fetch_start) * 1000
             skip_msg = f", {skipped_old} old entries skipped" if skipped_old > 0 else ""
             logger.info(
-                f"fetch_feed_content end: {len(entries)} entries in {total_elapsed:.1f}ms"
-                f"{skip_msg}"
+                f"fetch_feed_content end: {len(entries)} entries in {total_elapsed:.1f}ms{skip_msg}"
             )
             return {
                 "success": True,

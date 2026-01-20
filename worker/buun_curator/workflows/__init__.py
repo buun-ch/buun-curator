@@ -25,6 +25,7 @@ from buun_curator.workflows.search_prune import SearchPruneWorkflow
 from buun_curator.workflows.search_reindex import SearchReindexWorkflow
 from buun_curator.workflows.single_feed_ingestion import SingleFeedIngestionWorkflow
 from buun_curator.workflows.translation import TranslationWorkflow
+from buun_curator.workflows.update_entry_index import UpdateEntryIndexWorkflow
 
 __all__ = [
     "AllFeedsIngestionWorkflow",
@@ -48,4 +49,5 @@ __all__ = [
     "SingleFeedIngestionWorkflow",
     "SummarizationEvaluationWorkflow",
     "TranslationWorkflow",
+    "UpdateEntryIndexWorkflow",
 ]

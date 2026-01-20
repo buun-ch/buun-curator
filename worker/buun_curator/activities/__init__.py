@@ -74,6 +74,7 @@ from buun_curator.activities.search import (
     index_entries_batch,
     init_search_index,
     remove_documents_from_index,
+    update_entry_index,
 )
 from buun_curator.activities.translate import (
     get_entries_for_translation,
@@ -150,6 +151,7 @@ __all__ = [
     "index_entries_batch",
     "init_search_index",
     "remove_documents_from_index",
+    "update_entry_index",
     # Evaluation
     "evaluate_ragas",
     "EvaluateRagasInput",

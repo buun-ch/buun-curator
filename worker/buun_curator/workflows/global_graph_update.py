@@ -81,13 +81,11 @@ class GlobalGraphUpdateWorkflow:
             total_count = len(entry_ids)
         else:
             # Fetch pending entries
-            fetch_result: GetEntriesForGraphUpdateOutput = (
-                await workflow.execute_activity(
-                    get_entries_for_graph_update,
-                    GetEntriesForGraphUpdateInput(batch_size=input.batch_size),
-                    start_to_close_timeout=timedelta(seconds=30),
-                    retry_policy=RetryPolicy(maximum_attempts=3),
-                )
+            fetch_result: GetEntriesForGraphUpdateOutput = await workflow.execute_activity(
+                get_entries_for_graph_update,
+                GetEntriesForGraphUpdateInput(batch_size=input.batch_size),
+                start_to_close_timeout=timedelta(seconds=30),
+                retry_policy=RetryPolicy(maximum_attempts=3),
             )
             entry_ids = fetch_result.entry_ids
             total_count = fetch_result.total_count
@@ -100,10 +98,7 @@ class GlobalGraphUpdateWorkflow:
                 total_count=0,
             )
 
-        workflow.logger.info(
-            f"Processing {len(entry_ids)} entries "
-            f"(total pending: {total_count})"
-        )
+        workflow.logger.info(f"Processing {len(entry_ids)} entries (total pending: {total_count})")
 
         # Fetch entry details and build episodes
         episodes: list[GraphEpisodeInput] = []
@@ -126,9 +121,7 @@ class GlobalGraphUpdateWorkflow:
                 # Use filtered_content for the graph
                 content = entry.get("filteredContent", "")
                 if not content:
-                    workflow.logger.debug(
-                        f"Skipping entry {entry_id}: no filteredContent"
-                    )
+                    workflow.logger.debug(f"Skipping entry {entry_id}: no filteredContent")
                     # Still mark as processed to avoid reprocessing
                     processed_ids.append(entry_id)
                     continue
@@ -145,22 +138,18 @@ class GlobalGraphUpdateWorkflow:
                 processed_ids.append(entry_id)
 
             except Exception as e:
-                workflow.logger.warning(
-                    f"Failed to fetch entry {entry_id}: {e}"
-                )
+                workflow.logger.warning(f"Failed to fetch entry {entry_id}: {e}")
 
         # Add episodes to graph in bulk (let exceptions propagate to fail the workflow)
         if episodes:
-            bulk_result: AddToGlobalGraphBulkOutput = (
-                await workflow.execute_activity(
-                    add_to_global_graph_bulk,
-                    AddToGlobalGraphBulkInput(episodes=episodes),
-                    start_to_close_timeout=timedelta(minutes=10),
-                    retry_policy=RetryPolicy(
-                        maximum_attempts=2,
-                        initial_interval=timedelta(seconds=5),
-                    ),
-                )
+            bulk_result: AddToGlobalGraphBulkOutput = await workflow.execute_activity(
+                add_to_global_graph_bulk,
+                AddToGlobalGraphBulkInput(episodes=episodes),
+                start_to_close_timeout=timedelta(minutes=10),
+                retry_policy=RetryPolicy(
+                    maximum_attempts=2,
+                    initial_interval=timedelta(seconds=5),
+                ),
             )
             total_added = bulk_result.success_count
             workflow.logger.info(
@@ -170,21 +159,15 @@ class GlobalGraphUpdateWorkflow:
 
         # Mark entries as graph-added (let exceptions propagate to fail the workflow)
         if processed_ids:
-            mark_result: MarkEntriesGraphAddedOutput = (
-                await workflow.execute_activity(
-                    mark_entries_graph_added,
-                    MarkEntriesGraphAddedInput(entry_ids=processed_ids),
-                    start_to_close_timeout=timedelta(seconds=30),
-                    retry_policy=RetryPolicy(maximum_attempts=3),
-                )
+            mark_result: MarkEntriesGraphAddedOutput = await workflow.execute_activity(
+                mark_entries_graph_added,
+                MarkEntriesGraphAddedInput(entry_ids=processed_ids),
+                start_to_close_timeout=timedelta(seconds=30),
+                retry_policy=RetryPolicy(maximum_attempts=3),
             )
-            workflow.logger.info(
-                f"Marked {mark_result.updated_count} entries as graph-added"
-            )
+            workflow.logger.info(f"Marked {mark_result.updated_count} entries as graph-added")
 
-        workflow.logger.info(
-            f"Completed: added {total_added} entries to graph"
-        )
+        workflow.logger.info(f"Completed: added {total_added} entries to graph")
         workflow.logger.info(
             "GlobalGraphUpdateWorkflow end",
             extra={"workflow_id": wf_info.workflow_id},

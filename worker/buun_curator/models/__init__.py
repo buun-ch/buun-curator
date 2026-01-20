@@ -103,6 +103,8 @@ from buun_curator.models.activity_io import (
     SearchGraphRAGSessionOutput,
     TranslateEntriesInput,
     TranslateEntriesOutput,
+    UpdateEntryIndexInput,
+    UpdateEntryIndexOutput,
     WebPageInfo,
 )
 from buun_curator.models.base import CamelCaseModel
@@ -286,6 +288,8 @@ __all__ = [
     "FetchGitHubReadmeOutput",
     "TranslateEntriesInput",
     "TranslateEntriesOutput",
+    "UpdateEntryIndexInput",
+    "UpdateEntryIndexOutput",
     # Workflow I/O models
     "AllFeedsIngestionInput",
     "AllFeedsIngestionResult",

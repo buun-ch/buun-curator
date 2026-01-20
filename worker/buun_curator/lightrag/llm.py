@@ -111,8 +111,7 @@ async def lightrag_llm_func(
     extra_body: dict[str, Any] = {"metadata": metadata}
 
     logger.debug(
-        f"LightRAG LLM call: model={model}, "
-        f"messages={len(messages)}, max_tokens={max_tokens}"
+        f"LightRAG LLM call: model={model}, messages={len(messages)}, max_tokens={max_tokens}"
     )
 
     try:

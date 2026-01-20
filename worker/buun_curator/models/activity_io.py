@@ -651,6 +651,19 @@ class RemoveDocumentsFromIndexOutput(BaseModel):
     error: str | None = None
 
 
+class UpdateEntryIndexInput(BaseModel):
+    """Input for update_entry_index activity."""
+
+    entry_id: ULID
+
+
+class UpdateEntryIndexOutput(BaseModel):
+    """Output from update_entry_index activity."""
+
+    success: bool = False
+    error: str | None = None
+
+
 # ============================================================================
 # Fetch Entry Links Activities
 # ============================================================================

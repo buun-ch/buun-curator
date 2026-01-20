@@ -55,9 +55,7 @@ def get_langfuse_client() -> Langfuse:
     host = os.environ.get("LANGFUSE_HOST", "https://cloud.langfuse.com")
 
     if not public_key or not secret_key:
-        raise ValueError(
-            "LANGFUSE_PUBLIC_KEY and LANGFUSE_SECRET_KEY must be set"
-        )
+        raise ValueError("LANGFUSE_PUBLIC_KEY and LANGFUSE_SECRET_KEY must be set")
 
     return Langfuse(public_key=public_key, secret_key=secret_key, host=host)
 
@@ -141,11 +139,13 @@ def run_filtering_on_dataset(
             numbered_content = _add_line_numbers(original_content)
 
             # Run filtering chain
-            result = chain.invoke({
-                "language": "Unknown",  # Language detection not needed for filtering
-                "title": title,
-                "content": numbered_content,
-            })
+            result = chain.invoke(
+                {
+                    "language": "Unknown",  # Language detection not needed for filtering
+                    "title": title,
+                    "content": numbered_content,
+                }
+            )
 
             # Extract main content using start/end line numbers
             filtered_content = _extract_main_content(
@@ -218,9 +218,7 @@ def run_filtering_on_dataset(
 
 def main():
     """CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="Run filtering on Langfuse dataset items"
-    )
+    parser = argparse.ArgumentParser(description="Run filtering on Langfuse dataset items")
     parser.add_argument(
         "--dataset-name",
         type=str,

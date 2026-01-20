@@ -329,8 +329,7 @@ async def reset_global_graph() -> tuple[bool, int]:
         _graphiti_initialized = False
 
         logger.info(
-            f"Global graph {GLOBAL_GRAPH_NAME} reset successfully "
-            f"({deleted_count} nodes deleted)"
+            f"Global graph {GLOBAL_GRAPH_NAME} reset successfully ({deleted_count} nodes deleted)"
         )
         return (True, deleted_count)
 

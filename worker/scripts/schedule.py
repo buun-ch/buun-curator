@@ -364,8 +364,7 @@ async def show_graph_schedule(client: Client) -> None:
     except Exception as e:
         if "not found" in str(e).lower():
             logger.info(
-                f"Schedule '{GRAPH_SCHEDULE_ID}' not found. "
-                "Use 'schedule graph set' to create."
+                f"Schedule '{GRAPH_SCHEDULE_ID}' not found. Use 'schedule graph set' to create."
             )
         else:
             raise
@@ -554,8 +553,7 @@ async def show_cleanup_schedule(client: Client) -> None:
     except Exception as e:
         if "not found" in str(e).lower():
             logger.info(
-                f"Schedule '{CLEANUP_SCHEDULE_ID}' not found. "
-                "Use 'schedule cleanup set' to create."
+                f"Schedule '{CLEANUP_SCHEDULE_ID}' not found. Use 'schedule cleanup set' to create."
             )
         else:
             raise

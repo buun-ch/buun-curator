@@ -131,13 +131,11 @@ class GraphRebuildWorkflow:
 
             # Fetch and add entries to graph in a single activity
             # This avoids large payloads crossing the Temporal boundary
-            bulk_result: FetchAndAddToGraphBulkOutput = (
-                await workflow.execute_activity(
-                    fetch_and_add_to_graph_bulk,
-                    FetchAndAddToGraphBulkInput(entry_ids=ids_result.entry_ids),
-                    start_to_close_timeout=timedelta(hours=2),
-                    retry_policy=RetryPolicy(maximum_attempts=2),
-                )
+            bulk_result: FetchAndAddToGraphBulkOutput = await workflow.execute_activity(
+                fetch_and_add_to_graph_bulk,
+                FetchAndAddToGraphBulkInput(entry_ids=ids_result.entry_ids),
+                start_to_close_timeout=timedelta(hours=2),
+                retry_policy=RetryPolicy(maximum_attempts=2),
             )
 
             added_count += bulk_result.success_count

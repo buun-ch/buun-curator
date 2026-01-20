@@ -69,6 +69,7 @@ from buun_curator.activities import (
     search_github_candidates,
     search_github_repository,
     search_graph_rag_session,
+    update_entry_index,
 )
 from buun_curator.config import get_config
 from buun_curator.health import HealthServer
@@ -98,6 +99,7 @@ from buun_curator.workflows import (
     SingleFeedIngestionWorkflow,
     SummarizationEvaluationWorkflow,
     TranslationWorkflow,
+    UpdateEntryIndexWorkflow,
 )
 
 
@@ -164,8 +166,7 @@ async def run_worker() -> None:
     tracing_interceptor = init_tracing()
 
     logger.info(
-        f"Connecting to Temporal at {config.temporal_host} "
-        f"(namespace: {config.temporal_namespace})"
+        f"Connecting to Temporal at {config.temporal_host} (namespace: {config.temporal_namespace})"
     )
     # Pass tracing interceptor to Client.connect() per Temporal docs
     interceptors = [tracing_interceptor] if tracing_interceptor else []
@@ -270,6 +271,7 @@ async def run_worker() -> None:
             SingleFeedIngestionWorkflow,
             SummarizationEvaluationWorkflow,
             TranslationWorkflow,
+            UpdateEntryIndexWorkflow,
         ],
         activities=[
             # Cleanup
@@ -312,6 +314,7 @@ async def run_worker() -> None:
             index_entries_batch,
             init_search_index,
             remove_documents_from_index,
+            update_entry_index,
             # Context extraction
             extract_entry_context,
             # GitHub enrichment

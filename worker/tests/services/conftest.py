@@ -20,9 +20,7 @@ def mock_crawl_result_success() -> MagicMock:
         "# Test Entry\n\nThis is the entry content.\n\nAnother paragraph."
     )
     result.markdown.fit_markdown = "Test Entry. This is the entry content. Another paragraph."
-    result.html = (
-        "<html><body><h1>Test Entry</h1><p>This is the entry content.</p></body></html>"
-    )
+    result.html = "<html><body><h1>Test Entry</h1><p>This is the entry content.</p></body></html>"
     result.error_message = None
     return result
 

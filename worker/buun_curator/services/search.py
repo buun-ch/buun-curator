@@ -81,6 +81,7 @@ def entry_to_document(entry: dict[str, Any]) -> dict[str, Any]:
         "filteredContent": (
             entry.get("filteredContent") or entry.get("filtered_content", "") or ""
         ),
+        "annotation": entry.get("annotation", "") or "",
         "author": entry.get("author"),
         "publishedAt": datetime_to_timestamp(entry.get("publishedAt") or entry.get("published_at")),
         "createdAt": datetime_to_timestamp(
@@ -120,6 +121,41 @@ def index_entries(entries: list[dict[str, Any]]) -> bool:
         logger.error(
             "Failed to index entries in Meilisearch",
             count=len(entries),
+            error=str(e),
+            error_type=type(e).__name__,
+        )
+        return False
+
+
+def update_entry(entry: dict[str, Any]) -> bool:
+    """
+    Update a single entry in Meilisearch index.
+
+    Parameters
+    ----------
+    entry : dict
+        Entry data from the database.
+
+    Returns
+    -------
+    bool
+        True if update was successful or skipped, False on error.
+    """
+    client = get_meilisearch_client()
+    if client is None:
+        # Meilisearch not configured, skip silently
+        return True
+
+    try:
+        index = client.index(get_index_name())
+        document = entry_to_document(entry)
+        index.update_documents([document], primary_key="id")
+        logger.info("Updated entry in Meilisearch", entry_id=entry["id"])
+        return True
+    except Exception as e:
+        logger.error(
+            "Failed to update entry in Meilisearch",
+            entry_id=entry.get("id"),
             error=str(e),
             error_type=type(e).__name__,
         )
@@ -196,6 +232,7 @@ def initialize_index() -> bool:
         index.update_searchable_attributes(
             [
                 "title",
+                "annotation",
                 "summary",
                 "filteredContent",
                 "feedContent",
@@ -319,9 +356,7 @@ def get_all_document_ids(batch_size: int = 1000) -> list[str]:
 
         while True:
             # Fetch only the id field to minimize data transfer
-            result = index.get_documents(
-                {"offset": offset, "limit": batch_size, "fields": ["id"]}
-            )
+            result = index.get_documents({"offset": offset, "limit": batch_size, "fields": ["id"]})
             documents = result.results
 
             if not documents:

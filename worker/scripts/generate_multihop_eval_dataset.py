@@ -244,24 +244,26 @@ def cluster_entries(
         # Collect titles for topic summary hint
         titles = [e["title"] for e in cluster_entries[:5]]
 
-        clusters.append({
-            "cluster_id": cluster_id,
-            "centroid_entry_id": centroid_entry["id"],
-            "centroid_title": centroid_entry["title"],
-            "entry_count": len(cluster_entries),
-            "entries": [
-                {
-                    "entry_id": e["id"],
-                    "title": e["title"],
-                    "url": e["url"],
-                    "language": e["language"],
-                    "feed_name": e["feed_name"],
-                    "category": e["category_name"],
-                }
-                for e in cluster_entries
-            ],
-            "sample_titles": titles,
-        })
+        clusters.append(
+            {
+                "cluster_id": cluster_id,
+                "centroid_entry_id": centroid_entry["id"],
+                "centroid_title": centroid_entry["title"],
+                "entry_count": len(cluster_entries),
+                "entries": [
+                    {
+                        "entry_id": e["id"],
+                        "title": e["title"],
+                        "url": e["url"],
+                        "language": e["language"],
+                        "feed_name": e["feed_name"],
+                        "category": e["category_name"],
+                    }
+                    for e in cluster_entries
+                ],
+                "sample_titles": titles,
+            }
+        )
 
     return clusters
 
@@ -276,17 +278,13 @@ class GeneratedQuestion(BaseModel):
     question_type: str = Field(
         description="Type of question: 'comparison', 'synthesis', or 'analysis'"
     )
-    reasoning: str = Field(
-        description="Why this question requires multiple entries to answer"
-    )
+    reasoning: str = Field(description="Why this question requires multiple entries to answer")
 
 
 class GeneratedQuestions(BaseModel):
     """List of generated multi-hop questions."""
 
-    questions: list[GeneratedQuestion] = Field(
-        description="List of generated questions"
-    )
+    questions: list[GeneratedQuestion] = Field(description="List of generated questions")
 
 
 class ShortcutCheckResult(BaseModel):
@@ -295,12 +293,8 @@ class ShortcutCheckResult(BaseModel):
     can_answer: bool = Field(
         description="True if the question can be fully answered from this single entry"
     )
-    confidence: str = Field(
-        description="Confidence level: 'high', 'medium', or 'low'"
-    )
-    explanation: str = Field(
-        description="Brief explanation of the assessment"
-    )
+    confidence: str = Field(description="Confidence level: 'high', 'medium', or 'low'")
+    explanation: str = Field(description="Brief explanation of the assessment")
 
 
 # --- LLM-based question generation ---
@@ -619,13 +613,15 @@ def generate_questions_for_cluster(
 
         questions = []
         for q in result.questions:
-            questions.append({
-                "question": q.question,
-                "question_type": q.question_type,
-                "reasoning": q.reasoning,
-                "source_entry_ids": [e["id"] for e in entries],
-                "source_titles": [e["title"] for e in entries],
-            })
+            questions.append(
+                {
+                    "question": q.question,
+                    "question_type": q.question_type,
+                    "reasoning": q.reasoning,
+                    "source_entry_ids": [e["id"] for e in entries],
+                    "source_titles": [e["title"] for e in entries],
+                }
+            )
         return questions
 
     except Exception as e:
@@ -841,9 +837,7 @@ def generate_cmd(
     clusters_path = output_dir / "clusters.json"
 
     if not clusters_path.exists():
-        raise click.ClickException(
-            f"{clusters_path} not found. Run 'cluster' command first."
-        )
+        raise click.ClickException(f"{clusters_path} not found. Run 'cluster' command first.")
 
     click.echo("=" * 60)
     click.echo("Step 2: Generating multi-hop questions")
@@ -905,12 +899,14 @@ def generate_cmd(
             entry_id = entry["entry_id"]
             if entry_id in entry_contents:
                 entry_data = entry_contents[entry_id]
-                entries_with_content.append({
-                    "id": entry_id,
-                    "title": entry_data["title"],
-                    "url": entry_data["url"],
-                    "content": entry_data["content"],
-                })
+                entries_with_content.append(
+                    {
+                        "id": entry_id,
+                        "title": entry_data["title"],
+                        "url": entry_data["url"],
+                        "content": entry_data["content"],
+                    }
+                )
 
         if len(entries_with_content) < 2:
             click.echo("    Skipping: not enough entries with content")
@@ -921,9 +917,7 @@ def generate_cmd(
             click.echo(f"      - {e['title'][:60]}...")
 
         # Generate questions
-        questions = generate_questions_for_cluster(
-            llm, entries_with_content, questions_per_cluster
-        )
+        questions = generate_questions_for_cluster(llm, entries_with_content, questions_per_cluster)
         click.echo(f"    Generated {len(questions)} questions")
 
         for q in questions:
@@ -969,9 +963,7 @@ def filter_cmd(ctx, llm_model: str | None):
     qa_path = output_dir / "multihop_qa.json"
 
     if not qa_path.exists():
-        raise click.ClickException(
-            f"{qa_path} not found. Run 'generate' command first."
-        )
+        raise click.ClickException(f"{qa_path} not found. Run 'generate' command first.")
 
     click.echo("=" * 60)
     click.echo("Step 3: Filtering shortcut-solvable questions")
@@ -1113,9 +1105,7 @@ def upload_cmd(ctx, langfuse_dataset_name: str | None):
     qa_path = output_dir / "multihop_qa.json"
 
     if not qa_path.exists():
-        raise click.ClickException(
-            f"{qa_path} not found. Run 'filter' command first."
-        )
+        raise click.ClickException(f"{qa_path} not found. Run 'filter' command first.")
 
     click.echo("=" * 60)
     click.echo("Step 4: Uploading to Langfuse Dataset")
@@ -1134,8 +1124,7 @@ def upload_cmd(ctx, langfuse_dataset_name: str | None):
 
     if metadata.get("status") != "filtered":
         click.echo(
-            "Warning: QA data has not been filtered. "
-            "Run 'filter' command first for best results."
+            "Warning: QA data has not been filtered. Run 'filter' command first for best results."
         )
 
     # Initialize Langfuse client

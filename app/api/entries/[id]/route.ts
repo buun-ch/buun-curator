@@ -4,6 +4,7 @@ import { entries, feeds, entryLabels, labels } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { updateEntry as updateEntryApi, isError } from "@/lib/api";
 import { createLogger } from "@/lib/logger";
+import { startUpdateEntryIndexWorkflow } from "@/lib/temporal";
 
 const log = createLogger("api:entries");
 
@@ -153,6 +154,19 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     if (isError(result)) {
       return NextResponse.json({ error: result.error }, { status: 404 });
+    }
+
+    // Update Meilisearch index if searchable fields were modified
+    const searchableFieldsUpdated =
+      typeof annotation === "string" ||
+      typeof summary === "string" ||
+      typeof filteredContent === "string";
+
+    if (searchableFieldsUpdated) {
+      // Trigger workflow to update search index (fire-and-forget)
+      startUpdateEntryIndexWorkflow({ entryId }).catch((err) => {
+        log.error({ error: err, entryId }, "failed to start index update workflow");
+      });
     }
 
     return NextResponse.json({

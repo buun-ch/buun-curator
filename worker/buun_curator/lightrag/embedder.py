@@ -24,9 +24,7 @@ DEFAULT_MAX_TOKEN_SIZE = 8192
 class FastEmbedConfig:
     """Configuration for FastEmbed embedder."""
 
-    model: str = field(
-        default_factory=lambda: os.getenv("GRAPHRAG_EMBEDDING_MODEL", DEFAULT_MODEL)
-    )
+    model: str = field(default_factory=lambda: os.getenv("GRAPHRAG_EMBEDDING_MODEL", DEFAULT_MODEL))
     embedding_dim: int = field(
         default_factory=lambda: int(os.getenv("EMBEDDING_DIMENSIONS", str(DEFAULT_DIMENSIONS)))
     )

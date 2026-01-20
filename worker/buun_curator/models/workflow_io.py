@@ -20,6 +20,7 @@ from buun_curator.models.types import ULID
 
 class AllFeedsIngestionInput(CamelCaseModel):
     """Input for AllFeedsIngestionWorkflow."""
+
     pass
 
 
@@ -506,6 +507,25 @@ class SearchPruneOutput(CamelCaseModel):
     removed_count: int = 0
     total_in_index: int = 0
     total_in_db: int = 0
+    error: str | None = None
+
+
+# ============================================================================
+# UpdateEntryIndexWorkflow
+# ============================================================================
+
+
+class UpdateEntryIndexInput(CamelCaseModel):
+    """Input for UpdateEntryIndexWorkflow."""
+
+    entry_id: ULID
+
+
+class UpdateEntryIndexOutput(CamelCaseModel):
+    """Output for UpdateEntryIndexWorkflow."""
+
+    status: str  # "completed", "error"
+    success: bool = False
     error: str | None = None
 
 

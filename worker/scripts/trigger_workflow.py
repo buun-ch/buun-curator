@@ -633,8 +633,7 @@ async def run_search_prune(
         logger.info(f"  Status: {result.get('status')}")
         logger.info(f"  Removed: {result.get('removed_count')}")
         logger.info(
-            f"  Index had: {result.get('total_in_index')}, "
-            f"DB has: {result.get('total_in_db')}"
+            f"  Index had: {result.get('total_in_index')}, DB has: {result.get('total_in_db')}"
         )
         if result.get("error"):
             logger.error(f"  Error: {result.get('error')}")

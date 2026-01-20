@@ -100,8 +100,6 @@ async def deepl_translate_entries(
 
     success_count = sum(1 for r in results if r.get("translated_content"))
     activity.heartbeat(f"Completed: {success_count}/{total} successful")
-    logger.info(
-        "DeepL translate completed", success_count=success_count, total=total
-    )
+    logger.info("DeepL translate completed", success_count=success_count, total=total)
 
     return TranslateEntriesOutput(translations=results)

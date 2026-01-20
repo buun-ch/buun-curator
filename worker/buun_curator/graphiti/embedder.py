@@ -24,16 +24,12 @@ DEFAULT_DIMENSIONS = 768
 class FastEmbedConfig:
     """Configuration for FastEmbed embedder."""
 
-    model: str = field(
-        default_factory=lambda: os.getenv("GRAPHRAG_EMBEDDING_MODEL", DEFAULT_MODEL)
-    )
+    model: str = field(default_factory=lambda: os.getenv("GRAPHRAG_EMBEDDING_MODEL", DEFAULT_MODEL))
     embedding_dim: int = field(
         default_factory=lambda: int(os.getenv("EMBEDDING_DIMENSIONS", str(DEFAULT_DIMENSIONS)))
     )
     threads: int | None = field(
-        default_factory=lambda: (
-            int(val) if (val := os.getenv("EMBEDDING_THREADS")) else None
-        )
+        default_factory=lambda: (int(val) if (val := os.getenv("EMBEDDING_THREADS")) else None)
     )
 
 

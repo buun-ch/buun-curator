@@ -2,7 +2,7 @@
  * Meilisearch search client for Next.js.
  *
  * This module provides search-only functionality.
- * Index management is handled by the Worker (SearchReindexWorkflow).
+ * Index management is handled by the Worker (SearchReindexWorkflow, UpdateEntryIndexWorkflow).
  *
  * @module lib/meilisearch
  */

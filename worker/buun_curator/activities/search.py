@@ -23,6 +23,8 @@ from buun_curator.models import (
     InitSearchIndexOutput,
     RemoveDocumentsFromIndexInput,
     RemoveDocumentsFromIndexOutput,
+    UpdateEntryIndexInput,
+    UpdateEntryIndexOutput,
 )
 from buun_curator.services.api import APIClient
 from buun_curator.services.search import (
@@ -32,6 +34,7 @@ from buun_curator.services.search import (
     initialize_index,
     is_meilisearch_enabled,
     remove_entries,
+    update_entry,
 )
 
 logger = get_logger(__name__)
@@ -323,3 +326,52 @@ async def remove_documents_from_index(
         error_msg = str(e)
         logger.error(f"Failed to remove documents: {error_msg}")
         return RemoveDocumentsFromIndexOutput(error=error_msg)
+
+
+@activity.defn
+async def update_entry_index(
+    input: UpdateEntryIndexInput,
+) -> UpdateEntryIndexOutput:
+    """
+    Update a single entry in the Meilisearch index.
+
+    Fetches the entry data from the API and updates its index document.
+
+    Parameters
+    ----------
+    input : UpdateEntryIndexInput
+        Input containing entry_id to update.
+
+    Returns
+    -------
+    UpdateEntryIndexOutput
+        Output containing success status and optional error.
+    """
+    if not is_meilisearch_enabled():
+        logger.warning("Meilisearch not configured")
+        return UpdateEntryIndexOutput(success=True)  # Skip silently
+
+    config = get_config()
+
+    try:
+        async with APIClient(config.api_url, config.api_token) as api:
+            entry = await api.get_entry(str(input.entry_id))
+            if not entry or "error" in entry:
+                return UpdateEntryIndexOutput(
+                    success=False, error=f"Entry not found: {input.entry_id}"
+                )
+
+        success = await asyncio.to_thread(update_entry, entry)
+        if success:
+            logger.info("Updated entry in search index", entry_id=str(input.entry_id))
+            return UpdateEntryIndexOutput(success=True)
+        else:
+            return UpdateEntryIndexOutput(success=False, error="Failed to update index")
+    except Exception as e:
+        error_msg = str(e)
+        logger.error(
+            "Failed to update entry in search index",
+            entry_id=str(input.entry_id),
+            error=error_msg,
+        )
+        return UpdateEntryIndexOutput(success=False, error=error_msg)

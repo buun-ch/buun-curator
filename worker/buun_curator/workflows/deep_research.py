@@ -193,9 +193,7 @@ class DeepResearchWorkflow:
             )
 
         except Exception as e:
-            workflow.logger.error(
-                f"DeepResearch failed: {e}", extra={"entry_id": input.entry_id}
-            )
+            workflow.logger.error(f"DeepResearch failed: {e}", extra={"entry_id": input.entry_id})
             return DeepResearchResult(
                 status="error",
                 error=str(e),

@@ -41,9 +41,7 @@ async def save_web_page_enrichment(
         logger.debug("No web pages to save", entry_id=input.entry_id)
         return SaveWebPageEnrichmentOutput(success=True, saved_count=0)
 
-    logger.info(
-        "Saving web pages", entry_id=input.entry_id, pages=len(input.web_pages)
-    )
+    logger.info("Saving web pages", entry_id=input.entry_id, pages=len(input.web_pages))
 
     config = get_config()
 

@@ -431,6 +431,44 @@ export async function startDeleteEnrichmentWorkflow(
   };
 }
 
+/** Options for starting the UpdateEntryIndexWorkflow. */
+export interface StartUpdateEntryIndexOptions {
+  entryId: string;
+}
+
+/**
+ * Starts the UpdateEntryIndexWorkflow to update a single entry's search index.
+ *
+ * This is a fire-and-forget workflow - the caller doesn't need to wait for completion.
+ *
+ * @param options - Entry ID to update in the search index
+ * @returns Workflow handle with IDs for status tracking
+ */
+export async function startUpdateEntryIndexWorkflow(
+  options: StartUpdateEntryIndexOptions,
+): Promise<WorkflowHandle> {
+  const { entryId } = options;
+  const client = await getTemporalClient();
+  const config = getTemporalConfig();
+
+  const workflowId = `update-entry-index-${entryId}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+
+  const handle = await client.workflow.start("UpdateEntryIndexWorkflow", {
+    args: [
+      {
+        entryId,
+      },
+    ],
+    taskQueue: config.taskQueue,
+    workflowId,
+  });
+
+  return {
+    workflowId: handle.workflowId,
+    runId: handle.firstExecutionRunId,
+  };
+}
+
 /**
  * Gets the current status of a workflow execution.
  *

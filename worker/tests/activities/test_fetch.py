@@ -186,9 +186,7 @@ async def test_fetch_single_content_success() -> None:
         result = await fetch_single_content(input_data)
 
         mock_fetcher_class.assert_called_once_with(timeout=30, capture_screenshot=False)
-        mock_instance.fetch.assert_called_once_with(
-            "https://example.com/entry", "Test Entry", []
-        )
+        mock_instance.fetch.assert_called_once_with("https://example.com/entry", "Test Entry", [])
         assert result.full_content == "# Entry"
         # raw_html is not included in FetchSingleContentOutput
 

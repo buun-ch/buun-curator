@@ -54,9 +54,7 @@ async def save_entry_links(
             )
 
             if "error" in result:
-                logger.error(
-                    f"Failed to save links: {result['error']}", entry_id=input.entry_id
-                )
+                logger.error(f"Failed to save links: {result['error']}", entry_id=input.entry_id)
                 return SaveEntryLinksOutput(
                     success=False,
                     error=result["error"],

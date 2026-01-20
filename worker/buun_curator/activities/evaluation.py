@@ -100,9 +100,7 @@ async def evaluate_ragas(input: EvaluateRagasInput) -> EvaluateRagasOutput:
         answer=input.answer,
     )
 
-    logger.info(
-        "RAGAS evaluation completed", trace_id=input.trace_id, scores=scores
-    )
+    logger.info("RAGAS evaluation completed", trace_id=input.trace_id, scores=scores)
 
     return EvaluateRagasOutput(
         scores=scores,

@@ -59,8 +59,7 @@ def get_langfuse_client():
 
     if not public_key or not secret_key:
         raise ValueError(
-            "LANGFUSE_PUBLIC_KEY and LANGFUSE_SECRET_KEY must be set "
-            "for Langfuse upload"
+            "LANGFUSE_PUBLIC_KEY and LANGFUSE_SECRET_KEY must be set for Langfuse upload"
         )
 
     return Langfuse(public_key=public_key, secret_key=secret_key, host=host)
@@ -112,13 +111,15 @@ def fetch_labeled_entries(label_name: str, limit: int | None = None) -> list[dic
 
     entries = []
     for row in rows:
-        entries.append({
-            "id": row[0],
-            "title": row[1],
-            "url": row[2],
-            "full_content": row[3],
-            "filtered_content": row[4],
-        })
+        entries.append(
+            {
+                "id": row[0],
+                "title": row[1],
+                "url": row[2],
+                "full_content": row[3],
+                "filtered_content": row[4],
+            }
+        )
 
     return entries
 
@@ -144,8 +145,7 @@ def upload_to_langfuse(
     dataset = langfuse.create_dataset(
         name=dataset_name,
         description=(
-            "Filtering evaluation dataset - "
-            "entries for content filtering quality assessment"
+            "Filtering evaluation dataset - entries for content filtering quality assessment"
         ),
     )
     print(f"  Dataset ID: {dataset.id}")
@@ -245,9 +245,7 @@ def main():
                 "id": e["id"],
                 "title": e["title"],
                 "url": e["url"],
-                "full_content_length": (
-                    len(e["full_content"]) if e["full_content"] else 0
-                ),
+                "full_content_length": (len(e["full_content"]) if e["full_content"] else 0),
                 "filtered_content_length": (
                     len(e["filtered_content"]) if e["filtered_content"] else 0
                 ),

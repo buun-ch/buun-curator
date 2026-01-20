@@ -90,17 +90,13 @@ async def add_to_graph_rag_session(
             metadata=input.metadata,
         )
 
-        logger.info(
-            "Successfully added content to Graphiti session", graph_name=session.graph_name
-        )
+        logger.info("Successfully added content to Graphiti session", graph_name=session.graph_name)
         return AddToGraphRAGSessionOutput(
             success=True,
             graph_name=session.graph_name,
         )
     except Exception as e:
-        logger.error(
-            f"Failed to add content to Graphiti session: {e}", entry_id=input.entry_id
-        )
+        logger.error(f"Failed to add content to Graphiti session: {e}", entry_id=input.entry_id)
         return AddToGraphRAGSessionOutput(
             success=False,
             graph_name="",

@@ -111,9 +111,7 @@ async def _fetch_single_entry(
         )
     else:
         title_short = title[:30]
-        logger.warning(
-            "No content fetched", entry_id=entry_id, title=title_short, url=url
-        )
+        logger.warning("No content fetched", entry_id=entry_id, title=title_short, url=url)
         return (
             entry_id,
             None,
@@ -279,9 +277,7 @@ async def fetch_contents(input: FetchContentsInput) -> FetchContentsOutput:
                             entry_id, screenshot
                         )
                         thumbnail_count += 1
-                        logger.debug(
-                            f"Thumbnail uploaded for {entry_id}: {uploaded_thumbnail_url}"
-                        )
+                        logger.debug(f"Thumbnail uploaded for {entry_id}: {uploaded_thumbnail_url}")
                     except Exception as e:
                         logger.warning(f"Failed to upload thumbnail: {e}", entry_id=entry_id)
 
@@ -466,9 +462,7 @@ async def _save_entry_content(
             uploaded_thumbnail_url = await thumbnail_service.upload_thumbnail(
                 entry_id, content.screenshot
             )
-            logger.debug(
-                "Thumbnail uploaded", entry_id=entry_id, url=uploaded_thumbnail_url
-            )
+            logger.debug("Thumbnail uploaded", entry_id=entry_id, url=uploaded_thumbnail_url)
         except Exception as e:
             logger.warning(f"Failed to upload thumbnail: {e}", entry_id=entry_id)
 
@@ -611,9 +605,7 @@ async def fetch_and_save_entry_links(
                 try:
                     session = await GraphitiSession.create(entry_id)
                     await session.add_content(content.full_content, source_type="web_page")
-                    logger.info(
-                        "Added web page to Graphiti", entry_id=entry_id, url=url[:50]
-                    )
+                    logger.info("Added web page to Graphiti", entry_id=entry_id, url=url[:50])
                 except Exception as graphiti_err:
                     logger.warning(
                         f"Failed to add web page to Graphiti for {entry_id}: {graphiti_err}"

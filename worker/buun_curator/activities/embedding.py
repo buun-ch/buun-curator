@@ -23,9 +23,7 @@ from buun_curator.services.embedder import compute_embeddings as compute_embeddi
 logger = get_logger(__name__)
 
 
-async def _get_entries_content(
-    api: APIClient, entry_ids: list[str]
-) -> list[dict[str, Any]]:
+async def _get_entries_content(api: APIClient, entry_ids: list[str]) -> list[dict[str, Any]]:
     """
     Fetch entries and extract content for embedding.
 
@@ -49,12 +47,7 @@ async def _get_entries_content(
             continue
 
         # Use filteredContent > summary > title for embedding
-        text = (
-            entry.get("filteredContent")
-            or entry.get("summary")
-            or entry.get("title")
-            or ""
-        )
+        text = entry.get("filteredContent") or entry.get("summary") or entry.get("title") or ""
 
         if text:
             entries.append({"entry_id": entry_id, "text": text})

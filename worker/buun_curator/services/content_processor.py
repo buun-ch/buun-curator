@@ -100,8 +100,7 @@ def _extract_main_content(
 
     if end_line > total_lines:
         logger.warning(
-            f"end_line ({end_line}) exceeds total lines ({total_lines}). "
-            f"Adjusting to total lines."
+            f"end_line ({end_line}) exceeds total lines ({total_lines}). Adjusting to total lines."
         )
 
     filtered = "\n".join(lines[start_idx:end_idx])

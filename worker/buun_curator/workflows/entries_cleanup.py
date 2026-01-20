@@ -109,13 +109,11 @@ class EntriesCleanupWorkflow:
                     },
                 )
 
-                remove_result: RemoveDocumentsFromIndexOutput = (
-                    await workflow.execute_activity(
-                        remove_documents_from_index,
-                        RemoveDocumentsFromIndexInput(document_ids=batch),
-                        start_to_close_timeout=timedelta(minutes=5),
-                        retry_policy=RetryPolicy(maximum_attempts=3),
-                    )
+                remove_result: RemoveDocumentsFromIndexOutput = await workflow.execute_activity(
+                    remove_documents_from_index,
+                    RemoveDocumentsFromIndexInput(document_ids=batch),
+                    start_to_close_timeout=timedelta(minutes=5),
+                    retry_policy=RetryPolicy(maximum_attempts=3),
                 )
 
                 if remove_result.error:

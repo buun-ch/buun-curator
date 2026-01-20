@@ -42,9 +42,7 @@ async def save_github_enrichment(
     # Filter only found results with repo data
     found_results = [er for er in input.enrichment_results if er.get("found") and er.get("repo")]
 
-    logger.info(
-        "Saving GitHub enrichments", entry_id=input.entry_id, count=len(found_results)
-    )
+    logger.info("Saving GitHub enrichments", entry_id=input.entry_id, count=len(found_results))
 
     config = get_config()
     saved_count = 0

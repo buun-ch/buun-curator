@@ -103,9 +103,7 @@ async def _create_lightrag_instance(trace_id: str | None = None) -> Any:
     _setup_memgraph_env()
 
     # Create LLM function with trace_id bound
-    llm_func = (
-        partial(lightrag_llm_func, trace_id=trace_id) if trace_id else lightrag_llm_func
-    )
+    llm_func = partial(lightrag_llm_func, trace_id=trace_id) if trace_id else lightrag_llm_func
 
     # Create LightRAG instance with Memgraph storage
     rag = LightRAG(
@@ -243,9 +241,7 @@ async def add_contents_bulk_to_global_graph(
     trace_id = uuid.uuid4().hex[:32]
     rag = await _create_lightrag_instance(trace_id=trace_id)
 
-    logger.info(
-        f"Bulk adding {len(contents)} contents to LightRAG, trace_id={trace_id}"
-    )
+    logger.info(f"Bulk adding {len(contents)} contents to LightRAG, trace_id={trace_id}")
 
     # Build all contents, IDs, and file paths for batch insert
     full_contents: list[str] = []
@@ -279,8 +275,7 @@ async def add_contents_bulk_to_global_graph(
         failed_count = len(contents)
 
     logger.info(
-        f"Bulk add complete: success={success_count}, failed={failed_count}, "
-        f"trace_id={trace_id}"
+        f"Bulk add complete: success={success_count}, failed={failed_count}, trace_id={trace_id}"
     )
     return success_count, failed_count
 

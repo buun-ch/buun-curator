@@ -265,9 +265,7 @@ class ContentDistillationWorkflow(ProgressNotificationMixin):
 
                         if summary:
                             # Generate per-entry trace_id (same as ContentProcessor)
-                            entry_trace_id = generate_entry_trace_id(
-                                entry_id, batch_trace_id
-                            )
+                            entry_trace_id = generate_entry_trace_id(entry_id, batch_trace_id)
                             eval_items.append(
                                 SummarizationEvaluationItem(
                                     entry_id=entry_id,
@@ -290,9 +288,7 @@ class ContentDistillationWorkflow(ProgressNotificationMixin):
 
                     if eval_items:
                         # Generate deterministic workflow ID using SHA1 hash
-                        hash_input = (
-                            f"{wf_info.workflow_id}:{wf_info.run_id}:{batch_trace_id}"
-                        )
+                        hash_input = f"{wf_info.workflow_id}:{wf_info.run_id}:{batch_trace_id}"
                         unique_suffix = hashlib.sha1(hash_input.encode()).hexdigest()[:8]
                         eval_workflow_id = f"summarize-eval-{unique_suffix}"
                         try:

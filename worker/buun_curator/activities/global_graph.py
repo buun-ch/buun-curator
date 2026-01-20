@@ -230,9 +230,7 @@ async def add_to_global_graph_bulk(
     try:
         success_count, failed_count = await _add_contents_bulk(episodes)
 
-        logger.info(
-            "Bulk add completed", success_count=success_count, failed_count=failed_count
-        )
+        logger.info("Bulk add completed", success_count=success_count, failed_count=failed_count)
 
         return AddToGlobalGraphBulkOutput(
             success_count=success_count,
@@ -322,13 +320,15 @@ async def fetch_and_add_to_graph_bulk(
             skipped_count += 1
             continue
 
-        episodes.append({
-            "entry_id": result["id"],
-            "content": content,
-            "title": result.get("title"),
-            "url": result.get("url"),
-            "source_type": "entry",
-        })
+        episodes.append(
+            {
+                "entry_id": result["id"],
+                "content": content,
+                "title": result.get("title"),
+                "url": result.get("url"),
+                "source_type": "entry",
+            }
+        )
 
     if not episodes:
         logger.info("No episodes to add (all entries skipped)")

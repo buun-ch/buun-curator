@@ -146,9 +146,7 @@ class Config:
             # Worker concurrency limits (0 = use Temporal defaults)
             max_concurrent_activities=int(os.getenv("MAX_CONCURRENT_ACTIVITIES", "0")),
             max_concurrent_workflow_tasks=int(os.getenv("MAX_CONCURRENT_WORKFLOW_TASKS", "0")),
-            max_concurrent_local_activities=int(
-                os.getenv("MAX_CONCURRENT_LOCAL_ACTIVITIES", "0")
-            ),
+            max_concurrent_local_activities=int(os.getenv("MAX_CONCURRENT_LOCAL_ACTIVITIES", "0")),
             domain_fetch_delay=float(os.getenv("DOMAIN_FETCH_DELAY", "2.0")),
             graph_rag_backend=os.getenv("GRAPH_RAG_BACKEND", "graphiti"),
             # Langfuse
@@ -156,8 +154,7 @@ class Config:
             langfuse_secret_key=os.getenv("LANGFUSE_SECRET_KEY", ""),
             langfuse_host=os.getenv("LANGFUSE_HOST", ""),
             # AI Evaluation
-            ai_evaluation_enabled=os.getenv("AI_EVALUATION_ENABLED", "false").lower()
-            == "true",
+            ai_evaluation_enabled=os.getenv("AI_EVALUATION_ENABLED", "false").lower() == "true",
             # Embedding models
             graphrag_embedding_model=os.getenv(
                 "GRAPHRAG_EMBEDDING_MODEL",
