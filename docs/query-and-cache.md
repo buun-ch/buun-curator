@@ -5,17 +5,17 @@ query flows corresponding to UI actions.
 
 ## Query Keys
 
-| Query Key | Type | Hook | staleTime | Description |
-|-----------|------|------|-----------|-------------|
-| `["subscriptions", filterMode]` | Query | `useSubscriptions` | default | Subscription tree with unread counts |
-| `["entries", subscription, filterMode, sortMode]` | InfiniteQuery | `useEntries` | default | Entry list with pagination (lightweight `EntryListItem`) |
-| `["entry", entryId]` | Query | `useEntry` | 30s | Single entry with full content and labels |
-| `["search", query, subscription]` | Query | `useEntrySearch` | 30s | Search results (Meilisearch) |
-| `["feed", feedId]` | Query | `useSelectedSubscriptionInfo` | default | Feed detail information |
-| `["reddit-favorites"]` | Query | `useRedditFavorites` | 5 min | Favorite subreddits |
-| `["subreddit", name]` | Query | `useSubreddit` | 10 min | Subreddit information |
-| `["subreddit-posts", name, sort, time, limit]` | InfiniteQuery | `useSubredditPosts` | 1 min | Subreddit post list |
-| `["reddit-post", postId]` | Query | `useRedditPost` | 1 min | Reddit post detail |
+| Query Key                                         | Type          | Hook                          | staleTime | Description                                              |
+| ------------------------------------------------- | ------------- | ----------------------------- | --------- | -------------------------------------------------------- |
+| `["subscriptions", filterMode]`                   | Query         | `useSubscriptions`            | default   | Subscription tree with unread counts                     |
+| `["entries", subscription, filterMode, sortMode]` | InfiniteQuery | `useEntries`                  | default   | Entry list with pagination (lightweight `EntryListItem`) |
+| `["entry", entryId]`                              | Query         | `useEntry`                    | 30s       | Single entry with full content and labels                |
+| `["search", query, subscription]`                 | Query         | `useEntrySearch`              | 30s       | Search results (Meilisearch)                             |
+| `["feed", feedId]`                                | Query         | `useSelectedSubscriptionInfo` | default   | Feed detail information                                  |
+| `["reddit-favorites"]`                            | Query         | `useRedditFavorites`          | 5 min     | Favorite subreddits                                      |
+| `["subreddit", name]`                             | Query         | `useSubreddit`                | 10 min    | Subreddit information                                    |
+| `["subreddit-posts", name, sort, time, limit]`    | InfiniteQuery | `useSubredditPosts`           | 1 min     | Subreddit post list                                      |
+| `["reddit-post", postId]`                         | Query         | `useRedditPost`               | 1 min     | Reddit post detail                                       |
 
 ## Data Architecture
 
@@ -23,10 +23,10 @@ query flows corresponding to UI actions.
 
 Two data types are used for entries to optimize performance:
 
-| Type | Query Key | Usage | Fields |
-|------|-----------|-------|--------|
-| `EntryListItem` | `["entries", ...]` | Content List | id, title, summary, feedName, isRead, isStarred, keep, etc. |
-| `Entry` | `["entry", entryId]` | Content Viewer | Extends `EntryListItem` with fullContent, translatedContent, labels, etc. |
+| Type            | Query Key            | Usage          | Fields                                                                    |
+| --------------- | -------------------- | -------------- | ------------------------------------------------------------------------- |
+| `EntryListItem` | `["entries", ...]`   | Content List   | id, title, summary, feedName, isRead, isStarred, keep, etc.               |
+| `Entry`         | `["entry", entryId]` | Content Viewer | Extends `EntryListItem` with fullContent, translatedContent, labels, etc. |
 
 This separation ensures the entry list query doesn't include heavy content
 fields, improving list loading performance.
@@ -336,10 +336,10 @@ await invalidateSubscriptions(queryClient);
 
 ## Key Hooks
 
-| Hook | Purpose | Query Key Used |
-|------|---------|----------------|
-| `useEntry` | Fetch single entry with full content | `["entry", entryId]` |
-| `useEntries` | Fetch entry list (lightweight) | `["entries", ...]` |
-| `useSelectedEntry` | Manage selected entry state, uses `useEntry` internally | `["entry", entryId]` |
-| `useEntryActions` | Toggle star/read/keep, refresh entry | Updates both caches |
-| `useEntryLabels` | Add/remove labels | Invalidates `["entry", entryId]` |
+| Hook               | Purpose                                                 | Query Key Used                   |
+| ------------------ | ------------------------------------------------------- | -------------------------------- |
+| `useEntry`         | Fetch single entry with full content                    | `["entry", entryId]`             |
+| `useEntries`       | Fetch entry list (lightweight)                          | `["entries", ...]`               |
+| `useSelectedEntry` | Manage selected entry state, uses `useEntry` internally | `["entry", entryId]`             |
+| `useEntryActions`  | Toggle star/read/keep, refresh entry                    | Updates both caches              |
+| `useEntryLabels`   | Add/remove labels                                       | Invalidates `["entry", entryId]` |

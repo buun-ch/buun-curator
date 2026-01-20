@@ -17,12 +17,12 @@ The system uses a three-layer architecture:
 
 The Next.js API layer serves as a secure proxy between the browser and the Python Agent:
 
-| Concern | Direct Browser → Agent | Browser → Next.js → Agent |
-|---------|------------------------|---------------------------|
-| API Keys | Exposed to client ❌ | Server-side only ✅ |
-| Internal URLs | Visible to client ❌ | Hidden ✅ |
-| CORS | Requires permissive policy ❌ | Server-to-server ✅ |
-| Auth/Authz | Duplicated logic ❌ | Centralized ✅ |
+| Concern       | Direct Browser → Agent        | Browser → Next.js → Agent |
+| ------------- | ----------------------------- | ------------------------- |
+| API Keys      | Exposed to client ❌          | Server-side only ✅       |
+| Internal URLs | Visible to client ❌          | Hidden ✅                 |
+| CORS          | Requires permissive policy ❌ | Server-to-server ✅       |
+| Auth/Authz    | Duplicated logic ❌           | Centralized ✅            |
 
 ## Communication Flow
 
@@ -141,10 +141,10 @@ export const POST = async (req: NextRequest) => {
 
 The `serviceAdapter` defines how CopilotKit connects to an LLM:
 
-| Adapter | Purpose |
-|---------|---------|
-| `OpenAIAdapter` | Call OpenAI directly from Next.js |
-| `LangChainAdapter` | Use LangChain in Next.js |
+| Adapter                    | Purpose                                  |
+| -------------------------- | ---------------------------------------- |
+| `OpenAIAdapter`            | Call OpenAI directly from Next.js        |
+| `LangChainAdapter`         | Use LangChain in Next.js                 |
 | `ExperimentalEmptyAdapter` | Delegate everything to an external agent |
 
 This project uses `ExperimentalEmptyAdapter` because all LLM calls are handled by the Python Agent. The `HttpAgent` forwards requests to the agent's AG-UI endpoint.
@@ -196,40 +196,40 @@ class EntryService:
 
 The agent streams responses using Server-Sent Events (SSE) with the AG-UI protocol:
 
-| Event | Description |
-|-------|-------------|
-| `RUN_STARTED` | Agent execution begins |
-| `TEXT_MESSAGE_START` | Message stream begins |
+| Event                  | Description                         |
+| ---------------------- | ----------------------------------- |
+| `RUN_STARTED`          | Agent execution begins              |
+| `TEXT_MESSAGE_START`   | Message stream begins               |
 | `TEXT_MESSAGE_CONTENT` | Text chunk (emitted multiple times) |
-| `TEXT_MESSAGE_END` | Message complete |
-| `RUN_FINISHED` | Agent execution complete |
+| `TEXT_MESSAGE_END`     | Message complete                    |
+| `RUN_FINISHED`         | Agent execution complete            |
 
 ## File Reference
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| Chat Input | `components/reader/chat-input.tsx` | User input capture |
-| Assistant Sidebar | `components/reader/assistant-sidebar.tsx` | Chat UI container |
-| Layout Provider | `app/reader-layout.tsx` | CopilotKit context setup |
-| Runtime Endpoint | `app/api/copilotkit/route.ts` | Request routing to agent |
-| AG-UI Handler | `agent/buun_curator_agent/routes/ag_ui.py` | Agent protocol handler |
-| Entry Service | `agent/buun_curator_agent/services/entry.py` | Entry context fetcher |
-| Agent Config | `agent/buun_curator_agent/config.py` | Environment settings |
+| Component         | File                                         | Purpose                  |
+| ----------------- | -------------------------------------------- | ------------------------ |
+| Chat Input        | `components/reader/chat-input.tsx`           | User input capture       |
+| Assistant Sidebar | `components/reader/assistant-sidebar.tsx`    | Chat UI container        |
+| Layout Provider   | `app/reader-layout.tsx`                      | CopilotKit context setup |
+| Runtime Endpoint  | `app/api/copilotkit/route.ts`                | Request routing to agent |
+| AG-UI Handler     | `agent/buun_curator_agent/routes/ag_ui.py`   | Agent protocol handler   |
+| Entry Service     | `agent/buun_curator_agent/services/entry.py` | Entry context fetcher    |
+| Agent Config      | `agent/buun_curator_agent/config.py`         | Environment settings     |
 
 ## Environment Variables
 
 ### Next.js
 
-| Variable | Description | Default |
-|----------|-------------|---------|
+| Variable    | Description           | Default                 |
+| ----------- | --------------------- | ----------------------- |
 | `AGENT_URL` | Python agent base URL | `http://localhost:8000` |
 
 ### Python Agent
 
-| Variable | Description |
-|----------|-------------|
-| `OPENAI_API_KEY` | OpenAI API key |
-| `OPENAI_BASE_URL` | Custom LLM endpoint (optional) |
-| `RESEARCH_MODEL` | LLM model name |
-| `API_BASE_URL` | Next.js API URL for fetching entries |
-| `INTERNAL_API_TOKEN` | Auth token for internal API calls |
+| Variable             | Description                          |
+| -------------------- | ------------------------------------ |
+| `OPENAI_API_KEY`     | OpenAI API key                       |
+| `OPENAI_BASE_URL`    | Custom LLM endpoint (optional)       |
+| `RESEARCH_MODEL`     | LLM model name                       |
+| `API_BASE_URL`       | Next.js API URL for fetching entries |
+| `INTERNAL_API_TOKEN` | Auth token for internal API calls    |

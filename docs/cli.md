@@ -8,24 +8,24 @@ Buun Curator provides CLI commands in two services:
 
 **Agent Service (`agent/`):**
 
-| Command | Description |
-|---------|-------------|
-| `agent` | Start FastAPI server |
-| `agent-cli` | CLI for testing agents |
+| Command      | Description            |
+| ------------ | ---------------------- |
+| `agent`      | Start FastAPI server   |
+| `agent-cli`  | CLI for testing agents |
 | `batch-eval` | RAGAS batch evaluation |
 
 **Worker Service (`worker/`):**
 
-| Command | Description |
-|---------|-------------|
-| `worker` | Start Temporal worker |
-| `trigger` | Trigger workflows manually |
-| `schedule` | Manage Temporal schedules |
-| `fetch` | Debug content fetching |
+| Command                           | Description                                    |
+| --------------------------------- | ---------------------------------------------- |
+| `worker`                          | Start Temporal worker                          |
+| `trigger`                         | Trigger workflows manually                     |
+| `schedule`                        | Manage Temporal schedules                      |
+| `fetch`                           | Debug content fetching                         |
 | `generate-singlehop-eval-dataset` | Generate single-hop evaluation dataset (RAGAS) |
-| `generate-multihop-eval-dataset` | Generate multi-hop evaluation dataset |
-| `generate-filtering-dataset` | Generate filtering evaluation dataset |
-| `run-filtering-on-dataset` | Run filtering on dataset |
+| `generate-multihop-eval-dataset`  | Generate multi-hop evaluation dataset          |
+| `generate-filtering-dataset`      | Generate filtering evaluation dataset          |
+| `run-filtering-on-dataset`        | Run filtering on dataset                       |
 
 Commands should be run from the respective directories:
 
@@ -71,15 +71,15 @@ agent-cli dialogue <message> [options]
 
 **Arguments:**
 
-| Argument | Description |
-|----------|-------------|
+| Argument  | Description  |
+| --------- | ------------ |
 | `message` | User message |
 
 **Options:**
 
-| Option | Short | Description |
-|--------|-------|-------------|
-| `--context` | `-c` | Entry context (content) |
+| Option      | Short | Description             |
+| ----------- | ----- | ----------------------- |
+| `--context` | `-c`  | Entry context (content) |
 
 **Examples:**
 
@@ -98,24 +98,24 @@ agent-cli research <query> [options]
 
 **Arguments:**
 
-| Argument | Description |
-|----------|-------------|
-| `query` | Search query |
+| Argument | Description  |
+| -------- | ------------ |
+| `query`  | Search query |
 
 **Options:**
 
-| Option | Short | Default | Description |
-|--------|-------|---------|-------------|
-| `--mode` | `-m` | `planner` | Search mode |
+| Option   | Short | Default   | Description |
+| -------- | ----- | --------- | ----------- |
+| `--mode` | `-m`  | `planner` | Search mode |
 
 **Search Modes:**
 
-| Mode | Description |
-|------|-------------|
-| `planner` | Planner selects optimal sources based on query |
-| `meilisearch` | Use Meilisearch (full-text search) only |
-| `embedding` | Use embedding (vector search) only |
-| `hybrid` | Use both and merge results |
+| Mode          | Description                                    |
+| ------------- | ---------------------------------------------- |
+| `planner`     | Planner selects optimal sources based on query |
+| `meilisearch` | Use Meilisearch (full-text search) only        |
+| `embedding`   | Use embedding (vector search) only             |
+| `hybrid`      | Use both and merge results                     |
 
 **Examples:**
 
@@ -136,9 +136,9 @@ agent-cli api [options] <subcommand>
 
 **Options:**
 
-| Option | Short | Default | Description |
-|--------|-------|---------|-------------|
-| `--base-url` | `-u` | `http://buun-curator-agent.buun-curator:8000` | Agent service URL |
+| Option       | Short | Default                                       | Description       |
+| ------------ | ----- | --------------------------------------------- | ----------------- |
+| `--base-url` | `-u`  | `http://buun-curator-agent.buun-curator:8000` | Agent service URL |
 
 **Subcommands:**
 
@@ -164,16 +164,16 @@ batch-eval [options]
 
 **Options:**
 
-| Option | Short | Default | Description |
-|--------|-------|---------|-------------|
-| `--dataset-name` | | `research-evaluation` | Langfuse dataset name |
-| `--run-name` | | Auto-generated | Name for this evaluation run |
-| `--limit` | | None | Maximum number of items to evaluate |
-| `--dry-run` | | | Print items without running evaluation |
-| `--verbose` | `-v` | | Enable verbose logging |
-| `--no-save` | | | Skip saving results to file |
-| `--mode` | `-m` | `planner` | Search mode |
-| `--all-modes` | | | Run evaluation for all search modes sequentially |
+| Option           | Short | Default               | Description                                      |
+| ---------------- | ----- | --------------------- | ------------------------------------------------ |
+| `--dataset-name` |       | `research-evaluation` | Langfuse dataset name                            |
+| `--run-name`     |       | Auto-generated        | Name for this evaluation run                     |
+| `--limit`        |       | None                  | Maximum number of items to evaluate              |
+| `--dry-run`      |       |                       | Print items without running evaluation           |
+| `--verbose`      | `-v`  |                       | Enable verbose logging                           |
+| `--no-save`      |       |                       | Skip saving results to file                      |
+| `--mode`         | `-m`  | `planner`             | Search mode                                      |
+| `--all-modes`    |       |                       | Run evaluation for all search modes sequentially |
 
 **Examples:**
 
@@ -208,8 +208,8 @@ uv run worker [options]
 
 **Options:**
 
-| Option | Description |
-|--------|-------------|
+| Option     | Description                        |
+| ---------- | ---------------------------------- |
 | `--reload` | Enable auto-reload on file changes |
 
 **Examples:**
@@ -230,23 +230,23 @@ trigger <subcommand> [options]
 
 #### Subcommands
 
-| Subcommand | Description |
-|------------|-------------|
-| `ingest` | Run feed ingestion workflow for all feeds |
-| `ingest-feed` | Run ingestion workflow for a single feed |
-| `list-feeds` | List all registered feeds |
-| `distill-entries` | Run entry distillation workflow |
-| `reprocess` | Reprocess specific entry IDs (fetch + summarize) |
-| `fetch` | Fetch content for debugging |
-| `extract-context` | Extract structured context from an entry |
-| `collect-context` | Collect context from multiple entries and analyze |
-| `reindex` | Rebuild search index (Meilisearch) |
-| `prune` | Remove orphaned documents from search index |
-| `deep-research` | Run deep research on an entry with a query |
-| `graph-rebuild` | Rebuild global knowledge graph |
-| `graph-update` | Add pending entries to knowledge graph |
-| `cleanup` | Delete old entries (read, unstarred, not upvoted) |
-| `embedding-backfill` | Compute embeddings for entries without them |
+| Subcommand           | Description                                       |
+| -------------------- | ------------------------------------------------- |
+| `ingest`             | Run feed ingestion workflow for all feeds         |
+| `ingest-feed`        | Run ingestion workflow for a single feed          |
+| `list-feeds`         | List all registered feeds                         |
+| `distill-entries`    | Run entry distillation workflow                   |
+| `reprocess`          | Reprocess specific entry IDs (fetch + summarize)  |
+| `fetch`              | Fetch content for debugging                       |
+| `extract-context`    | Extract structured context from an entry          |
+| `collect-context`    | Collect context from multiple entries and analyze |
+| `reindex`            | Rebuild search index (Meilisearch)                |
+| `prune`              | Remove orphaned documents from search index       |
+| `deep-research`      | Run deep research on an entry with a query        |
+| `graph-rebuild`      | Rebuild global knowledge graph                    |
+| `graph-update`       | Add pending entries to knowledge graph            |
+| `cleanup`            | Delete old entries (read, unstarred, not upvoted) |
+| `embedding-backfill` | Compute embeddings for entries without them       |
 
 #### trigger ingest
 
@@ -258,10 +258,10 @@ trigger ingest [options]
 
 **Options:**
 
-| Option | Description |
-|--------|-------------|
+| Option           | Description                  |
+| ---------------- | ---------------------------- |
 | `--no-summarize` | Skip automatic summarization |
-| `--no-fetch` | Skip content fetching |
+| `--no-fetch`     | Skip content fetching        |
 
 **Examples:**
 
@@ -281,16 +281,16 @@ trigger ingest-feed <feed_id> [options]
 
 **Arguments:**
 
-| Argument | Description |
-|----------|-------------|
+| Argument  | Description       |
+| --------- | ----------------- |
 | `feed_id` | Feed ID to ingest |
 
 **Options:**
 
-| Option | Description |
-|--------|-------------|
+| Option           | Description                  |
+| ---------------- | ---------------------------- |
 | `--no-summarize` | Skip automatic summarization |
-| `--no-fetch` | Skip content fetching |
+| `--no-fetch`     | Skip content fetching        |
 
 **Examples:**
 
@@ -309,10 +309,10 @@ trigger deep-research <entry_id> <query>
 
 **Arguments:**
 
-| Argument | Description |
-|----------|-------------|
+| Argument   | Description          |
+| ---------- | -------------------- |
 | `entry_id` | Entry ID to research |
-| `query` | Research query |
+| `query`    | Research query       |
 
 **Examples:**
 
@@ -343,16 +343,16 @@ schedule <subcommand> [options]
 
 #### Subcommands
 
-| Subcommand | Description |
-|------------|-------------|
-| `show` | Show current schedule status |
-| `set` | Create or update schedule |
-| `pause` | Pause the schedule |
-| `resume` | Resume the schedule |
-| `delete` | Delete the schedule |
-| `trigger` | Trigger the schedule immediately |
-| `graph` | Manage graph update schedule |
-| `cleanup` | Manage entries cleanup schedule |
+| Subcommand | Description                      |
+| ---------- | -------------------------------- |
+| `show`     | Show current schedule status     |
+| `set`      | Create or update schedule        |
+| `pause`    | Pause the schedule               |
+| `resume`   | Resume the schedule              |
+| `delete`   | Delete the schedule              |
+| `trigger`  | Trigger the schedule immediately |
+| `graph`    | Manage graph update schedule     |
+| `cleanup`  | Manage entries cleanup schedule  |
 
 **Examples:**
 
@@ -376,18 +376,18 @@ fetch <url> [options]
 
 **Arguments:**
 
-| Argument | Description |
-|----------|-------------|
-| `url` | URL to fetch |
+| Argument | Description  |
+| -------- | ------------ |
+| `url`    | URL to fetch |
 
 **Options:**
 
-| Option | Short | Description |
-|--------|-------|-------------|
-| `--title` | `-t` | Entry title (for duplicate heading removal) |
-| `--screenshot` | `-s` | Capture screenshot |
-| `--exclude` | `-e` | CSS selector to exclude (can be repeated) |
-| `--html` | | Show raw_html (first 5000 chars) |
+| Option         | Short | Description                                 |
+| -------------- | ----- | ------------------------------------------- |
+| `--title`      | `-t`  | Entry title (for duplicate heading removal) |
+| `--screenshot` | `-s`  | Capture screenshot                          |
+| `--exclude`    | `-e`  | CSS selector to exclude (can be repeated)   |
+| `--html`       |       | Show raw_html (first 5000 chars)            |
 
 **Examples:**
 
@@ -412,18 +412,18 @@ generate-singlehop-eval-dataset [options] <subcommand>
 
 **Options:**
 
-| Option | Default | Description |
-|--------|---------|-------------|
+| Option           | Default                | Description                |
+| ---------------- | ---------------------- | -------------------------- |
 | `--dataset-name` | `singlehop-evaluation` | Dataset name for directory |
 
 **Subcommands:**
 
-| Subcommand | Description |
-|------------|-------------|
-| `sample` | Step 1: Sample diverse entries from database (K-means clustering) |
-| `generate` | Step 2: Generate QA pairs with RAGAS TestsetGenerator |
-| `upload` | Step 3: Upload generated QA pairs to Langfuse Dataset |
-| `all` | Run all steps: sample → generate → upload |
+| Subcommand | Description                                                       |
+| ---------- | ----------------------------------------------------------------- |
+| `sample`   | Step 1: Sample diverse entries from database (K-means clustering) |
+| `generate` | Step 2: Generate QA pairs with RAGAS TestsetGenerator             |
+| `upload`   | Step 3: Upload generated QA pairs to Langfuse Dataset             |
+| `all`      | Run all steps: sample → generate → upload                         |
 
 #### sample
 
@@ -431,10 +431,10 @@ generate-singlehop-eval-dataset [options] <subcommand>
 generate-singlehop-eval-dataset sample [options]
 ```
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `--n-samples` | 15 | Number of entries to sample per language |
-| `--min-content-length` | 1000 | Minimum content length for entries |
+| Option                 | Default | Description                              |
+| ---------------------- | ------- | ---------------------------------------- |
+| `--n-samples`          | 15      | Number of entries to sample per language |
+| `--min-content-length` | 1000    | Minimum content length for entries       |
 
 #### generate
 
@@ -442,11 +442,11 @@ generate-singlehop-eval-dataset sample [options]
 generate-singlehop-eval-dataset generate [options]
 ```
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `--dataset-size` | 10 | Number of QA samples per pattern |
-| `--llm-model` | `$EVAL_DATA_LLM_MODEL` | LLM model for generation |
-| `--embedding-model` | `$EVAL_DATA_EMBEDDING_LLM_MODEL` | Embedding model |
+| Option              | Default                          | Description                      |
+| ------------------- | -------------------------------- | -------------------------------- |
+| `--dataset-size`    | 10                               | Number of QA samples per pattern |
+| `--llm-model`       | `$EVAL_DATA_LLM_MODEL`           | LLM model for generation         |
+| `--embedding-model` | `$EVAL_DATA_EMBEDDING_LLM_MODEL` | Embedding model                  |
 
 #### upload
 
@@ -454,8 +454,8 @@ generate-singlehop-eval-dataset generate [options]
 generate-singlehop-eval-dataset upload [options]
 ```
 
-| Option | Default | Description |
-|--------|---------|-------------|
+| Option                    | Default                  | Description           |
+| ------------------------- | ------------------------ | --------------------- |
 | `--langfuse-dataset-name` | Same as `--dataset-name` | Langfuse dataset name |
 
 **Required Environment Variables:**
@@ -495,12 +495,12 @@ generate-filtering-dataset [options]
 
 **Options:**
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `--label` | `eval-filtering` | Label name to filter entries |
-| `--limit` | None | Maximum number of entries to fetch |
-| `--dataset-name` | `filtering-evaluation` | Dataset name |
-| `--no-upload` | | Skip uploading to Langfuse Dataset |
+| Option           | Default                | Description                        |
+| ---------------- | ---------------------- | ---------------------------------- |
+| `--label`        | `eval-filtering`       | Label name to filter entries       |
+| `--limit`        | None                   | Maximum number of entries to fetch |
+| `--dataset-name` | `filtering-evaluation` | Dataset name                       |
+| `--no-upload`    |                        | Skip uploading to Langfuse Dataset |
 
 **Examples:**
 
@@ -520,11 +520,11 @@ run-filtering-on-dataset [options]
 
 **Options:**
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `--dataset-name` | `filtering-evaluation` | Langfuse dataset name |
-| `--limit` | None | Maximum number of items to process |
-| `--dry-run` | | Show what would be done without making changes |
+| Option           | Default                | Description                                    |
+| ---------------- | ---------------------- | ---------------------------------------------- |
+| `--dataset-name` | `filtering-evaluation` | Langfuse dataset name                          |
+| `--limit`        | None                   | Maximum number of items to process             |
+| `--dry-run`      |                        | Show what would be done without making changes |
 
 **Examples:**
 
@@ -547,19 +547,19 @@ generate-multihop-eval-dataset [options] <subcommand>
 
 **Options:**
 
-| Option | Default | Description |
-|--------|---------|-------------|
+| Option           | Default               | Description                |
+| ---------------- | --------------------- | -------------------------- |
 | `--dataset-name` | `multihop-evaluation` | Dataset name for directory |
 
 **Subcommands:**
 
-| Subcommand | Description |
-|------------|-------------|
-| `cluster` | Step 1: Cluster entries by embedding similarity (K-means) |
-| `generate` | Step 2: Generate multi-hop questions from clusters |
-| `filter` | Step 3: Filter out shortcut-solvable questions |
-| `all` | Run all steps: cluster → generate → filter |
-| `upload` | Step 4: Upload filtered questions to Langfuse Dataset |
+| Subcommand | Description                                               |
+| ---------- | --------------------------------------------------------- |
+| `cluster`  | Step 1: Cluster entries by embedding similarity (K-means) |
+| `generate` | Step 2: Generate multi-hop questions from clusters        |
+| `filter`   | Step 3: Filter out shortcut-solvable questions            |
+| `all`      | Run all steps: cluster → generate → filter                |
+| `upload`   | Step 4: Upload filtered questions to Langfuse Dataset     |
 
 #### cluster
 
@@ -567,11 +567,11 @@ generate-multihop-eval-dataset [options] <subcommand>
 generate-multihop-eval-dataset cluster [options]
 ```
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `--n-clusters` | 20 | Number of clusters to create |
-| `--min-cluster-size` | 2 | Minimum entries per cluster |
-| `--min-content-length` | 500 | Minimum content length for entries |
+| Option                 | Default | Description                        |
+| ---------------------- | ------- | ---------------------------------- |
+| `--n-clusters`         | 20      | Number of clusters to create       |
+| `--min-cluster-size`   | 2       | Minimum entries per cluster        |
+| `--min-content-length` | 500     | Minimum content length for entries |
 
 #### generate
 
@@ -581,12 +581,12 @@ generate-multihop-eval-dataset generate [options]
 
 Selects the 2 most similar entries from each cluster and generates questions.
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `--questions-per-cluster` | 2 | Number of questions per cluster |
-| `--max-clusters` | None | Maximum clusters to process |
-| `--min-similarity` | 0.5 | Minimum cosine similarity between entries |
-| `--llm-model` | `$EVAL_DATA_LLM_MODEL` | LLM model for generation |
+| Option                    | Default                | Description                               |
+| ------------------------- | ---------------------- | ----------------------------------------- |
+| `--questions-per-cluster` | 2                      | Number of questions per cluster           |
+| `--max-clusters`          | None                   | Maximum clusters to process               |
+| `--min-similarity`        | 0.5                    | Minimum cosine similarity between entries |
+| `--llm-model`             | `$EVAL_DATA_LLM_MODEL` | LLM model for generation                  |
 
 #### filter
 
@@ -596,8 +596,8 @@ generate-multihop-eval-dataset filter [options]
 
 Filters out questions that can be answered from a single entry (shortcuts).
 
-| Option | Default | Description |
-|--------|---------|-------------|
+| Option        | Default                | Description                      |
+| ------------- | ---------------------- | -------------------------------- |
 | `--llm-model` | `$EVAL_DATA_LLM_MODEL` | LLM model for shortcut detection |
 
 #### upload
@@ -608,8 +608,8 @@ generate-multihop-eval-dataset upload [options]
 
 Uploads filtered questions to Langfuse Dataset for evaluation with `batch-eval`.
 
-| Option | Default | Description |
-|--------|---------|-------------|
+| Option                    | Default                  | Description           |
+| ------------------------- | ------------------------ | --------------------- |
 | `--langfuse-dataset-name` | Same as `--dataset-name` | Langfuse dataset name |
 
 **Required Environment Variables:**
@@ -662,20 +662,20 @@ uv run <command>
 
 ### Required Variables (Agent)
 
-| Variable | Description |
-|----------|-------------|
-| `OPENAI_API_KEY` | API key for OpenAI-compatible LLM service |
-| `OPENAI_BASE_URL` | Base URL for OpenAI-compatible LLM service |
-| `API_BASE_URL` | Next.js API URL |
-| `INTERNAL_API_TOKEN` | Internal API authentication token |
+| Variable             | Description                                |
+| -------------------- | ------------------------------------------ |
+| `OPENAI_API_KEY`     | API key for OpenAI-compatible LLM service  |
+| `OPENAI_BASE_URL`    | Base URL for OpenAI-compatible LLM service |
+| `API_BASE_URL`       | Next.js API URL                            |
+| `INTERNAL_API_TOKEN` | Internal API authentication token          |
 
 ### Required Variables (Worker)
 
-| Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `TEMPORAL_HOST` | Temporal server address |
-| `OPENAI_API_KEY` | API key for OpenAI-compatible LLM service |
+| Variable          | Description                                |
+| ----------------- | ------------------------------------------ |
+| `DATABASE_URL`    | PostgreSQL connection string               |
+| `TEMPORAL_HOST`   | Temporal server address                    |
+| `OPENAI_API_KEY`  | API key for OpenAI-compatible LLM service  |
 | `OPENAI_BASE_URL` | Base URL for OpenAI-compatible LLM service |
 
 See `worker/README.md` for complete environment variable documentation.

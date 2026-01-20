@@ -129,11 +129,11 @@ This design ensures:
 
 ### Filter Settings
 
-| Setting | Value | Description |
-|---------|-------|-------------|
-| `threshold` | 0.3 | Score threshold for content blocks |
-| `threshold_type` | dynamic | Adjusts threshold based on tag importance |
-| `min_word_threshold` | None | Disabled to preserve code blocks |
+| Setting              | Value   | Description                               |
+| -------------------- | ------- | ----------------------------------------- |
+| `threshold`          | 0.3     | Score threshold for content blocks        |
+| `threshold_type`     | dynamic | Adjusts threshold based on tag importance |
+| `min_word_threshold` | None    | Disabled to preserve code blocks          |
 
 ## Content Selection Logic
 
@@ -172,11 +172,11 @@ Evaluate fit_markdown
 
 Some pages cause `ImagePreservingFilter` to be overly aggressive, extracting only titles or headers while discarding the article body. The 10% threshold detects this by comparing filtered vs raw content length:
 
-| Scenario | raw_markdown | fit_markdown | 10% threshold | Result |
-|----------|--------------|--------------|---------------|--------|
-| Normal filtering | 6000 chars | 4000 chars | 600 | fit_markdown ✓ |
-| Over-filtering | 6000 chars | 103 chars | 600 | raw_markdown (fallback) |
-| Short article | 800 chars | 500 chars | 80 | fit_markdown ✓ |
+| Scenario         | raw_markdown | fit_markdown | 10% threshold | Result                  |
+| ---------------- | ------------ | ------------ | ------------- | ----------------------- |
+| Normal filtering | 6000 chars   | 4000 chars   | 600           | fit_markdown ✓          |
+| Over-filtering   | 6000 chars   | 103 chars    | 600           | raw_markdown (fallback) |
+| Short article    | 800 chars    | 500 chars    | 80            | fit_markdown ✓          |
 
 ## FetchedContent Output
 
@@ -191,9 +191,9 @@ class FetchedContent:
     title: str = ""             # HTML page title from metadata
 ```
 
-| Field | Description |
-|-------|-------------|
+| Field          | Description                                                                    |
+| -------------- | ------------------------------------------------------------------------------ |
 | `full_content` | Final markdown content (fit_markdown or raw_markdown based on selection logic) |
-| `raw_html` | Original HTML, used for creating extraction rules in the UI |
-| `screenshot` | Page screenshot for thumbnail generation (when enabled) |
-| `title` | Page title from HTML `<title>` or og:title meta tag |
+| `raw_html`     | Original HTML, used for creating extraction rules in the UI                    |
+| `screenshot`   | Page screenshot for thumbnail generation (when enabled)                        |
+| `title`        | Page title from HTML `<title>` or og:title meta tag                            |

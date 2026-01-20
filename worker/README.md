@@ -228,11 +228,11 @@ uv run schedule delete
 
 **Interval format:**
 
-| Format | Duration |
-|--------|----------|
+| Format | Duration   |
+| ------ | ---------- |
 | `30m`  | 30 minutes |
-| `6h`   | 6 hours |
-| `1d`   | 1 day |
+| `6h`   | 6 hours    |
+| `1d`   | 1 day      |
 
 ## Development
 

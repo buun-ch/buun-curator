@@ -100,15 +100,15 @@ AI-powered information curator and research assistant, currently just a feed rea
 
 ### Components
 
-| Component     | Technology             | Description                                          |
-| ------------- | ---------------------- | ---------------------------------------------------- |
-| Frontend      | Next.js (React)        | Multi-panel feed reader UI with CopilotKit chat      |
-| API           | Next.js API Routes     | REST API for entries, feeds, subscriptions           |
-| AI Agent      | FastAPI + AG-UI        | Real-time streaming responses via Server-Sent Events |
-| Worker        | Python + Temporal      | Durable workflow execution for background tasks      |
-| Database      | PostgreSQL + pgvector  | Entry storage, embeddings for recommendations        |
-| Search        | Meilisearch            | Full-text search with CJK language support           |
-| Observability | Langfuse               | LLM tracing and RAGAS evaluation scores              |
+| Component     | Technology            | Description                                          |
+| ------------- | --------------------- | ---------------------------------------------------- |
+| Frontend      | Next.js (React)       | Multi-panel feed reader UI with CopilotKit chat      |
+| API           | Next.js API Routes    | REST API for entries, feeds, subscriptions           |
+| AI Agent      | FastAPI + AG-UI       | Real-time streaming responses via Server-Sent Events |
+| Worker        | Python + Temporal     | Durable workflow execution for background tasks      |
+| Database      | PostgreSQL + pgvector | Entry storage, embeddings for recommendations        |
+| Search        | Meilisearch           | Full-text search with CJK language support           |
+| Observability | Langfuse              | LLM tracing and RAGAS evaluation scores              |
 
 - [Next.js](https://nextjs.org/)
 - [CopilotKit](https://www.copilotkit.ai/)

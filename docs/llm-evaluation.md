@@ -47,10 +47,10 @@ Generation Assessment) metrics. Scores are recorded to
 
 ## Metrics
 
-| Metric | Description | Range |
-|--------|-------------|-------|
-| `faithfulness` | Measures factual consistency of the answer with retrieved contexts (hallucination detection) | 0.0 - 1.0 |
-| `answer_relevancy` | Measures how well the answer addresses the user's question | 0.0 - 1.0 |
+| Metric             | Description                                                                                  | Range     |
+| ------------------ | -------------------------------------------------------------------------------------------- | --------- |
+| `faithfulness`     | Measures factual consistency of the answer with retrieved contexts (hallucination detection) | 0.0 - 1.0 |
+| `answer_relevancy` | Measures how well the answer addresses the user's question                                   | 0.0 - 1.0 |
 
 ## Components
 
@@ -58,34 +58,34 @@ Generation Assessment) metrics. Scores are recorded to
 
 The Agent triggers evaluation after generating a response:
 
-| File | Purpose |
-|------|---------|
-| `agent/buun_curator_agent/temporal.py` | `start_evaluation_workflow()` function |
-| `agent/buun_curator_agent/agents/dialogue.py` | Triggers evaluation in dialogue mode |
-| `agent/buun_curator_agent/agents/research.py` | Triggers evaluation in research mode |
+| File                                          | Purpose                                |
+| --------------------------------------------- | -------------------------------------- |
+| `agent/buun_curator_agent/temporal.py`        | `start_evaluation_workflow()` function |
+| `agent/buun_curator_agent/agents/dialogue.py` | Triggers evaluation in dialogue mode   |
+| `agent/buun_curator_agent/agents/research.py` | Triggers evaluation in research mode   |
 
 ### Worker (Execution)
 
 The Worker executes RAGAS evaluation and records scores:
 
-| File | Purpose |
-|------|---------|
-| `worker/buun_curator/workflows/evaluation.py` | `EvaluationWorkflow`, `SummarizationEvaluationWorkflow` |
-| `worker/buun_curator/workflows/content_distillation.py` | Starts `SummarizationEvaluationWorkflow` as child |
-| `worker/buun_curator/activities/evaluation.py` | `evaluate_ragas`, `evaluate_summarization` activities |
-| `worker/buun_curator/services/evaluation.py` | RAGAS scoring and Langfuse integration |
+| File                                                    | Purpose                                                 |
+| ------------------------------------------------------- | ------------------------------------------------------- |
+| `worker/buun_curator/workflows/evaluation.py`           | `EvaluationWorkflow`, `SummarizationEvaluationWorkflow` |
+| `worker/buun_curator/workflows/content_distillation.py` | Starts `SummarizationEvaluationWorkflow` as child       |
+| `worker/buun_curator/activities/evaluation.py`          | `evaluate_ragas`, `evaluate_summarization` activities   |
+| `worker/buun_curator/services/evaluation.py`            | RAGAS scoring and Langfuse integration                  |
 
 ## Configuration
 
 ### Environment Variables
 
-| Variable | Description | Component |
-|----------|-------------|-----------|
-| `AI_EVALUATION_ENABLED` | Enable/disable evaluation (`true`/`false`) | Agent |
-| `EVALUATION_EMBEDDING_MODEL` | Embedding model for RAGAS | Worker |
-| `LANGFUSE_PUBLIC_KEY` | Langfuse public key | Worker |
-| `LANGFUSE_SECRET_KEY` | Langfuse secret key | Worker |
-| `LANGFUSE_HOST` | Langfuse host URL | Worker |
+| Variable                     | Description                                | Component |
+| ---------------------------- | ------------------------------------------ | --------- |
+| `AI_EVALUATION_ENABLED`      | Enable/disable evaluation (`true`/`false`) | Agent     |
+| `EVALUATION_EMBEDDING_MODEL` | Embedding model for RAGAS                  | Worker    |
+| `LANGFUSE_PUBLIC_KEY`        | Langfuse public key                        | Worker    |
+| `LANGFUSE_SECRET_KEY`        | Langfuse secret key                        | Worker    |
+| `LANGFUSE_HOST`              | Langfuse host URL                          | Worker    |
 
 ### Helm Configuration
 
@@ -109,13 +109,13 @@ Evaluates agent responses (dialogue/research mode).
 
 #### Input
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `trace_id` | string | Langfuse trace ID to attach scores to |
-| `mode` | string | Agent mode (`"dialogue"` or `"research"`) |
-| `question` | string | User's question |
-| `contexts` | list[string] | Retrieved context documents |
-| `answer` | string | Generated answer |
+| Field      | Type         | Description                               |
+| ---------- | ------------ | ----------------------------------------- |
+| `trace_id` | string       | Langfuse trace ID to attach scores to     |
+| `mode`     | string       | Agent mode (`"dialogue"` or `"research"`) |
+| `question` | string       | User's question                           |
+| `contexts` | list[string] | Retrieved context documents               |
+| `answer`   | string       | Generated answer                          |
 
 ### SummarizationEvaluationWorkflow
 
@@ -158,35 +158,35 @@ Evaluates content summarization quality from ContentDistillationWorkflow.
 
 #### Input
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `trace_id` | string | Langfuse trace ID from distillation |
-| `items` | list[SummarizationEvaluationItem] | Items to evaluate |
-| `max_samples` | int | Maximum number of items to evaluate (default: 5) |
+| Field         | Type                              | Description                                      |
+| ------------- | --------------------------------- | ------------------------------------------------ |
+| `trace_id`    | string                            | Langfuse trace ID from distillation              |
+| `items`       | list[SummarizationEvaluationItem] | Items to evaluate                                |
+| `max_samples` | int                               | Maximum number of items to evaluate (default: 5) |
 
 **SummarizationEvaluationItem:**
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `entry_id` | string | Entry identifier |
-| `original_content` | string | Original content before summarization |
-| `summary` | string | Generated summary |
-| `trace_id` | string | Per-entry trace ID for Langfuse (optional) |
+| Field              | Type   | Description                                |
+| ------------------ | ------ | ------------------------------------------ |
+| `entry_id`         | string | Entry identifier                           |
+| `original_content` | string | Original content before summarization      |
+| `summary`          | string | Generated summary                          |
+| `trace_id`         | string | Per-entry trace ID for Langfuse (optional) |
 
 #### Metrics
 
 **Per-entry scores** (on `distillation-eval` trace):
 
-| Metric | Description |
-|--------|-------------|
-| `faithfulness` | Whether summary is factually consistent with original |
+| Metric             | Description                                                      |
+| ------------------ | ---------------------------------------------------------------- |
+| `faithfulness`     | Whether summary is factually consistent with original            |
 | `answer_relevancy` | Whether summary appropriately addresses "Summarize this content" |
 
 **Batch average scores** (on `distillation-batch` trace):
 
-| Metric | Description |
-|--------|-------------|
-| `batch_faithfulness` | Arithmetic mean of faithfulness across evaluated entries |
+| Metric                   | Description                                                  |
+| ------------------------ | ------------------------------------------------------------ |
+| `batch_faithfulness`     | Arithmetic mean of faithfulness across evaluated entries     |
 | `batch_answer_relevancy` | Arithmetic mean of answer_relevancy across evaluated entries |
 
 ### Error Handling
@@ -300,12 +300,12 @@ uv run batch-eval --limit 5 --dry-run          # Preview 5 items
 
 **Search modes:**
 
-| Mode | Description |
-|------|-------------|
-| `planner` | Planner selects optimal sources based on query (default) |
-| `meilisearch` | Full-text search only |
-| `embedding` | Vector search only |
-| `hybrid` | Both sources, merged results |
+| Mode          | Description                                              |
+| ------------- | -------------------------------------------------------- |
+| `planner`     | Planner selects optimal sources based on query (default) |
+| `meilisearch` | Full-text search only                                    |
+| `embedding`   | Vector search only                                       |
+| `hybrid`      | Both sources, merged results                             |
 
 **Results:**
 

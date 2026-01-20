@@ -19,14 +19,14 @@ All components output JSON logs with consistent field names for unified querying
 
 ### Common Fields
 
-| Field       | Type   | Description                                               |
-| ----------- | ------ | --------------------------------------------------------- |
-| `event`     | string | Log message                                               |
-| `level`     | string | Log level (`debug`, `info`, `warning`, `error`)           |
-| `timestamp` | string | ISO 8601 timestamp (e.g., `2026-01-15T13:07:48.157413Z`)  |
-| `component` | string | Component name (`frontend`, `worker`, `agent`)            |
-| `trace_id`  | string | OpenTelemetry trace ID (32 hex chars)                     |
-| `span_id`   | string | OpenTelemetry span ID (16 hex chars)                      |
+| Field       | Type   | Description                                              |
+| ----------- | ------ | -------------------------------------------------------- |
+| `event`     | string | Log message                                              |
+| `level`     | string | Log level (`debug`, `info`, `warning`, `error`)          |
+| `timestamp` | string | ISO 8601 timestamp (e.g., `2026-01-15T13:07:48.157413Z`) |
+| `component` | string | Component name (`frontend`, `worker`, `agent`)           |
+| `trace_id`  | string | OpenTelemetry trace ID (32 hex chars)                    |
+| `span_id`   | string | OpenTelemetry span ID (16 hex chars)                     |
 
 ### Frontend Log Format
 
@@ -123,13 +123,13 @@ Traces are propagated between components using W3C Trace Context (`traceparent` 
 
 ### Environment Variables
 
-| Variable                       | Component | Description                                        |
-| ------------------------------ | --------- | -------------------------------------------------- |
-| `OTEL_TRACING_ENABLED`         | All       | Enable/disable tracing (`true`/`false`)            |
-| `OTEL_SERVICE_NAME`            | All       | Service name for traces                            |
-| `OTEL_EXPORTER_OTLP_ENDPOINT`  | All       | Tempo OTLP endpoint (e.g., `http://tempo:4317`)    |
-| `LOG_LEVEL`                    | All       | Log level (`DEBUG`, `INFO`, `WARNING`, `ERROR`)    |
-| `ENVIRONMENT`                  | All       | Environment name (`development`, `production`)     |
+| Variable                      | Component | Description                                     |
+| ----------------------------- | --------- | ----------------------------------------------- |
+| `OTEL_TRACING_ENABLED`        | All       | Enable/disable tracing (`true`/`false`)         |
+| `OTEL_SERVICE_NAME`           | All       | Service name for traces                         |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | All       | Tempo OTLP endpoint (e.g., `http://tempo:4317`) |
+| `LOG_LEVEL`                   | All       | Log level (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |
+| `ENVIRONMENT`                 | All       | Environment name (`development`, `production`)  |
 
 ### Helm Values
 
@@ -266,11 +266,11 @@ or outside Temporal's workflow sandbox.
 
 ### Summary
 
-| Location | Logger | Syntax |
-| -------- | ------ | ------ |
-| **Workflows** | `workflow.logger` | `workflow.logger.info("msg", extra={"key": value})` |
-| **Activities** | `structlog` / `logging.getLogger()` | `logger.info("msg", key=value)` |
-| **Services** | `structlog` / `logging.getLogger()` | `logger.info("msg", key=value)` |
+| Location       | Logger                              | Syntax                                              |
+| -------------- | ----------------------------------- | --------------------------------------------------- |
+| **Workflows**  | `workflow.logger`                   | `workflow.logger.info("msg", extra={"key": value})` |
+| **Activities** | `structlog` / `logging.getLogger()` | `logger.info("msg", key=value)`                     |
+| **Services**   | `structlog` / `logging.getLogger()` | `logger.info("msg", key=value)`                     |
 
 ### Why the Difference?
 

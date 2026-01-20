@@ -206,40 +206,40 @@ class EntryContext(BaseModel):
 
 Entry subject domain classification.
 
-| Value | Description |
-|-------|-------------|
-| `software` | OSS, tools, libraries, frameworks, programming |
-| `technology` | Hardware, systems, infrastructure, AI/ML |
-| `business` | Companies, startups, organizations, markets |
-| `research` | Academic papers, research, science |
-| `people` | Individuals, interviews, profiles, careers |
-| `industry` | Industry trends, movements, events |
-| `product` | Products, gadgets, consumer services |
-| `politics` | Politics, policy, regulations |
-| `economy` | Economy, finance, markets |
-| `society` | Society, culture, lifestyle |
-| `health` | Health, medical |
-| `environment` | Environment, climate |
-| `other` | Doesn't fit predefined categories |
+| Value         | Description                                    |
+| ------------- | ---------------------------------------------- |
+| `software`    | OSS, tools, libraries, frameworks, programming |
+| `technology`  | Hardware, systems, infrastructure, AI/ML       |
+| `business`    | Companies, startups, organizations, markets    |
+| `research`    | Academic papers, research, science             |
+| `people`      | Individuals, interviews, profiles, careers     |
+| `industry`    | Industry trends, movements, events             |
+| `product`     | Products, gadgets, consumer services           |
+| `politics`    | Politics, policy, regulations                  |
+| `economy`     | Economy, finance, markets                      |
+| `society`     | Society, culture, lifestyle                    |
+| `health`      | Health, medical                                |
+| `environment` | Environment, climate                           |
+| `other`       | Doesn't fit predefined categories              |
 
 ### ContentType
 
 Entry content type/format.
 
-| Value | Description |
-|-------|-------------|
-| `announcement` | New features, releases, launches |
-| `news` | News reporting, current events |
-| `tutorial` | How-to guides, educational content |
-| `opinion` | Personal opinions, analysis, commentary |
-| `comparison` | Comparisons, evaluations, benchmarks |
-| `proposal` | RFCs, design proposals |
-| `criticism` | Critiques, problem statements |
-| `solution` | Solutions, workarounds, fixes |
-| `report` | Benchmarks, experiment results, reports |
-| `interview` | Interviews |
-| `review` | Reviews, evaluations |
-| `other` | Doesn't fit predefined categories |
+| Value          | Description                             |
+| -------------- | --------------------------------------- |
+| `announcement` | New features, releases, launches        |
+| `news`         | News reporting, current events          |
+| `tutorial`     | How-to guides, educational content      |
+| `opinion`      | Personal opinions, analysis, commentary |
+| `comparison`   | Comparisons, evaluations, benchmarks    |
+| `proposal`     | RFCs, design proposals                  |
+| `criticism`    | Critiques, problem statements           |
+| `solution`     | Solutions, workarounds, fixes           |
+| `report`       | Benchmarks, experiment results, reports |
+| `interview`    | Interviews                              |
+| `review`       | Reviews, evaluations                    |
+| `other`        | Doesn't fit predefined categories       |
 
 ### EntityType
 
@@ -279,12 +279,12 @@ Entity types aligned with the ontology.
 
 Role of an entity within the entry.
 
-| Value | Description |
-|-------|-------------|
-| `author` | Author of the entry |
-| `subject` | Main subject of the entry |
-| `mentioned` | Mentioned in passing |
-| `compared` | Used for comparison |
+| Value       | Description               |
+| ----------- | ------------------------- |
+| `author`    | Author of the entry       |
+| `subject`   | Main subject of the entry |
+| `mentioned` | Mentioned in passing      |
+| `compared`  | Used for comparison       |
 
 ### RelationType
 
@@ -344,10 +344,10 @@ Enrichments are additional data attached to entries, stored in the `entry_enrich
 
 ### Enrichment Types
 
-| Type | Trigger | Description |
-|------|---------|-------------|
-| `github` | Automatic | Repository info for software entities |
-| `web_page` | User action | Content from linked web pages |
+| Type       | Trigger     | Description                           |
+| ---------- | ----------- | ------------------------------------- |
+| `github`   | Automatic   | Repository info for software entities |
+| `web_page` | User action | Content from linked web pages         |
 
 ### GitHub Enrichment
 

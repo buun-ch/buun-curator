@@ -374,6 +374,7 @@ dev = [
     { name = "ruff" },
     { name = "types-aiobotocore", extra = ["s3"] },
     { name = "watchfiles" },
+    { name = "wcwidth" },
 ]
 
 [package.metadata]
@@ -419,6 +420,7 @@ dev = [
     { name = "ruff", specifier = ">=0.14.10" },
     { name = "types-aiobotocore", extras = ["s3"], specifier = ">=3.0.0" },
     { name = "watchfiles", specifier = ">=1.1.1" },
+    { name = "wcwidth", specifier = ">=0.2.13" },
 ]
 
 [[package]]

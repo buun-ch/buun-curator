@@ -263,10 +263,10 @@ The system uses Temporal Query to fetch progress state, keeping the notification
 
 To prevent notification floods during rapid progress updates:
 
-| Layer | Strategy | Interval | Purpose |
-|-------|----------|----------|---------|
-| Worker | Throttle | 300ms | Skip notifications if last was recent |
-| API | Debounce | 100ms | Coalesce rapid updates before broadcast |
+| Layer  | Strategy | Interval | Purpose                                 |
+| ------ | -------- | -------- | --------------------------------------- |
+| Worker | Throttle | 300ms    | Skip notifications if last was recent   |
+| API    | Debounce | 100ms    | Coalesce rapid updates before broadcast |
 
 **Worker-side throttle** (`_NOTIFY_THROTTLE_SECONDS = 0.3`):
 
@@ -455,16 +455,16 @@ const showWorkflowToast = useCallback((progress: WorkflowProgress) => {
 
 ### Progress Classes Summary
 
-| Workflow | Progress Class | Key Fields |
-|----------|---------------|------------|
-| `AllFeedsIngestion` | `AllFeedsIngestionProgress` | `feedsTotal`, `feedsCompleted`, `currentBatch`, `totalBatches` |
-| `SingleFeedIngestion` | `SingleFeedIngestionProgress` | `feedId`, `feedName`, `entriesCreated`, `contentsFetched` |
-| `ScheduleFetch` | `ScheduleFetchProgress` | `totalDomains`, `domainsCompleted`, `skippedCount` |
-| `DomainFetch` | `DomainFetchProgress` | `domain`, `entry_progress`, `entriesFetched`, `entriesDistilled` |
-| `ReprocessEntries` | `ReprocessEntriesProgress` | `entry_progress`, `entriesFetched`, `entriesDistilled` |
-| `Translation` | `TranslationProgress` | `provider`, `entry_progress`, `totalEntries`, `entriesTranslated` |
-| `ContentDistillation` | `ContentDistillationProgress` | `entry_progress`, `totalEntries`, `entriesDistilled` |
-| `ContextCollection` | `ContextCollectionProgress` | `entry_progress`, `successfulExtractions`, `enrichmentCandidatesCount` |
+| Workflow              | Progress Class                | Key Fields                                                             |
+| --------------------- | ----------------------------- | ---------------------------------------------------------------------- |
+| `AllFeedsIngestion`   | `AllFeedsIngestionProgress`   | `feedsTotal`, `feedsCompleted`, `currentBatch`, `totalBatches`         |
+| `SingleFeedIngestion` | `SingleFeedIngestionProgress` | `feedId`, `feedName`, `entriesCreated`, `contentsFetched`              |
+| `ScheduleFetch`       | `ScheduleFetchProgress`       | `totalDomains`, `domainsCompleted`, `skippedCount`                     |
+| `DomainFetch`         | `DomainFetchProgress`         | `domain`, `entry_progress`, `entriesFetched`, `entriesDistilled`       |
+| `ReprocessEntries`    | `ReprocessEntriesProgress`    | `entry_progress`, `entriesFetched`, `entriesDistilled`                 |
+| `Translation`         | `TranslationProgress`         | `provider`, `entry_progress`, `totalEntries`, `entriesTranslated`      |
+| `ContentDistillation` | `ContentDistillationProgress` | `entry_progress`, `totalEntries`, `entriesDistilled`                   |
+| `ContextCollection`   | `ContextCollectionProgress`   | `entry_progress`, `successfulExtractions`, `enrichmentCandidatesCount` |
 
 All progress classes inherit from `WorkflowProgress` base class which includes:
 `workflow_id`, `workflow_type`, `status`, `current_step`, `message`, `started_at`, `updated_at`, `error`.
@@ -486,18 +486,18 @@ const fetchActiveWorkflows = async () => {
 
 ### SSE Key Files
 
-| Location | File | Purpose |
-|----------|------|---------|
-| Worker | `activities/notify.py` | `notify_update` local activity |
-| Worker | `models/workflow_io.py` | `WorkflowProgress` Pydantic models (camelCase) |
-| Worker | `workflows/*.py` | `_notify_update()` method, `get_progress` query |
-| Next.js | `app/api/events/send/route.ts` | Receive notification, query Temporal, broadcast |
-| Next.js | `app/api/events/route.ts` | SSE endpoint for browsers |
-| Next.js | `app/api/workflows/active/route.ts` | List running workflows for reconnection |
-| Next.js | `lib/temporal.ts` | `queryWorkflowProgress()` function |
-| Frontend | `hooks/use-sse.ts` | SSE hook with event handlers |
-| Frontend | `components/sse/sse-provider.tsx` | SSE context and cache integration |
-| Frontend | `stores/workflow-store.ts` | Zustand store for workflow state |
+| Location | File                                | Purpose                                         |
+| -------- | ----------------------------------- | ----------------------------------------------- |
+| Worker   | `activities/notify.py`              | `notify_update` local activity                  |
+| Worker   | `models/workflow_io.py`             | `WorkflowProgress` Pydantic models (camelCase)  |
+| Worker   | `workflows/*.py`                    | `_notify_update()` method, `get_progress` query |
+| Next.js  | `app/api/events/send/route.ts`      | Receive notification, query Temporal, broadcast |
+| Next.js  | `app/api/events/route.ts`           | SSE endpoint for browsers                       |
+| Next.js  | `app/api/workflows/active/route.ts` | List running workflows for reconnection         |
+| Next.js  | `lib/temporal.ts`                   | `queryWorkflowProgress()` function              |
+| Frontend | `hooks/use-sse.ts`                  | SSE hook with event handlers                    |
+| Frontend | `components/sse/sse-provider.tsx`   | SSE context and cache integration               |
+| Frontend | `stores/workflow-store.ts`          | Zustand store for workflow state                |
 
 ## Workflows
 
@@ -656,15 +656,15 @@ uv run trigger reindex --clean
 
 **Indexed Fields:**
 
-| Field | Purpose |
-|-------|---------|
-| `title` | Entry title (searchable, highlighted) |
-| `summary` | AI-generated summary (searchable, highlighted) |
-| `filteredContent` | Extracted entry content |
-| `feedContent` | Original RSS/Atom content |
-| `author` | Author name |
-| `feedId` | Filter by feed |
-| `publishedAt` | Sort by date |
+| Field             | Purpose                                        |
+| ----------------- | ---------------------------------------------- |
+| `title`           | Entry title (searchable, highlighted)          |
+| `summary`         | AI-generated summary (searchable, highlighted) |
+| `filteredContent` | Extracted entry content                        |
+| `feedContent`     | Original RSS/Atom content                      |
+| `author`          | Author name                                    |
+| `feedId`          | Filter by feed                                 |
+| `publishedAt`     | Sort by date                                   |
 
 **Note:** `isRead` and `isStarred` are NOT indexed in Meilisearch. These fields change
 frequently and are fetched from the database when displaying search results.
@@ -825,13 +825,13 @@ uv run trigger graph-update --batch-size 100
 
 **Difference from GraphRebuildWorkflow:**
 
-| Aspect | GlobalGraphUpdateWorkflow | GraphRebuildWorkflow |
-|--------|---------------------------|---------------------|
-| Purpose | Incremental updates | Full rebuild |
-| CLI | `uv run trigger graph-update` | `uv run trigger graph-rebuild` |
-| Scheduling | Runs on schedule | Manual trigger |
-| Entry selection | Only `graphAddedAt=NULL` | All entries |
-| Clean option | No | Yes (`--clean`) |
+| Aspect          | GlobalGraphUpdateWorkflow     | GraphRebuildWorkflow           |
+| --------------- | ----------------------------- | ------------------------------ |
+| Purpose         | Incremental updates           | Full rebuild                   |
+| CLI             | `uv run trigger graph-update` | `uv run trigger graph-rebuild` |
+| Scheduling      | Runs on schedule              | Manual trigger                 |
+| Entry selection | Only `graphAddedAt=NULL`      | All entries                    |
+| Clean option    | No                            | Yes (`--clean`)                |
 
 ### GraphRebuildWorkflow
 
@@ -868,11 +868,11 @@ uv run trigger graph-rebuild --clean --batch-size 10
 
 **Environment Variables (Helm configurable):**
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `EMBEDDING_MODEL` | FastEmbed model for embeddings | `sentence-transformers/paraphrase-multilingual-mpnet-base-v2` |
-| `EMBEDDING_DIMENSIONS` | Embedding vector dimensions | `768` |
-| `EMBEDDING_THREADS` | ONNX Runtime thread limit | unlimited |
+| Variable               | Description                    | Default                                                       |
+| ---------------------- | ------------------------------ | ------------------------------------------------------------- |
+| `EMBEDDING_MODEL`      | FastEmbed model for embeddings | `sentence-transformers/paraphrase-multilingual-mpnet-base-v2` |
+| `EMBEDDING_DIMENSIONS` | Embedding vector dimensions    | `768`                                                         |
+| `EMBEDDING_THREADS`    | ONNX Runtime thread limit      | unlimited                                                     |
 
 **Known Issues:**
 
@@ -1003,10 +1003,10 @@ records scores to Langfuse. Started by the Agent service in fire-and-forget mode
 
 **Metrics:**
 
-| Metric | Description | Range |
-|--------|-------------|-------|
-| `faithfulness` | Answer grounded in retrieved contexts | 0.0 - 1.0 |
-| `answer_relevancy` | Answer addresses the question | 0.0 - 1.0 |
+| Metric             | Description                           | Range     |
+| ------------------ | ------------------------------------- | --------- |
+| `faithfulness`     | Answer grounded in retrieved contexts | 0.0 - 1.0 |
+| `answer_relevancy` | Answer addresses the question         | 0.0 - 1.0 |
 
 **Error Handling:**
 
@@ -1018,13 +1018,13 @@ This ensures Temporal marks the workflow as **Failed** and applies retry policie
 
 **Environment Variables (Helm configurable):**
 
-| Variable | Description | Used By |
-|----------|-------------|---------|
-| `AI_EVALUATION_ENABLED` | Enable/disable evaluation | Agent |
-| `EVALUATION_EMBEDDING_MODEL` | Embedding model for RAGAS | Worker |
-| `LANGFUSE_PUBLIC_KEY` | Langfuse public key | Worker |
-| `LANGFUSE_SECRET_KEY` | Langfuse secret key | Worker |
-| `LANGFUSE_HOST` | Langfuse host URL | Worker |
+| Variable                     | Description               | Used By |
+| ---------------------------- | ------------------------- | ------- |
+| `AI_EVALUATION_ENABLED`      | Enable/disable evaluation | Agent   |
+| `EVALUATION_EMBEDDING_MODEL` | Embedding model for RAGAS | Worker  |
+| `LANGFUSE_PUBLIC_KEY`        | Langfuse public key       | Worker  |
+| `LANGFUSE_SECRET_KEY`        | Langfuse secret key       | Worker  |
+| `LANGFUSE_HOST`              | Langfuse host URL         | Worker  |
 
 **Agent Integration:**
 
@@ -1152,13 +1152,13 @@ This project uses Pydantic `BaseModel` for all Temporal I/O and API communicatio
 
 ### Model Selection Policy
 
-| Context | Model Type | Reason | Example |
-|---------|------------|--------|---------|
-| **Workflow I/O** | Pydantic (`CamelCaseModel`) | camelCase for Next.js | `SingleFeedIngestionInput` |
-| **Activity I/O** | Pydantic (`BaseModel`) | Validation, consistent serialization | `FetchContentsInput` |
-| **API communication** | Pydantic (`CamelCaseModel`) | camelCase conversion, validation | `ProgressPayload` (SSE) |
-| **LLM structured output** | Pydantic | LangChain integration | `EntryContext` |
-| **Models with Enum** | Pydantic | Proper enum serialization | `EntityInfo` |
+| Context                   | Model Type                  | Reason                               | Example                    |
+| ------------------------- | --------------------------- | ------------------------------------ | -------------------------- |
+| **Workflow I/O**          | Pydantic (`CamelCaseModel`) | camelCase for Next.js                | `SingleFeedIngestionInput` |
+| **Activity I/O**          | Pydantic (`BaseModel`)      | Validation, consistent serialization | `FetchContentsInput`       |
+| **API communication**     | Pydantic (`CamelCaseModel`) | camelCase conversion, validation     | `ProgressPayload` (SSE)    |
+| **LLM structured output** | Pydantic                    | LangChain integration                | `EntryContext`             |
+| **Models with Enum**      | Pydantic                    | Proper enum serialization            | `EntityInfo`               |
 
 ### Workflow I/O: Use Pydantic (CamelCaseModel)
 
@@ -1351,10 +1351,10 @@ becomes unhealthy.
 
 ### Health Check Endpoints
 
-| Endpoint | Purpose | Probe Type |
-|----------|---------|------------|
-| `/health` | Verify Temporal connectivity | Liveness |
-| `/ready` | Check if server is accepting requests | Readiness |
+| Endpoint  | Purpose                               | Probe Type |
+| --------- | ------------------------------------- | ---------- |
+| `/health` | Verify Temporal connectivity          | Liveness   |
+| `/ready`  | Check if server is accepting requests | Readiness  |
 
 The `/health` endpoint calls Temporal's `DescribeNamespace` API to verify the gRPC
 connection is functional. If the SDK Core has panicked or the connection is broken,
@@ -1405,11 +1405,11 @@ With the default configuration:
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `HEALTH_PORT` | Port for health check server | `8080` |
-| `MAX_CONCURRENT_ACTIVITIES` | Maximum concurrent activity tasks | `0` (unlimited) |
-| `MAX_CONCURRENT_WORKFLOW_TASKS` | Maximum concurrent workflow tasks | `0` (unlimited) |
+| Variable                          | Description                         | Default         |
+| --------------------------------- | ----------------------------------- | --------------- |
+| `HEALTH_PORT`                     | Port for health check server        | `8080`          |
+| `MAX_CONCURRENT_ACTIVITIES`       | Maximum concurrent activity tasks   | `0` (unlimited) |
+| `MAX_CONCURRENT_WORKFLOW_TASKS`   | Maximum concurrent workflow tasks   | `0` (unlimited) |
 | `MAX_CONCURRENT_LOCAL_ACTIVITIES` | Maximum concurrent local activities | `0` (unlimited) |
 
 ### Worker Concurrency Configuration

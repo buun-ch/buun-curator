@@ -42,6 +42,7 @@ lefthook install
 
 | Files               | Tools                                  |
 | ------------------- | -------------------------------------- |
+| `*.md`              | markdownlint-cli2                      |
 | `*.{ts,tsx,js,jsx}` | Prettier → ESLint                      |
 | `worker/**/*.py`    | Ruff (organize imports → fix → format) |
 | `agent/**/*.py`     | Ruff (organize imports → fix → format) |
@@ -144,13 +145,13 @@ tilt down
 
 Tilt supports several configuration flags:
 
-| Flag | Description | Default |
-| ---- | ----------- | ------- |
-| `--registry` | Container registry URL | `localhost:30500` |
-| `--port-forward` | Enable port forwarding (localhost:13000) | `false` |
-| `--extra-values-file` | Additional Helm values file | - |
-| `--enable-health-logs` | Enable health check request logging | `false` |
-| `--prod-image` | Use production Dockerfile instead of dev | `false` |
+| Flag                   | Description                              | Default           |
+| ---------------------- | ---------------------------------------- | ----------------- |
+| `--registry`           | Container registry URL                   | `localhost:30500` |
+| `--port-forward`       | Enable port forwarding (localhost:13000) | `false`           |
+| `--extra-values-file`  | Additional Helm values file              | -                 |
+| `--enable-health-logs` | Enable health check request logging      | `false`           |
+| `--prod-image`         | Use production Dockerfile instead of dev | `false`           |
 
 Examples:
 
@@ -193,18 +194,18 @@ Vault, AWS Secrets Manager).
 
 The ExternalSecret maps the following secrets:
 
-| Secret Store Key | Environment Variable |
-| ---------------- | -------------------- |
-| `buun-curator/s3` | `S3_ACCESS_KEY`, `S3_SECRET_KEY` |
-| `buun-curator/deep_l` | `DEEPL_API_KEY` |
-| `buun-curator/microsoft` | `MS_TRANSLATOR_SUBSCRIPTION_KEY`, `MS_TRANSLATOR_REGION` |
-| `buun-curator/litellm` | `OPENAI_API_KEY` |
-| `buun-curator/langfuse` | `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY` |
-| `buun-curator/keycloak` | `KEYCLOAK_URL`, `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET`, `BETTER_AUTH_URL` |
-| `buun-curator/internal-api` | `INTERNAL_API_TOKEN` |
-| `buun-curator/better-auth` | `BETTER_AUTH_SECRET` |
-| `buun-curator/github` | `GITHUB_TOKEN` |
-| `buun-curator/meilisearch` | `MEILISEARCH_API_KEY` |
+| Secret Store Key            | Environment Variable                                                              |
+| --------------------------- | --------------------------------------------------------------------------------- |
+| `buun-curator/s3`           | `S3_ACCESS_KEY`, `S3_SECRET_KEY`                                                  |
+| `buun-curator/deep_l`       | `DEEPL_API_KEY`                                                                   |
+| `buun-curator/microsoft`    | `MS_TRANSLATOR_SUBSCRIPTION_KEY`, `MS_TRANSLATOR_REGION`                          |
+| `buun-curator/litellm`      | `OPENAI_API_KEY`                                                                  |
+| `buun-curator/langfuse`     | `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`                                      |
+| `buun-curator/keycloak`     | `KEYCLOAK_URL`, `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET`, `BETTER_AUTH_URL` |
+| `buun-curator/internal-api` | `INTERNAL_API_TOKEN`                                                              |
+| `buun-curator/better-auth`  | `BETTER_AUTH_SECRET`                                                              |
+| `buun-curator/github`       | `GITHUB_TOKEN`                                                                    |
+| `buun-curator/meilisearch`  | `MEILISEARCH_API_KEY`                                                             |
 
 ## Development Values
 

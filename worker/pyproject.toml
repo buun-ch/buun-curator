@@ -45,6 +45,7 @@ dev = [
     "watchfiles>=1.1.1",
     "click>=8.3.1",
     "postgres-mcp>=0.3.0",
+    "wcwidth>=0.2.13",
 ]
 
 [tool.uv.sources]
@@ -59,6 +60,7 @@ generate-filtering-dataset = "scripts.generate_filtering_dataset:main"
 run-filtering-on-dataset = "scripts.run_filtering_on_dataset:main"
 generate-singlehop-eval-dataset = "scripts.generate_singlehop_eval_dataset:cli"
 generate-multihop-eval-dataset = "scripts.generate_multihop_eval_dataset:cli"
+fix-md-tables = "scripts.fix_md_tables:main"
 
 [build-system]
 requires = ["hatchling"]

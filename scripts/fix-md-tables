@@ -1,0 +1,9 @@
+#!/bin/bash
+# Wrapper script for fix-md-tables Python command
+# Runs from worker/ directory with proper base-dir for project root paths
+
+set -euo pipefail
+
+git_top=$(git rev-parse --show-toplevel)
+cd "${git_top}/worker"
+uv run fix-md-tables --base-dir .. "$@"

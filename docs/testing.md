@@ -5,10 +5,10 @@ for SSE (Server-Sent Events) connection resilience.
 
 ## Test Types
 
-| Type | Framework              | Location       | Purpose                   |
-| ---- | ---------------------- | -------------- | ------------------------- |
-| Unit | Vitest                 | `tests/unit/`  | Logic testing             |
-| E2E  | Playwright + Toxiproxy | `tests/e2e/`   | SSE connection resilience |
+| Type | Framework              | Location      | Purpose                   |
+| ---- | ---------------------- | ------------- | ------------------------- |
+| Unit | Vitest                 | `tests/unit/` | Logic testing             |
+| E2E  | Playwright + Toxiproxy | `tests/e2e/`  | SSE connection resilience |
 
 ## Setup
 

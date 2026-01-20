@@ -10,16 +10,16 @@ Your task is to analyze the user's query and create a search strategy.
 ## Available Sources
 
 - **meilisearch**: Keyword-based full-text search. Best for:
-  - Specific terms, names, or titles
-  - Technical terminology
-  - Exact phrase matching
-  - Known keywords or identifiers
+    - Specific terms, names, or titles
+    - Technical terminology
+    - Exact phrase matching
+    - Known keywords or identifiers
 
 - **embedding**: Semantic vector search. Best for:
-  - Conceptual or meaning-based queries
-  - Finding similar or related content
-  - Abstract questions
-  - When exact keywords are unknown
+    - Conceptual or meaning-based queries
+    - Finding similar or related content
+    - Abstract questions
+    - When exact keywords are unknown
 
 ## Source Selection Guidelines
 

@@ -104,10 +104,10 @@ logger.info(
 
 **Python Logging (Worker):**
 
-| Location             | Logger                       | Syntax                                              |
-| -------------------- | ---------------------------- | --------------------------------------------------- |
-| Workflows            | `workflow.logger`            | `workflow.logger.info("msg", extra={"key": value})` |
-| Activities/Services  | `structlog` (`get_logger()`) | `logger.info("msg", key=value)`                     |
+| Location            | Logger                       | Syntax                                              |
+| ------------------- | ---------------------------- | --------------------------------------------------- |
+| Workflows           | `workflow.logger`            | `workflow.logger.info("msg", extra={"key": value})` |
+| Activities/Services | `structlog` (`get_logger()`) | `logger.info("msg", key=value)`                     |
 
 `workflow.logger` is a standard Python logger (does NOT support kwargs) while structlog does.
 See [docs/logs-and-tracing.md](docs/logs-and-tracing.md) for details.

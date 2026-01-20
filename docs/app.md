@@ -35,12 +35,12 @@ The database schema is defined in `db/schema.ts`:
 
 ### Commands
 
-| Command            | Description                                                |
-| ------------------ | ---------------------------------------------------------- |
-| `bun db:generate`  | Generate migration files from schema changes               |
-| `bun db:migrate`   | Run pending migrations                                     |
-| `bun db:push`      | Push schema changes directly to the database (development) |
-| `bun db:studio`    | Open Drizzle Studio (database GUI)                         |
+| Command           | Description                                                |
+| ----------------- | ---------------------------------------------------------- |
+| `bun db:generate` | Generate migration files from schema changes               |
+| `bun db:migrate`  | Run pending migrations                                     |
+| `bun db:push`     | Push schema changes directly to the database (development) |
+| `bun db:studio`   | Open Drizzle Studio (database GUI)                         |
 
 ### Workflow
 
@@ -142,12 +142,12 @@ lib/config.ts   # High-level: Helper functions for accessing config
 
 ### Available Configuration
 
-| Environment Variable                     | Default   | Description                            |
-| ---------------------------------------- | --------- | -------------------------------------- |
-| `NEXT_PUBLIC_AUTH_ENABLED`               | `"true"`  | Enable/disable authentication          |
-| `NEXT_PUBLIC_DEBUG_SSE`                  | `"false"` | Show SSE connection status in sidebar  |
-| `NEXT_PUBLIC_REDDIT_ENABLED`             | `"false"` | Enable Reddit features                 |
-| `NEXT_PUBLIC_RESEARCH_CONTEXT_ENABLED`   | `"false"` | Enable research context panel          |
+| Environment Variable                   | Default   | Description                           |
+| -------------------------------------- | --------- | ------------------------------------- |
+| `NEXT_PUBLIC_AUTH_ENABLED`             | `"true"`  | Enable/disable authentication         |
+| `NEXT_PUBLIC_DEBUG_SSE`                | `"false"` | Show SSE connection status in sidebar |
+| `NEXT_PUBLIC_REDDIT_ENABLED`           | `"false"` | Enable Reddit features                |
+| `NEXT_PUBLIC_RESEARCH_CONTEXT_ENABLED` | `"false"` | Enable research context panel         |
 
 ### Usage
 
