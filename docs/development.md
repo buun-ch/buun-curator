@@ -24,9 +24,37 @@ This installs the following tools with pinned versions (see `mise.toml`):
 - Python, uv
 - Helm
 - Tilt
+- Lefthook
 - markdownlint-cli2
 
 Telepresence is not managed by mise because if you use it in other projects, the version of the agent may conflict.
+
+### Setting Up Pre-commit Hooks
+
+This project uses [Lefthook](https://github.com/evilmartians/lefthook) for pre-commit hooks.
+After cloning the repository, install the hooks:
+
+```bash
+lefthook install
+```
+
+The pre-commit hook automatically runs on staged files:
+
+| Files               | Tools                                  |
+| ------------------- | -------------------------------------- |
+| `*.{ts,tsx,js,jsx}` | Prettier → ESLint                      |
+| `worker/**/*.py`    | Ruff (organize imports → fix → format) |
+| `agent/**/*.py`     | Ruff (organize imports → fix → format) |
+
+To run the hooks manually (without committing):
+
+```bash
+# Run on currently staged files
+lefthook run pre-commit
+
+# Run on all files (ignores staging)
+lefthook run pre-commit --all-files
+```
 
 ### Recommended: buun-stack
 

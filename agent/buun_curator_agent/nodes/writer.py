@@ -66,17 +66,21 @@ async def writer_node(state: ResearchState) -> ResearchState:
     )
     structured_llm = llm.with_structured_output(ResearchAnswer)
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", WRITER_SYSTEM_PROMPT),
-        ("human", "{query}"),
-    ])
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", WRITER_SYSTEM_PROMPT),
+            ("human", "{query}"),
+        ]
+    )
 
     chain = prompt | structured_llm
-    result = await chain.ainvoke({
-        "query": query,
-        "entry_context": entry_context,
-        "retrieved_docs": _format_retrieved_docs(retrieved_docs),
-    })
+    result = await chain.ainvoke(
+        {
+            "query": query,
+            "entry_context": entry_context,
+            "retrieved_docs": _format_retrieved_docs(retrieved_docs),
+        }
+    )
     answer = cast(ResearchAnswer, result)
 
     logger.info(

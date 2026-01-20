@@ -1,0 +1,35 @@
+# Lefthook configuration
+# https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  commands:
+    # TypeScript/JavaScript: prettier -> eslint (sequential)
+    lint-ts:
+      glob: "*.{ts,tsx,js,jsx}"
+      run: bun prettier --write {staged_files} && bun lint --fix {staged_files}
+      stage_fixed: true
+
+    # Python (worker): organize imports -> fix -> format (sequential)
+    lint-python-worker:
+      glob: "worker/**/*.py"
+      root: "worker/"
+      env:
+        VIRTUAL_ENV: ".venv"
+      run: |
+        uv run ruff check --fix --force-exclude --select=I001 --exit-zero --no-cache {staged_files} &&
+        uv run ruff check --fix --force-exclude --exit-zero --no-cache {staged_files} &&
+        uv run ruff format --force-exclude {staged_files}
+      stage_fixed: true
+
+    # Python (agent): organize imports -> fix -> format (sequential)
+    lint-python-agent:
+      glob: "agent/**/*.py"
+      root: "agent/"
+      env:
+        VIRTUAL_ENV: ".venv"
+      run: |
+        uv run ruff check --fix --force-exclude --select=I001 --exit-zero --no-cache {staged_files} &&
+        uv run ruff check --fix --force-exclude --exit-zero --no-cache {staged_files} &&
+        uv run ruff format --force-exclude {staged_files}
+      stage_fixed: true

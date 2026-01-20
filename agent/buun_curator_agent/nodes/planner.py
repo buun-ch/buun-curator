@@ -43,16 +43,20 @@ async def planner_node(state: ResearchState) -> ResearchState:
     )
     structured_llm = llm.with_structured_output(SearchPlan)
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", PLANNER_SYSTEM_PROMPT),
-        ("human", "{query}"),
-    ])
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", PLANNER_SYSTEM_PROMPT),
+            ("human", "{query}"),
+        ]
+    )
 
     chain = prompt | structured_llm
-    result = await chain.ainvoke({
-        "query": query,
-        "entry_context": entry_context,
-    })
+    result = await chain.ainvoke(
+        {
+            "query": query,
+            "entry_context": entry_context,
+        }
+    )
     plan = cast(SearchPlan, result)
 
     logger.info(

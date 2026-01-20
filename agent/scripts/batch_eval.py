@@ -103,6 +103,7 @@ def check_required_env_vars() -> list[str]:
 
     return missing
 
+
 # Cached clients
 _langfuse_client: Langfuse | None = None
 
@@ -370,22 +371,26 @@ async def run_batch_evaluation(
                             all_scores[metric_name] = []
                         all_scores[metric_name].append(float(score_value))
 
-                results.append({
-                    "item_id": item.id,
-                    "question": question,
-                    "answer": answer[:200],
-                    "contexts_count": len(contexts),
-                    "scores": scores,
-                    "expected_answer": expected_answer[:200] if expected_answer else None,
-                })
+                results.append(
+                    {
+                        "item_id": item.id,
+                        "question": question,
+                        "answer": answer[:200],
+                        "contexts_count": len(contexts),
+                        "scores": scores,
+                        "expected_answer": expected_answer[:200] if expected_answer else None,
+                    }
+                )
 
             except Exception as e:
                 logger.exception(f"Failed to evaluate item {i + 1}: {e}")
-                results.append({
-                    "item_id": item.id,
-                    "question": question,
-                    "error": str(e),
-                })
+                results.append(
+                    {
+                        "item_id": item.id,
+                        "question": question,
+                        "error": str(e),
+                    }
+                )
 
     # Flush data to Langfuse
     langfuse.flush()
@@ -438,9 +443,7 @@ async def run_batch_evaluation(
 
 def main():
     """CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="Run batch evaluation on Langfuse dataset"
-    )
+    parser = argparse.ArgumentParser(description="Run batch evaluation on Langfuse dataset")
     parser.add_argument(
         "--dataset-name",
         type=str,

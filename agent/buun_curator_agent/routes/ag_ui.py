@@ -118,14 +118,10 @@ async def run_agent(input_data: RunAgentInput) -> AsyncGenerator[str, None]:
     try:
         # Dispatch to mode-specific handler
         if mode == "research":
-            async for event in run_research(
-                input_data, encoder, message_id, trace_id, session_id
-            ):
+            async for event in run_research(input_data, encoder, message_id, trace_id, session_id):
                 yield event
         else:
-            async for event in run_dialogue(
-                input_data, encoder, message_id, trace_id, session_id
-            ):
+            async for event in run_dialogue(input_data, encoder, message_id, trace_id, session_id):
                 yield event
 
     except Exception as e:

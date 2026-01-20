@@ -165,7 +165,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (searchableFieldsUpdated) {
       // Trigger workflow to update search index (fire-and-forget)
       startUpdateEntryIndexWorkflow({ entryId }).catch((err) => {
-        log.error({ error: err, entryId }, "failed to start index update workflow");
+        log.error(
+          { error: err, entryId },
+          "failed to start index update workflow",
+        );
       });
     }
 

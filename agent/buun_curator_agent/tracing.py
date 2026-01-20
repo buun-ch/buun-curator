@@ -38,16 +38,16 @@ def init_tracing() -> None:
         endpoint=settings.otel_exporter_otlp_endpoint,
     )
 
-    resource = Resource.create({
-        ResourceAttributes.SERVICE_NAME: settings.otel_service_name,
-        ResourceAttributes.SERVICE_VERSION: "0.1.0",
-        ResourceAttributes.DEPLOYMENT_ENVIRONMENT: settings.environment,
-    })
+    resource = Resource.create(
+        {
+            ResourceAttributes.SERVICE_NAME: settings.otel_service_name,
+            ResourceAttributes.SERVICE_VERSION: "0.1.0",
+            ResourceAttributes.DEPLOYMENT_ENVIRONMENT: settings.environment,
+        }
+    )
 
     provider = TracerProvider(resource=resource)
-    processor = BatchSpanProcessor(
-        OTLPSpanExporter(endpoint=settings.otel_exporter_otlp_endpoint)
-    )
+    processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=settings.otel_exporter_otlp_endpoint))
     provider.add_span_processor(processor)
     trace.set_tracer_provider(provider)
 

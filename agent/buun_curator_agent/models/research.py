@@ -22,9 +22,7 @@ class SearchPlan(BaseModel):
         default=["meilisearch"],
         description="Sources to search: meilisearch (keyword), embedding (semantic).",
     )
-    reasoning: str = Field(
-        description="Brief explanation of the search strategy."
-    )
+    reasoning: str = Field(description="Brief explanation of the search strategy.")
 
 
 class RetrievedDoc(BaseModel):
@@ -35,9 +33,7 @@ class RetrievedDoc(BaseModel):
     title: str = Field(description="Document title")
     content: str = Field(description="Document content or summary")
     url: str | None = Field(default=None, description="Document URL if available")
-    relevance_score: float | None = Field(
-        default=None, description="Relevance score from search"
-    )
+    relevance_score: float | None = Field(default=None, description="Relevance score from search")
 
 
 class SourceReference(BaseModel):
@@ -52,22 +48,18 @@ class ResearchAnswer(BaseModel):
     """Writer output: the final research answer."""
 
     answer: str = Field(description="The research answer in Markdown format")
-    answer_type: Literal["comparison", "explanation", "recommendation", "summary"] = (
-        Field(description="Type of answer based on query analysis")
+    answer_type: Literal["comparison", "explanation", "recommendation", "summary"] = Field(
+        description="Type of answer based on query analysis"
     )
     sources: list[SourceReference] = Field(
         default_factory=list, description="List of sources used in the answer"
     )
-    confidence: float = Field(
-        ge=0.0, le=1.0, description="Confidence score for the answer"
-    )
+    confidence: float = Field(ge=0.0, le=1.0, description="Confidence score for the answer")
     needs_more_info: bool = Field(
         default=False,
         description="Whether more information is needed to fully answer the query",
     )
-    follow_ups: list[str] = Field(
-        default_factory=list, description="Suggested follow-up questions"
-    )
+    follow_ups: list[str] = Field(default_factory=list, description="Suggested follow-up questions")
 
 
 class ResearchState(TypedDict):

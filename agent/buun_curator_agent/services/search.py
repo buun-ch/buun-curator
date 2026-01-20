@@ -45,9 +45,7 @@ class SearchService(APIService):
 
         try:
             async with self._get_client() as client:
-                response = await client.get(
-                    url, params=params, headers=self._get_headers()
-                )
+                response = await client.get(url, params=params, headers=self._get_headers())
 
                 if response.status_code == 503:
                     logger.warning(
