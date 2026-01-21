@@ -566,7 +566,8 @@ class ContentProcessor:
 
         except Exception as e:
             logger.error(
-                f"Error in parallel processing: {e}",
+                "Error in parallel content processing",
+                error=str(e),
                 error_type=type(e).__name__,
             )
             # Re-raise to let Temporal handle retry

@@ -111,6 +111,34 @@ class TranslationWorkflow(ProgressNotificationMixin):
             },
         )
 
+        try:
+            return await self._run_translation(input, provider_label)
+        except Exception as e:
+            # Send error notification via SSE before failing the workflow
+            error_msg = str(e)
+            self._progress.status = "error"
+            self._progress.error = error_msg
+            self._progress.message = f"Translation failed: {error_msg}"
+            for entry_id in self._progress.entry_progress:
+                self._update_entry_status(entry_id, "error", error=error_msg)
+            self._progress.updated_at = workflow_now_iso()
+            await self._notify_update()
+            raise
+
+    async def _run_translation(
+        self,
+        input: TranslationInput,
+        provider_label: str,
+    ) -> TranslationResult:
+        """
+        Run the main translation logic.
+
+        Separated from run() to enable top-level error handling with SSE notification.
+        """
+        entry_ids = input.entry_ids
+        provider = input.provider
+        wf_info = workflow.info()
+
         # 0. Get app settings (target language)
         settings_result: GetAppSettingsOutput = await workflow.execute_activity(
             get_app_settings,

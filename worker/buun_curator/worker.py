@@ -117,10 +117,17 @@ def configure_logging() -> None:
         component="worker",
     )
 
-    # Enable Temporal workflow logger to see workflow.logger output
-    workflow_logger = logging.getLogger("temporalio.workflow")
-    workflow_logger.setLevel(getattr(logging, log_level))
-    workflow_logger.addFilter(WorkflowLogFilter())
+    # Add filter to root handler to strip context dicts from Temporal SDK log messages
+    # (Filters on loggers don't apply to child loggers, so we add to handler instead)
+    root_logger = logging.getLogger()
+    for handler in root_logger.handlers:
+        handler.addFilter(WorkflowLogFilter())
+
+    # Temporal SDK logging - set via TEMPORAL_LOG_LEVEL env var (default: WARNING)
+    # temporalio.workflow is set to LOG_LEVEL to see workflow.logger output
+    temporal_log_level = os.getenv("TEMPORAL_LOG_LEVEL", "WARNING").upper()
+    logging.getLogger("temporalio").setLevel(getattr(logging, temporal_log_level))
+    logging.getLogger("temporalio.workflow").setLevel(getattr(logging, log_level))
 
     # Suppress noisy HTTP client logs (httpx/httpcore trace logs)
     logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -148,12 +155,16 @@ class WorkflowLogFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         """Remove trailing context dict from workflow log messages."""
         msg = record.getMessage()
-        # Temporal SDK appends " ({'attempt': ..., ...})" to messages
-        if msg.endswith(")") and " ({'" in msg:
-            idx = msg.rfind(" ({'")
-            if idx > 0:
-                record.msg = msg[:idx]
-                record.args = ()
+        # Temporal SDK appends " ({'attempt': ..., ...})" or " ({...})" to messages
+        if msg.endswith(")"):
+            # Try both patterns: " ({'" (dict with string keys) and " ({" (any dict)
+            for pattern in (" ({'", ' ({"'):
+                if pattern in msg:
+                    idx = msg.rfind(pattern)
+                    if idx > 0:
+                        record.msg = msg[:idx]
+                        record.args = ()
+                        break
         return True
 
 

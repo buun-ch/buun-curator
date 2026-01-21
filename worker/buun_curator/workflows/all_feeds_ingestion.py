@@ -90,6 +90,26 @@ class AllFeedsIngestionWorkflow(ProgressNotificationMixin):
         )
         await self._notify_update()
 
+        try:
+            return await self._run_ingestion()
+        except Exception as e:
+            # Send error notification via SSE before failing the workflow
+            error_msg = str(e)
+            self._progress.status = "error"
+            self._progress.error = error_msg
+            self._progress.message = f"Ingestion failed: {error_msg}"
+            self._progress.updated_at = workflow_now_iso()
+            await self._notify_update()
+            raise
+
+    async def _run_ingestion(self) -> AllFeedsIngestionResult:
+        """
+        Run the main ingestion logic.
+
+        Separated from run() to enable top-level error handling with SSE notification.
+        """
+        wf_info = workflow.info()
+
         # 1. Get app settings and workflow config from environment
         # All config values are read at runtime from environment variables
         settings_result: GetAppSettingsOutput = await workflow.execute_activity(

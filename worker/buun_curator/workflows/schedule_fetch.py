@@ -165,6 +165,27 @@ class ScheduleFetchWorkflow(ProgressNotificationMixin):
             await self._notify_update()
             return ScheduleFetchOutput()
 
+        try:
+            return await self._run_fetch(input)
+        except Exception as e:
+            # Send error notification via SSE before failing the workflow
+            error_msg = str(e)
+            self._progress.status = "error"
+            self._progress.error = error_msg
+            self._progress.message = f"Fetch failed: {error_msg}"
+            self._progress.updated_at = workflow_now_iso()
+            await self._notify_update()
+            raise
+
+    async def _run_fetch(self, input: ScheduleFetchInput) -> ScheduleFetchOutput:
+        """
+        Run the main fetch logic.
+
+        Separated from run() to enable top-level error handling with SSE notification.
+        """
+        wf_info = workflow.info()
+        entries = input.entries
+
         # Separate YouTube URLs (skip fetching)
         entries_to_fetch: list[dict] = []
         skipped_entries: list[dict] = []

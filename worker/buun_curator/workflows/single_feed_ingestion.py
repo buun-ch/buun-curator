@@ -94,6 +94,28 @@ class SingleFeedIngestionWorkflow(ProgressNotificationMixin):
         )
         await self._notify_update()
 
+        try:
+            return await self._run_ingestion(input)
+        except Exception as e:
+            # Send error notification via SSE before failing the workflow
+            error_msg = str(e)
+            self._progress.status = "error"
+            self._progress.error = error_msg
+            self._progress.message = f"Ingestion failed: {error_msg}"
+            self._progress.updated_at = workflow_now_iso()
+            await self._notify_update()
+            raise
+
+    async def _run_ingestion(self, input: SingleFeedIngestionInput) -> SingleFeedIngestionResult:
+        """
+        Run the main ingestion logic.
+
+        Separated from run() to enable top-level error handling with SSE notification.
+        """
+        feed_id = input.feed_id
+        feed_name = input.feed_name
+        wf_info = workflow.info()
+
         # 0. Fetch feed options from API (to get accurate fetch_limit)
         # This ensures we always use the correct fetch_limit from the database
         feed_options: GetFeedOptionsOutput = await workflow.execute_activity(

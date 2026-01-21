@@ -113,6 +113,30 @@ class DomainFetchWorkflow(ProgressNotificationMixin):
             },
         )
 
+        try:
+            return await self._run_fetch(input)
+        except Exception as e:
+            # Send error notification via SSE before failing the workflow
+            error_msg = str(e)
+            self._progress.status = "error"
+            self._progress.error = error_msg
+            self._progress.message = f"Domain fetch failed: {error_msg}"
+            for entry_id in self._progress.entry_progress:
+                self._update_entry_status(entry_id, "error", error=error_msg)
+            self._progress.updated_at = workflow_now_iso()
+            await self._notify_update()
+            raise
+
+    async def _run_fetch(self, input: DomainFetchInput) -> DomainFetchOutput:
+        """
+        Run the main fetch logic.
+
+        Separated from run() to enable top-level error handling with SSE notification.
+        """
+        domain = input.domain
+        entries = input.entries
+        delay_seconds = input.delay_seconds
+
         results: list[dict] = []
         success_count = 0
         failed_count = 0

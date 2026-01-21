@@ -850,6 +850,30 @@ class ContextCollectionWorkflow(ProgressNotificationMixin):
                 plan=["No entries to process"],
             )
 
+        try:
+            return await self._run_context_collection(input)
+        except Exception as e:
+            # Send error notification via SSE before failing the workflow
+            error_msg = str(e)
+            self._progress.status = "error"
+            self._progress.error = error_msg
+            self._progress.message = f"Context collection failed: {error_msg}"
+            for entry_id in self._progress.entry_progress:
+                self._update_entry_status(entry_id, "error", error=error_msg)
+            self._progress.updated_at = workflow_now_iso()
+            await self._notify_update()
+            raise
+
+    async def _run_context_collection(
+        self, input: ContextCollectionInput
+    ) -> ContextCollectionOutput:
+        """
+        Run the main context collection logic.
+
+        Separated from run() to enable top-level error handling with SSE notification.
+        """
+        now = workflow_now_iso()
+
         # Initialize entry progress tracking
         for entry_id in input.entry_ids:
             self._progress.entry_progress[entry_id] = EntryProgressState(

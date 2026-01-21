@@ -110,6 +110,36 @@ class ReprocessEntriesWorkflow(ProgressNotificationMixin):
             )
             return ReprocessEntriesResult(status="no_entries")
 
+        try:
+            return await self._run_reprocess(input)
+        except Exception as e:
+            # Send error notification via SSE before failing the workflow
+            error_msg = str(e)
+            self._progress.status = "error"
+            self._progress.error = error_msg
+            self._progress.message = f"Reprocess failed: {error_msg}"
+            for entry_id in self._progress.entry_progress:
+                self._update_entry_status(entry_id, "error", error=error_msg)
+            self._progress.updated_at = workflow_now_iso()
+            await self._notify_update()
+            raise
+
+    async def _run_reprocess(
+        self,
+        input: ReprocessEntriesInput,
+    ) -> ReprocessEntriesResult:
+        """
+        Run the main reprocess logic.
+
+        Separated from run() to enable top-level error handling with SSE notification.
+        """
+        # Extract input fields for convenience
+        entry_ids = input.entry_ids
+        fetch_content = input.fetch_content
+        summarize = input.summarize
+
+        wf_info = workflow.info()
+
         # 1. Get entry details from MCP
         get_result: GetEntriesOutput = await workflow.execute_activity(
             get_entries,
@@ -166,6 +196,7 @@ class ReprocessEntriesWorkflow(ProgressNotificationMixin):
                 heartbeat_timeout=timedelta(seconds=60),
                 retry_policy=RetryPolicy(maximum_attempts=2),
             )
+
             # Contents are saved to DB within the activity
             contents = fetch_result.contents_for_summarize
             contents_fetched = fetch_result.success_count
