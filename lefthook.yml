@@ -7,12 +7,14 @@ pre-commit:
     # Markdown: fix tables -> lint
     lint-markdown:
       glob: "{*,**/*}.md"
+      exclude: ".claude/**"
       run: ./scripts/fix-md-tables {staged_files} && markdownlint-cli2 --fix {staged_files}
       stage_fixed: true
 
     # TypeScript/JavaScript: prettier -> eslint (sequential)
     lint-ts:
       glob: "*.{ts,tsx,js,jsx}"
+      exclude: ".claude/**"
       run: bun prettier --write {staged_files} && bun lint --fix {staged_files}
       stage_fixed: true
 

@@ -45,6 +45,7 @@ yarn-error.log*
 next-env.d.ts
 
 .claude/settings.local.json
+.claude/skills/*/node_modules/
 
 .venv
 .playwright-mcp/

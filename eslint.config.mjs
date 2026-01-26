@@ -7,6 +7,7 @@ export default defineConfig([
       "worker/",
       "agent/",
       ".next/",
+      ".claude/",
       "node_modules/",
       ".venv/",
       "dist/",
