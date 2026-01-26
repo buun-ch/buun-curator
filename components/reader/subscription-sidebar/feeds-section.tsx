@@ -69,7 +69,7 @@ export function FeedsSection({
         </CollapsibleTrigger>
         <button
           className={cn(
-            "flex flex-1 items-center gap-1 py-1.5 pr-2 hover:bg-sidebar-accent",
+            "flex flex-1 items-center gap-1 py-1.5 pr-4 hover:bg-sidebar-accent",
             collapsed && "justify-center px-0",
           )}
           onClick={() => onSelect?.("all")}

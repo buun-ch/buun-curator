@@ -78,7 +78,7 @@ export function SubscriptionItem({
           </CollapsibleTrigger>
           <button
             className={cn(
-              "flex min-w-0 flex-1 items-center gap-0.5 py-1.5 pr-2 hover:bg-sidebar-accent",
+              "flex min-w-0 flex-1 items-center gap-0.5 py-1.5 pr-4 hover:bg-sidebar-accent",
               collapsed && "justify-center px-0",
             )}
             onClick={() => onSelect?.(subscription.id)}
@@ -118,7 +118,7 @@ export function SubscriptionItem({
     <button
       onClick={() => onSelect?.(subscription.id)}
       className={cn(
-        "flex w-full items-center gap-0.5 px-2 py-1.5 text-sm select-none hover:bg-sidebar-accent",
+        "flex w-full items-center gap-0.5 py-1.5 pr-4 pl-2 text-sm select-none hover:bg-sidebar-accent",
         isSelected && "bg-sidebar-accent",
         collapsed && "justify-center px-0",
       )}
