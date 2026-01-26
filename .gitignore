@@ -44,6 +44,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+.claude/settings.local.json
+
 .venv
 .playwright-mcp/
 /private/
