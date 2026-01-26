@@ -56,15 +56,15 @@ export function SubscriptionItem({
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <div
           className={cn(
-            "flex w-full items-center rounded-md text-sm select-none",
-            isSelected && "bg-accent",
+            "flex w-full items-center text-sm select-none",
+            isSelected && "bg-sidebar-accent",
             collapsed && "justify-center",
           )}
           style={{ paddingLeft }}
         >
           <CollapsibleTrigger asChild>
             <button
-              className="flex items-center rounded-md p-1.5 hover:bg-accent"
+              className="flex items-center px-1 py-1.5 hover:bg-sidebar-accent"
               onClick={(e) => e.stopPropagation()}
             >
               <ChevronRight
@@ -78,7 +78,7 @@ export function SubscriptionItem({
           </CollapsibleTrigger>
           <button
             className={cn(
-              "flex min-w-0 flex-1 items-center gap-2 rounded-md py-1.5 pr-2 hover:bg-accent",
+              "flex min-w-0 flex-1 items-center gap-0.5 py-1.5 pr-2 hover:bg-sidebar-accent",
               collapsed && "justify-center px-0",
             )}
             onClick={() => onSelect?.(subscription.id)}
@@ -86,11 +86,11 @@ export function SubscriptionItem({
             {icon}
             {!collapsed && (
               <>
-                <span className="flex-1 truncate text-left">
+                <span className="flex-1 truncate pl-1 text-left">
                   {subscription.title}
                 </span>
                 {subscription.count != null && subscription.count > 0 && (
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-sidebar-foreground">
                     {subscription.count}
                   </span>
                 )}
@@ -118,8 +118,8 @@ export function SubscriptionItem({
     <button
       onClick={() => onSelect?.(subscription.id)}
       className={cn(
-        "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm select-none hover:bg-accent",
-        isSelected && "bg-accent",
+        "flex w-full items-center gap-0.5 px-2 py-1.5 text-sm select-none hover:bg-sidebar-accent",
+        isSelected && "bg-sidebar-accent",
         collapsed && "justify-center px-0",
       )}
       style={{ paddingLeft }}
@@ -127,11 +127,11 @@ export function SubscriptionItem({
       {icon}
       {!collapsed && (
         <>
-          <span className="flex-1 truncate text-left">
+          <span className="flex-1 truncate pl-1 text-left">
             {subscription.title}
           </span>
           {subscription.count != null && subscription.count > 0 && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-sidebar-foreground">
               {subscription.count}
             </span>
           )}

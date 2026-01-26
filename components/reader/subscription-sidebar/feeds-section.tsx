@@ -48,14 +48,14 @@ export function FeedsSection({
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <div
         className={cn(
-          "flex w-full items-center rounded-md text-sm font-medium select-none",
-          isFeedsSelected && "bg-accent",
+          "flex w-full items-center pl-1 text-sm font-medium select-none",
+          isFeedsSelected && "bg-sidebar-accent",
           collapsed && "justify-center",
         )}
       >
         <CollapsibleTrigger asChild>
           <button
-            className="flex items-center rounded-md p-1.5 hover:bg-accent"
+            className="flex items-center p-1.5 hover:bg-sidebar-accent"
             onClick={(e) => e.stopPropagation()}
           >
             <ChevronRight
@@ -69,7 +69,7 @@ export function FeedsSection({
         </CollapsibleTrigger>
         <button
           className={cn(
-            "flex flex-1 items-center gap-2 rounded-md py-1.5 pr-2 hover:bg-accent",
+            "flex flex-1 items-center gap-1 py-1.5 pr-2 hover:bg-sidebar-accent",
             collapsed && "justify-center px-0",
           )}
           onClick={() => onSelect?.("all")}

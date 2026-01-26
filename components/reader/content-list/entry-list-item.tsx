@@ -49,11 +49,11 @@ export const EntryListItem = React.forwardRef<
           alt=""
           width={64}
           height={64}
-          className="size-16 shrink-0 rounded-md border border-border/50 object-cover grayscale-70"
+          className="size-16 shrink-0 rounded-md border-1 object-cover grayscale-70"
           unoptimized
         />
       ) : (
-        <div className="flex size-16 shrink-0 items-center justify-center rounded-md border border-border/50 bg-muted">
+        <div className="flex size-16 shrink-0 items-center justify-center rounded-md border-1 bg-muted">
           <span className="text-2xl text-muted-foreground">
             {source.charAt(0)}
           </span>

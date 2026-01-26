@@ -134,12 +134,14 @@ export function SubscriptionSidebar({
       {/* Subscription list - hidden when collapsed */}
       {!collapsed && (
         <div
-          className="flex-1 overflow-auto overflow-x-hidden px-1 pb-2"
+          className="flex-1 overflow-auto overflow-x-hidden px-0 pb-2"
           onScroll={handleScroll}
         >
           {loading ? (
             <div className="flex items-center justify-center py-4">
-              <span className="text-sm text-muted-foreground">Loading...</span>
+              <span className="text-sm text-sidebar-foreground">
+                Loading...
+              </span>
             </div>
           ) : (
             <div className="space-y-1">
@@ -193,8 +195,8 @@ export function SubscriptionSidebar({
           <button
             onClick={() => navigateToSettings()}
             className={cn(
-              "flex w-full items-center gap-2 rounded-md px-4 pt-2.5 pb-1 text-sm select-none hover:bg-accent",
-              viewMode === "settings" && "bg-accent font-medium",
+              "flex w-full items-center gap-2 border-b px-4 py-2 text-sm select-none hover:bg-sidebar-accent",
+              viewMode === "settings" && "bg-sidebar-accent font-medium",
               collapsed && "justify-center px-0",
             )}
           >
@@ -204,11 +206,10 @@ export function SubscriptionSidebar({
             )}
           </button>
           {debugEnabled && !collapsed && (
-            <div className="my-1 flex items-center gap-2 border-t px-5 pt-2 pb-1 text-sm text-muted-foreground">
+            <div className="my-1 flex items-center gap-2 border-t px-5 pt-2 pb-1 text-sm text-sidebar-foreground">
               <SSEStatusIndicator />
             </div>
           )}
-          <div className="my-1 border-t" />
           <UserMenu key="user-menu" collapsed={collapsed} />
         </div>
       </div>
