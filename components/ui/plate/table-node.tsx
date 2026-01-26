@@ -507,7 +507,7 @@ function RowDropLine() {
   return (
     <div
       className={cn(
-        "absolute inset-x-0 left-2 z-50 h-0.5 bg-brand/50",
+        "bg-brand/50 absolute inset-x-0 left-2 z-50 h-0.5",
         dropLine === "top" ? "-top-px" : "-bottom-px",
       )}
     />
@@ -556,7 +556,7 @@ export function TableCellElement({
         element.background ? "bg-(--cellBackground)" : "bg-background",
         isHeader && "text-left *:m-0",
         "before:size-full",
-        selected && "before:z-10 before:bg-brand/5",
+        selected && "before:bg-brand/5 before:z-10",
         "before:absolute before:box-border before:content-[''] before:select-none",
         borders.bottom?.size && "before:border-b before:border-b-border",
         borders.right?.size && "before:border-r before:border-r-border",
