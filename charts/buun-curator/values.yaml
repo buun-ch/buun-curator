@@ -214,6 +214,17 @@ worker:
   # Max entry age in days (skip entries older than this, 0 = no limit)
   maxEntryAgeDays: 7
 
+  # Content distillation batch size (entries per LLM batch)
+  distillationBatchSize: 5
+
+  # Batch sizes for admin workflows (trigger/schedule commands)
+  batchSizes:
+    searchReindex: 500      # SEARCH_REINDEX_BATCH_SIZE
+    searchPrune: 1000       # SEARCH_PRUNE_BATCH_SIZE
+    graphRebuild: 50        # GRAPH_REBUILD_BATCH_SIZE
+    globalGraphUpdate: 50   # GLOBAL_GRAPH_UPDATE_BATCH_SIZE
+    embeddingBackfill: 100  # EMBEDDING_BACKFILL_BATCH_SIZE
+
   # Worker concurrency limits (Temporal worker configuration)
   # Set to 0 to use Temporal defaults (unlimited)
   concurrency:

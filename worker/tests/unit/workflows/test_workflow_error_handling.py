@@ -73,6 +73,7 @@ def sample_entries() -> list[dict]:
 async def test_distill_activity_failure_notifies_sse(
     sample_entries: list[dict],
     sandbox_runner: SandboxedWorkflowRunner,
+    required_env_vars: None,
 ) -> None:
     """
     Test that workflow notifies SSE before failing when distill activity fails.
@@ -187,6 +188,7 @@ async def test_distill_activity_failure_notifies_sse(
 async def test_workflow_completes_successfully_on_no_error(
     sample_entries: list[dict],
     sandbox_runner: SandboxedWorkflowRunner,
+    required_env_vars: None,
 ) -> None:
     """
     Test that workflow completes successfully when no errors occur.
@@ -293,6 +295,7 @@ async def test_workflow_completes_successfully_on_no_error(
 @pytest.mark.asyncio
 async def test_no_entries_returns_early_without_error(
     sandbox_runner: SandboxedWorkflowRunner,
+    required_env_vars: None,
 ) -> None:
     """
     Test that workflow returns early when no entries to distill.

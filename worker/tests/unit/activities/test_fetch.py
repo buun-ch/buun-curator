@@ -169,10 +169,14 @@ async def test_fetch_single_content_success() -> None:
         raw_html="<h1>Entry</h1>",  # ContentFetcher returns this, but activity doesn't
     )
 
-    with patch("buun_curator.activities.fetch.ContentFetcher") as mock_fetcher_class:
+    with (
+        patch("buun_curator.activities.fetch.ContentFetcher") as mock_fetcher_class,
+        patch("buun_curator.activities.fetch.get_config") as mock_config,
+    ):
         mock_instance = MagicMock()
         mock_instance.fetch = AsyncMock(return_value=mock_content)
         mock_fetcher_class.return_value = mock_instance
+        mock_config.return_value.enable_thumbnail = False
 
         from buun_curator.activities.fetch import fetch_single_content
         from buun_curator.models import FetchSingleContentInput
@@ -199,10 +203,14 @@ async def test_fetch_single_content_merges_rules() -> None:
         raw_html="<p>Content</p>",
     )
 
-    with patch("buun_curator.activities.fetch.ContentFetcher") as mock_fetcher_class:
+    with (
+        patch("buun_curator.activities.fetch.ContentFetcher") as mock_fetcher_class,
+        patch("buun_curator.activities.fetch.get_config") as mock_config,
+    ):
         mock_instance = MagicMock()
         mock_instance.fetch = AsyncMock(return_value=mock_content)
         mock_fetcher_class.return_value = mock_instance
+        mock_config.return_value.enable_thumbnail = False
 
         from buun_curator.activities.fetch import fetch_single_content
         from buun_curator.models import FetchSingleContentInput
@@ -234,10 +242,14 @@ async def test_fetch_single_content_empty_returns_no_content_status() -> None:
         raw_html="",
     )
 
-    with patch("buun_curator.activities.fetch.ContentFetcher") as mock_fetcher_class:
+    with (
+        patch("buun_curator.activities.fetch.ContentFetcher") as mock_fetcher_class,
+        patch("buun_curator.activities.fetch.get_config") as mock_config,
+    ):
         mock_instance = MagicMock()
         mock_instance.fetch = AsyncMock(return_value=mock_content)
         mock_fetcher_class.return_value = mock_instance
+        mock_config.return_value.enable_thumbnail = False
 
         from buun_curator.activities.fetch import fetch_single_content
         from buun_curator.models import FetchSingleContentInput

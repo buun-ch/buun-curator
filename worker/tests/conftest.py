@@ -16,6 +16,18 @@ def _load_fixture(name: str) -> str:
     return (FIXTURES_DIR / f"{name}.txt").read_text()
 
 
+@pytest.fixture
+def required_env_vars(monkeypatch: pytest.MonkeyPatch) -> None:
+    """
+    Set required environment variables for Config.from_env().
+
+    Use this fixture in tests that call code paths accessing get_config()
+    without mocking it.
+    """
+    monkeypatch.setenv("INTERNAL_API_TOKEN", "test-token")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-api-key")
+
+
 def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
     """
     Sort test items to run unit tests before integration tests.

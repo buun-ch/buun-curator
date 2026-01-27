@@ -596,6 +596,146 @@ class MyWorkflowInput(CamelCaseModel):
     new_config: dict = Field(default_factory=dict)
 ```
 
+## Configuration Management
+
+### Design Principles
+
+1. **Default values are constants in `config.py`**
+2. **Input models reference these constants**
+3. **Top-level workflows read from config; child workflows receive values via input**
+4. **Priority: CLI args > parent workflow input > environment variable > default constant**
+
+### Environment Variable Helpers
+
+```python
+# config.py
+def get_env(name: str, default: str | None) -> str:
+    """Get env var. default=None means required (raises ValueError if not set)."""
+    value = os.getenv(name)
+    if value is None:
+        if default is None:
+            raise ValueError(f"Required environment variable '{name}' is not set")
+        return default
+    return value
+
+def get_env_bool(name: str, default: bool | None) -> bool:
+    """Get boolean env var. Returns True if value is 'true' (case-insensitive)."""
+    str_default = str(default) if default is not None else None
+    return get_env(name, str_default).lower() == "true"
+
+def get_env_int(name: str, default: int | None) -> int:
+    """Get integer env var."""
+    str_default = str(default) if default is not None else None
+    return int(get_env(name, str_default))
+
+def get_env_float(name: str, default: float | None) -> float:
+    """Get float env var."""
+    str_default = str(default) if default is not None else None
+    return float(get_env(name, str_default))
+```
+
+### Defining Configurable Parameters
+
+```python
+# config.py - Step 1: Define default constant
+DEFAULT_DISTILLATION_BATCH_SIZE = 5
+
+@dataclass
+class Config:
+    # Step 2: Add config field
+    distillation_batch_size: int
+
+    @classmethod
+    def from_env(cls) -> "Config":
+        return cls(
+            # Step 3: Read from env with default
+            distillation_batch_size=get_env_int(
+                "DISTILLATION_BATCH_SIZE", DEFAULT_DISTILLATION_BATCH_SIZE
+            ),
+        )
+```
+
+```python
+# workflow_io.py - Step 4: Input model references constant
+from buun_curator.config import DEFAULT_DISTILLATION_BATCH_SIZE
+
+class ContentDistillationInput(CamelCaseModel):
+    batch_size: int = DEFAULT_DISTILLATION_BATCH_SIZE
+
+class SingleFeedIngestionInput(CamelCaseModel):
+    # Propagate to child workflows
+    distillation_batch_size: int = DEFAULT_DISTILLATION_BATCH_SIZE
+```
+
+### Where to Read Config
+
+**Top-level workflows** (triggered directly by CLI/API) read from config:
+
+```python
+# all_feeds_ingestion.py - Top-level workflow
+from buun_curator.config import get_config
+
+@workflow.defn
+class AllFeedsIngestionWorkflow:
+    @workflow.run
+    async def run(self, input: AllFeedsIngestionInput) -> AllFeedsIngestionResult:
+        config = get_config()
+
+        # Pass config value to child workflow
+        await workflow.execute_child_workflow(
+            SingleFeedIngestionWorkflow.run,
+            SingleFeedIngestionInput(
+                feed_id=feed.id,
+                distillation_batch_size=config.distillation_batch_size,  # From config
+            ),
+        )
+```
+
+**Child workflows** receive values via input (never read config directly):
+
+```python
+# single_feed_ingestion.py - Child workflow
+@workflow.defn
+class SingleFeedIngestionWorkflow:
+    @workflow.run
+    async def run(self, input: SingleFeedIngestionInput) -> SingleFeedIngestionResult:
+        # Use value from input, NOT from config
+        await workflow.start_child_workflow(
+            ContentDistillationWorkflow.run,
+            ContentDistillationInput(
+                entry_ids=entry_ids,
+                batch_size=input.distillation_batch_size,  # From parent
+            ),
+        )
+```
+
+### CLI Argument Priority
+
+In trigger scripts, CLI args override config when explicitly provided:
+
+```python
+# scripts/trigger_workflow.py
+config = get_config()
+
+# Use explicit None check, NOT `or` (0 is a valid value)
+batch_size = (
+    args.batch_size
+    if args.batch_size is not None
+    else config.distillation_batch_size
+)
+```
+
+**IMPORTANT:** Never use `args.batch_size or config.xxx` pattern because `0` is falsy and would incorrectly use config value.
+
+### Workflow Call Hierarchy Example
+
+```text
+AllFeedsIngestionWorkflow (reads config.distillation_batch_size)
+  └─→ SingleFeedIngestionInput.distillation_batch_size
+        └─→ ScheduleFetchInput.distillation_batch_size
+              └─→ ContentDistillationInput.batch_size
+```
+
 ## References
 
 - [Temporal Python SDK Guide](https://docs.temporal.io/develop/python/core-application)

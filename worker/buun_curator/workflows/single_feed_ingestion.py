@@ -262,6 +262,7 @@ class SingleFeedIngestionWorkflow(ProgressNotificationMixin):
                     auto_distill=input.auto_distill,
                     target_language=target_language,
                     parent_workflow_id=wf_info.workflow_id,
+                    distillation_batch_size=input.distillation_batch_size,
                 ),
                 id=fetch_wf_id,
                 execution_timeout=timedelta(minutes=30),
@@ -320,6 +321,7 @@ class SingleFeedIngestionWorkflow(ProgressNotificationMixin):
                                 ContentDistillationWorkflow.run,
                                 ContentDistillationInput(
                                     entry_ids=[entry_id],
+                                    batch_size=input.distillation_batch_size,
                                     parent_workflow_id="",
                                     show_toast=False,
                                 ),

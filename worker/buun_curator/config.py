@@ -6,18 +6,178 @@ import os
 from dataclasses import dataclass
 
 
+def get_env(name: str, default: str | None) -> str:
+    """
+    Get environment variable value.
+
+    Parameters
+    ----------
+    name : str
+        Environment variable name.
+    default : str | None
+        Default value if not set. If None, the variable is required.
+
+    Returns
+    -------
+    str
+        Environment variable value.
+
+    Raises
+    ------
+    ValueError
+        If default is None and variable is not set.
+    """
+    value = os.getenv(name)
+    if value is None:
+        if default is None:
+            raise ValueError(f"Required environment variable '{name}' is not set")
+        return default
+    return value
+
+
+def get_env_bool(name: str, default: bool | None) -> bool:
+    """
+    Get boolean environment variable.
+
+    Parameters
+    ----------
+    name : str
+        Environment variable name.
+    default : bool | None
+        Default value if not set. If None, the variable is required.
+
+    Returns
+    -------
+    bool
+        True if value is "true" (case-insensitive), False otherwise.
+
+    Raises
+    ------
+    ValueError
+        If default is None and variable is not set.
+    """
+    str_default = str(default) if default is not None else None
+    return get_env(name, str_default).lower() == "true"
+
+
+def get_env_int(name: str, default: int | None) -> int:
+    """
+    Get integer environment variable.
+
+    Parameters
+    ----------
+    name : str
+        Environment variable name.
+    default : int | None
+        Default value if not set. If None, the variable is required.
+
+    Returns
+    -------
+    int
+        Parsed integer value.
+
+    Raises
+    ------
+    ValueError
+        If default is None and variable is not set.
+    """
+    str_default = str(default) if default is not None else None
+    return int(get_env(name, str_default))
+
+
+def get_env_float(name: str, default: float | None) -> float:
+    """
+    Get float environment variable.
+
+    Parameters
+    ----------
+    name : str
+        Environment variable name.
+    default : float | None
+        Default value if not set. If None, the variable is required.
+
+    Returns
+    -------
+    float
+        Parsed float value.
+
+    Raises
+    ------
+    ValueError
+        If default is None and variable is not set.
+    """
+    str_default = str(default) if default is not None else None
+    return float(get_env(name, str_default))
+
+
+# =============================================================================
+# Default values
+# =============================================================================
+
+# API
+DEFAULT_API_URL = "http://localhost:3000"
+
+# LLM
+DEFAULT_LLM_MODEL = "claude-haiku"
+
+# Translation
+DEFAULT_TRANSLATION_PROVIDER = "deepl"
+
+# Temporal
+DEFAULT_TEMPORAL_HOST = "localhost:7233"
+DEFAULT_TEMPORAL_NAMESPACE = "default"
+DEFAULT_TASK_QUEUE = "buun-curator"
+
+# Feature flags
+DEFAULT_ENABLE_CONTENT_FETCH = True
+DEFAULT_ENABLE_SUMMARIZATION = True
+DEFAULT_ENABLE_THUMBNAIL = True
+
+# S3
+DEFAULT_S3_BUCKET = "buun-curator"
+DEFAULT_S3_REGION = "us-east-1"
+
+# Concurrency
+DEFAULT_FEED_INGESTION_CONCURRENCY = 5
+DEFAULT_FETCH_CONCURRENCY = 3
+DEFAULT_MAX_CONCURRENT_ACTIVITIES = 0
+DEFAULT_MAX_CONCURRENT_WORKFLOW_TASKS = 0
+DEFAULT_MAX_CONCURRENT_LOCAL_ACTIVITIES = 0
+
+# Rate limiting
+DEFAULT_DOMAIN_FETCH_DELAY = 2.0
+
+# GraphRAG
+DEFAULT_GRAPH_RAG_BACKEND = "graphiti"
+DEFAULT_GRAPHRAG_EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
+DEFAULT_EVALUATION_EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+
+# Content processing
+DEFAULT_MAX_CONTENT_CHARS = 500000
+DEFAULT_MAX_ENTRY_AGE_DAYS = 7
+
+# Batch sizes
+DEFAULT_DISTILLATION_BATCH_SIZE = 5
+DEFAULT_SEARCH_REINDEX_BATCH_SIZE = 500
+DEFAULT_SEARCH_PRUNE_BATCH_SIZE = 1000
+DEFAULT_GRAPH_REBUILD_BATCH_SIZE = 50
+DEFAULT_GLOBAL_GRAPH_UPDATE_BATCH_SIZE = 50
+DEFAULT_EMBEDDING_BACKFILL_BATCH_SIZE = 100
+
+# AI Evaluation
+DEFAULT_AI_EVALUATION_ENABLED = False
+
+
 @dataclass
 class Config:
-    """
-    Application configuration loaded from environment variables.
-    """
+    """Application configuration loaded from environment variables."""
 
     # API Server
     api_url: str  # REST API base URL
-    api_token: str  # Internal API token for authentication
+    api_token: str  # Internal API token for authentication (required)
 
     # OpenAI / LLM (set OPENAI_BASE_URL for LiteLLM proxy, leave empty for OpenAI direct)
-    openai_api_key: str
+    openai_api_key: str  # Required
     openai_base_url: str
 
     # === LLM Model Configuration ===
@@ -108,64 +268,112 @@ class Config:
     # Entry age filtering
     max_entry_age_days: int  # Skip entries older than this (0 = no limit)
 
+    # Content distillation
+    distillation_batch_size: int  # Batch size for LLM distillation
+
+    # Admin workflow batch sizes
+    search_reindex_batch_size: int  # Batch size for Meilisearch reindex
+    search_prune_batch_size: int  # Batch size for search prune
+    graph_rebuild_batch_size: int  # Batch size for graph rebuild
+    global_graph_update_batch_size: int  # Batch size for graph update
+    embedding_backfill_batch_size: int  # Batch size for embedding backfill
+
     @classmethod
     def from_env(cls) -> "Config":
-        """
-        Load configuration from environment variables.
-        """
+        """Load configuration from environment variables."""
+        # LLM model with fallback chain
+        llm_model = get_env("LLM_MODEL", DEFAULT_LLM_MODEL)
+
         return cls(
-            api_url=os.getenv("BUUN_CURATOR_API_URL", "http://localhost:3000"),
-            api_token=os.getenv("INTERNAL_API_TOKEN", ""),
-            openai_api_key=os.getenv("OPENAI_API_KEY", ""),
-            openai_base_url=os.getenv("OPENAI_BASE_URL", ""),  # Empty = OpenAI direct
-            # LLM models with fallback chain
-            llm_model=(llm_default := os.getenv("LLM_MODEL", "claude-haiku")),
-            extraction_llm_model=os.getenv("EXTRACTION_LLM_MODEL", "") or llm_default,
-            reasoning_llm_model=os.getenv("REASONING_LLM_MODEL", "") or llm_default,
-            summarization_llm_model=os.getenv("SUMMARIZATION_LLM_MODEL", "") or llm_default,
-            translation_provider=os.getenv("TRANSLATION_PROVIDER", "deepl"),
-            deepl_api_key=os.getenv("DEEPL_API_KEY", ""),
-            ms_translator_subscription_key=os.getenv("MS_TRANSLATOR_SUBSCRIPTION_KEY", ""),
-            ms_translator_region=os.getenv("MS_TRANSLATOR_REGION", ""),
-            temporal_host=os.getenv("TEMPORAL_HOST", "localhost:7233"),
-            temporal_namespace=os.getenv("TEMPORAL_NAMESPACE", "default"),
-            task_queue=os.getenv("TEMPORAL_TASK_QUEUE", "buun-curator"),
-            enable_content_fetch=os.getenv("ENABLE_CONTENT_FETCH", "true").lower() == "true",
-            enable_summarization=os.getenv("ENABLE_SUMMARIZATION", "true").lower() == "true",
-            enable_thumbnail=os.getenv("ENABLE_THUMBNAIL", "true").lower() == "true",
-            s3_endpoint=os.getenv("S3_ENDPOINT", ""),  # Empty for AWS S3
-            s3_access_key=os.getenv("S3_ACCESS_KEY", ""),
-            s3_secret_key=os.getenv("S3_SECRET_KEY", ""),
-            s3_bucket=os.getenv("S3_BUCKET", "buun-curator"),
-            s3_prefix=os.getenv("S3_PREFIX", ""),  # e.g., "public"
-            s3_public_url=os.getenv("S3_PUBLIC_URL", ""),
-            s3_region=os.getenv("S3_REGION", "us-east-1"),
-            github_token=os.getenv("GITHUB_TOKEN", ""),
-            feed_ingestion_concurrency=int(os.getenv("FEED_INGESTION_CONCURRENCY", "5")),
-            fetch_concurrency=int(os.getenv("FETCH_CONCURRENCY", "3")),
-            # Worker concurrency limits (0 = use Temporal defaults)
-            max_concurrent_activities=int(os.getenv("MAX_CONCURRENT_ACTIVITIES", "0")),
-            max_concurrent_workflow_tasks=int(os.getenv("MAX_CONCURRENT_WORKFLOW_TASKS", "0")),
-            max_concurrent_local_activities=int(os.getenv("MAX_CONCURRENT_LOCAL_ACTIVITIES", "0")),
-            domain_fetch_delay=float(os.getenv("DOMAIN_FETCH_DELAY", "2.0")),
-            graph_rag_backend=os.getenv("GRAPH_RAG_BACKEND", "graphiti"),
+            # API (token is required)
+            api_url=get_env("BUUN_CURATOR_API_URL", DEFAULT_API_URL),
+            api_token=get_env("INTERNAL_API_TOKEN", None),
+            # OpenAI / LLM (API key is required)
+            openai_api_key=get_env("OPENAI_API_KEY", None),
+            openai_base_url=get_env("OPENAI_BASE_URL", ""),
+            # LLM models
+            llm_model=llm_model,
+            extraction_llm_model=get_env("EXTRACTION_LLM_MODEL", "") or llm_model,
+            reasoning_llm_model=get_env("REASONING_LLM_MODEL", "") or llm_model,
+            summarization_llm_model=get_env("SUMMARIZATION_LLM_MODEL", "") or llm_model,
+            # Translation
+            translation_provider=get_env("TRANSLATION_PROVIDER", DEFAULT_TRANSLATION_PROVIDER),
+            deepl_api_key=get_env("DEEPL_API_KEY", ""),
+            ms_translator_subscription_key=get_env("MS_TRANSLATOR_SUBSCRIPTION_KEY", ""),
+            ms_translator_region=get_env("MS_TRANSLATOR_REGION", ""),
+            # Temporal
+            temporal_host=get_env("TEMPORAL_HOST", DEFAULT_TEMPORAL_HOST),
+            temporal_namespace=get_env("TEMPORAL_NAMESPACE", DEFAULT_TEMPORAL_NAMESPACE),
+            task_queue=get_env("TEMPORAL_TASK_QUEUE", DEFAULT_TASK_QUEUE),
+            # Feature flags
+            enable_content_fetch=get_env_bool("ENABLE_CONTENT_FETCH", DEFAULT_ENABLE_CONTENT_FETCH),
+            enable_summarization=get_env_bool("ENABLE_SUMMARIZATION", DEFAULT_ENABLE_SUMMARIZATION),
+            enable_thumbnail=get_env_bool("ENABLE_THUMBNAIL", DEFAULT_ENABLE_THUMBNAIL),
+            # S3
+            s3_endpoint=get_env("S3_ENDPOINT", ""),
+            s3_access_key=get_env("S3_ACCESS_KEY", ""),
+            s3_secret_key=get_env("S3_SECRET_KEY", ""),
+            s3_bucket=get_env("S3_BUCKET", DEFAULT_S3_BUCKET),
+            s3_prefix=get_env("S3_PREFIX", ""),
+            s3_public_url=get_env("S3_PUBLIC_URL", ""),
+            s3_region=get_env("S3_REGION", DEFAULT_S3_REGION),
+            # GitHub
+            github_token=get_env("GITHUB_TOKEN", ""),
+            # Concurrency
+            feed_ingestion_concurrency=get_env_int(
+                "FEED_INGESTION_CONCURRENCY", DEFAULT_FEED_INGESTION_CONCURRENCY
+            ),
+            fetch_concurrency=get_env_int("FETCH_CONCURRENCY", DEFAULT_FETCH_CONCURRENCY),
+            max_concurrent_activities=get_env_int(
+                "MAX_CONCURRENT_ACTIVITIES", DEFAULT_MAX_CONCURRENT_ACTIVITIES
+            ),
+            max_concurrent_workflow_tasks=get_env_int(
+                "MAX_CONCURRENT_WORKFLOW_TASKS", DEFAULT_MAX_CONCURRENT_WORKFLOW_TASKS
+            ),
+            max_concurrent_local_activities=get_env_int(
+                "MAX_CONCURRENT_LOCAL_ACTIVITIES", DEFAULT_MAX_CONCURRENT_LOCAL_ACTIVITIES
+            ),
+            # Rate limiting
+            domain_fetch_delay=get_env_float("DOMAIN_FETCH_DELAY", DEFAULT_DOMAIN_FETCH_DELAY),
+            # GraphRAG
+            graph_rag_backend=get_env("GRAPH_RAG_BACKEND", DEFAULT_GRAPH_RAG_BACKEND),
             # Langfuse
-            langfuse_public_key=os.getenv("LANGFUSE_PUBLIC_KEY", ""),
-            langfuse_secret_key=os.getenv("LANGFUSE_SECRET_KEY", ""),
-            langfuse_host=os.getenv("LANGFUSE_HOST", ""),
+            langfuse_public_key=get_env("LANGFUSE_PUBLIC_KEY", ""),
+            langfuse_secret_key=get_env("LANGFUSE_SECRET_KEY", ""),
+            langfuse_host=get_env("LANGFUSE_HOST", ""),
             # AI Evaluation
-            ai_evaluation_enabled=os.getenv("AI_EVALUATION_ENABLED", "false").lower() == "true",
+            ai_evaluation_enabled=get_env_bool(
+                "AI_EVALUATION_ENABLED", DEFAULT_AI_EVALUATION_ENABLED
+            ),
             # Embedding models
-            graphrag_embedding_model=os.getenv(
-                "GRAPHRAG_EMBEDDING_MODEL",
-                "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+            graphrag_embedding_model=get_env(
+                "GRAPHRAG_EMBEDDING_MODEL", DEFAULT_GRAPHRAG_EMBEDDING_MODEL
             ),
-            evaluation_embedding_model=os.getenv(
-                "EVALUATION_EMBEDDING_MODEL",
-                "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+            evaluation_embedding_model=get_env(
+                "EVALUATION_EMBEDDING_MODEL", DEFAULT_EVALUATION_EMBEDDING_MODEL
             ),
-            max_content_chars=int(os.getenv("MAX_CONTENT_CHARS", "500000")),
-            max_entry_age_days=int(os.getenv("MAX_ENTRY_AGE_DAYS", "7")),
+            # Content processing
+            max_content_chars=get_env_int("MAX_CONTENT_CHARS", DEFAULT_MAX_CONTENT_CHARS),
+            max_entry_age_days=get_env_int("MAX_ENTRY_AGE_DAYS", DEFAULT_MAX_ENTRY_AGE_DAYS),
+            # Batch sizes
+            distillation_batch_size=get_env_int(
+                "DISTILLATION_BATCH_SIZE", DEFAULT_DISTILLATION_BATCH_SIZE
+            ),
+            search_reindex_batch_size=get_env_int(
+                "SEARCH_REINDEX_BATCH_SIZE", DEFAULT_SEARCH_REINDEX_BATCH_SIZE
+            ),
+            search_prune_batch_size=get_env_int(
+                "SEARCH_PRUNE_BATCH_SIZE", DEFAULT_SEARCH_PRUNE_BATCH_SIZE
+            ),
+            graph_rebuild_batch_size=get_env_int(
+                "GRAPH_REBUILD_BATCH_SIZE", DEFAULT_GRAPH_REBUILD_BATCH_SIZE
+            ),
+            global_graph_update_batch_size=get_env_int(
+                "GLOBAL_GRAPH_UPDATE_BATCH_SIZE", DEFAULT_GLOBAL_GRAPH_UPDATE_BATCH_SIZE
+            ),
+            embedding_backfill_batch_size=get_env_int(
+                "EMBEDDING_BACKFILL_BATCH_SIZE", DEFAULT_EMBEDDING_BACKFILL_BATCH_SIZE
+            ),
         )
 
 
@@ -174,9 +382,7 @@ _config: Config | None = None
 
 
 def get_config() -> Config:
-    """
-    Get the global configuration instance.
-    """
+    """Get the global configuration instance."""
     global _config
     if _config is None:
         _config = Config.from_env()

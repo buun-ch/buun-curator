@@ -14,6 +14,7 @@ from temporalio import workflow
 
 with workflow.unsafe.imports_passed_through():
     from buun_curator.activities import get_app_settings, list_feeds
+    from buun_curator.config import get_config
     from buun_curator.models import (
         AllFeedsIngestionInput,
         GetAppSettingsInput,
@@ -126,6 +127,10 @@ class AllFeedsIngestionWorkflow(ProgressNotificationMixin):
         domain_fetch_delay = settings_result.domain_fetch_delay
         target_language = settings_result.target_language
 
+        # Get distillation batch size from config
+        config = get_config()
+        distillation_batch_size = config.distillation_batch_size
+
         workflow.logger.info(
             "Options loaded",
             extra={
@@ -135,6 +140,7 @@ class AllFeedsIngestionWorkflow(ProgressNotificationMixin):
                 "max_concurrent": max_concurrent,
                 "domain_fetch_delay": domain_fetch_delay,
                 "target_language": target_language,
+                "distillation_batch_size": distillation_batch_size,
             },
         )
 
@@ -236,6 +242,7 @@ class AllFeedsIngestionWorkflow(ProgressNotificationMixin):
                         target_language=target_language,
                         domain_fetch_delay=domain_fetch_delay,
                         parent_workflow_id=wf_info.workflow_id,
+                        distillation_batch_size=distillation_batch_size,
                     ),
                     id=child_wf_id,
                 )

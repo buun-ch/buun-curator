@@ -83,7 +83,6 @@ select = [
     "B",    # flake8-bugbear (common bugs and design issues)
     "C4",   # flake8-comprehensions (unnecessary list/dict/set comprehensions)
     "SIM",  # flake8-simplify (simplifiable code patterns)
-    "ARG",  # flake8-unused-arguments
 ]
 ignore = []
 extend-select = ["E501"]

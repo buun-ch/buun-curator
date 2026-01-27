@@ -340,3 +340,25 @@ class FetchContentsInput(BaseModel):
     entries: list[dict]
     timeout: int = 60
 ```
+
+## Python Configuration (worker/)
+
+Configuration in `config.py` uses helper functions with required/optional pattern:
+
+```python
+# get_env(name, default) - default=None means required
+api_token = get_env("INTERNAL_API_TOKEN", None)  # Required, raises if not set
+api_url = get_env("API_URL", "http://localhost:3000")  # Optional with default
+
+# Type-specific helpers
+enable_fetch = get_env_bool("ENABLE_FETCH", True)
+batch_size = get_env_int("BATCH_SIZE", 5)
+delay = get_env_float("DELAY", 2.0)
+```
+
+**Workflow configuration parameters:**
+
+- Default values defined as constants in `config.py` (e.g., `DEFAULT_DISTILLATION_BATCH_SIZE = 5`)
+- Input models reference these constants for defaults
+- **Top-level workflows** read from `get_config()`, child workflows receive values via input
+- Priority: CLI args > parent workflow input > environment variable > default constant

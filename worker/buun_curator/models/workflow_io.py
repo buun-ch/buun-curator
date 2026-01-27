@@ -10,6 +10,14 @@ pydantic_data_converter.
 
 from pydantic import Field
 
+from buun_curator.config import (
+    DEFAULT_DISTILLATION_BATCH_SIZE,
+    DEFAULT_EMBEDDING_BACKFILL_BATCH_SIZE,
+    DEFAULT_GLOBAL_GRAPH_UPDATE_BATCH_SIZE,
+    DEFAULT_GRAPH_REBUILD_BATCH_SIZE,
+    DEFAULT_SEARCH_PRUNE_BATCH_SIZE,
+    DEFAULT_SEARCH_REINDEX_BATCH_SIZE,
+)
 from buun_curator.models.base import CamelCaseModel
 from buun_curator.models.types import ULID
 
@@ -56,13 +64,11 @@ class SingleFeedIngestionInput(CamelCaseModel):
     auto_distill: bool = True
     enable_content_fetch: bool = True
     target_language: str = ""
-    # New fields added after initial release (must be at end for backward compatibility)
     enable_thumbnail: bool = False
     domain_fetch_delay: float = 2.0  # Delay between requests to same domain (seconds)
-    # Parent workflow ID for SSE notifications (when called as child workflow)
     parent_workflow_id: str = ""
-    # Entry age filtering (None = use config default, 0 = no limit)
     max_entry_age_days: int | None = None
+    distillation_batch_size: int = DEFAULT_DISTILLATION_BATCH_SIZE
 
 
 class SingleFeedIngestionResult(CamelCaseModel):
@@ -94,6 +100,7 @@ class ScheduleFetchInput(CamelCaseModel):
     auto_distill: bool = True  # Whether to distill after fetch
     target_language: str = ""  # Target language for distillation
     parent_workflow_id: str = ""  # Parent workflow ID for SSE notifications
+    distillation_batch_size: int = DEFAULT_DISTILLATION_BATCH_SIZE
 
 
 class ScheduleFetchOutput(CamelCaseModel):
@@ -153,7 +160,6 @@ class DomainFetchOutput(CamelCaseModel):
     results: list[dict] = Field(default_factory=list)  # List of DomainFetchResult as dicts
     success_count: int = 0
     failed_count: int = 0
-    # IDs of entries that were successfully fetched and saved to DB
     fetched_entry_ids: list[str] = Field(default_factory=list)
     entries_distilled: int = 0  # Number of entries successfully distilled
 
@@ -190,7 +196,7 @@ class ContentDistillationInput(CamelCaseModel):
     """Input for ContentDistillationWorkflow."""
 
     entry_ids: list[ULID] | None = None
-    batch_size: int = 5
+    batch_size: int = DEFAULT_DISTILLATION_BATCH_SIZE
     parent_workflow_id: str = ""  # Parent workflow ID for SSE notifications
     show_toast: bool = True  # Whether to show toast in frontend
 
@@ -481,7 +487,7 @@ class ContextCollectionProgress(WorkflowProgress):
 class SearchReindexInput(CamelCaseModel):
     """Input for SearchReindexWorkflow."""
 
-    batch_size: int = 500
+    batch_size: int = DEFAULT_SEARCH_REINDEX_BATCH_SIZE
     clean: bool = False  # Delete all documents before reindexing
 
 
@@ -497,7 +503,7 @@ class SearchReindexOutput(CamelCaseModel):
 class SearchPruneInput(CamelCaseModel):
     """Input for SearchPruneWorkflow."""
 
-    batch_size: int = 1000  # Batch size for fetching from Meilisearch
+    batch_size: int = DEFAULT_SEARCH_PRUNE_BATCH_SIZE
 
 
 class SearchPruneOutput(CamelCaseModel):
@@ -537,7 +543,7 @@ class UpdateEntryIndexOutput(CamelCaseModel):
 class GraphRebuildInput(CamelCaseModel):
     """Input for GraphRebuildWorkflow."""
 
-    batch_size: int = 50  # Smaller batches due to LLM processing overhead
+    batch_size: int = DEFAULT_GRAPH_REBUILD_BATCH_SIZE
     clean: bool = False  # Delete all nodes before rebuilding
 
 
@@ -719,7 +725,7 @@ class GlobalGraphUpdateInput(CamelCaseModel):
     """
 
     entry_ids: list[str] = Field(default_factory=list)
-    batch_size: int = 50  # Entries per graph update batch
+    batch_size: int = DEFAULT_GLOBAL_GRAPH_UPDATE_BATCH_SIZE
 
 
 class GlobalGraphUpdateResult(CamelCaseModel):
@@ -773,7 +779,7 @@ class EmbeddingBackfillInput(CamelCaseModel):
     Computes embeddings for entries that have content but no embedding.
     """
 
-    batch_size: int = 100  # Entries to process per batch
+    batch_size: int = DEFAULT_EMBEDDING_BACKFILL_BATCH_SIZE
 
 
 class EmbeddingBackfillResult(CamelCaseModel):

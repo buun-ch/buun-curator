@@ -750,8 +750,8 @@ async def main() -> None:
     graph_set_parser.add_argument(
         "--batch-size",
         type=int,
-        default=50,
-        help="Entries per batch (default: 50)",
+        default=None,
+        help="Entries per batch (default: from config or 50)",
     )
 
     # Graph pause command
@@ -849,7 +849,11 @@ async def main() -> None:
                 interval=args.interval,
                 cron=args.cron,
                 timezone=args.timezone if args.cron else None,
-                batch_size=args.batch_size,
+                batch_size=(
+                    args.batch_size
+                    if args.batch_size is not None
+                    else config.global_graph_update_batch_size
+                ),
             )
         elif args.graph_command == "pause":
             await pause_graph_schedule(client)

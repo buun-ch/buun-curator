@@ -987,8 +987,8 @@ async def main() -> None:
     distill_parser.add_argument(
         "--batch-size",
         type=int,
-        default=5,
-        help="Batch size for distillation (default: 5)",
+        default=None,
+        help="Batch size for distillation (default: from config or 5)",
     )
 
     # Reprocess entries command
@@ -1056,8 +1056,8 @@ async def main() -> None:
     reindex_parser.add_argument(
         "--batch-size",
         type=int,
-        default=500,
-        help="Batch size for indexing (default: 500)",
+        default=None,
+        help="Batch size for indexing (default: from config or 500)",
     )
     reindex_parser.add_argument(
         "--clean",
@@ -1072,8 +1072,8 @@ async def main() -> None:
     prune_parser.add_argument(
         "--batch-size",
         type=int,
-        default=1000,
-        help="Batch size for fetching from Meilisearch (default: 1000)",
+        default=None,
+        help="Batch size for fetching from Meilisearch (default: from config or 1000)",
     )
 
     # Deep research command
@@ -1096,8 +1096,8 @@ async def main() -> None:
     graph_rebuild_parser.add_argument(
         "--batch-size",
         type=int,
-        default=50,
-        help="Batch size for processing (default: 50)",
+        default=None,
+        help="Batch size for processing (default: from config or 50)",
     )
     graph_rebuild_parser.add_argument(
         "--clean",
@@ -1112,8 +1112,8 @@ async def main() -> None:
     graph_update_parser.add_argument(
         "--batch-size",
         type=int,
-        default=50,
-        help="Batch size for processing (default: 50)",
+        default=None,
+        help="Batch size for processing (default: from config or 50)",
     )
 
     # Entries cleanup command
@@ -1139,8 +1139,8 @@ async def main() -> None:
     embedding_backfill_parser.add_argument(
         "--batch-size",
         type=int,
-        default=100,
-        help="Batch size for processing (default: 100)",
+        default=None,
+        help="Batch size for processing (default: from config or 100)",
     )
 
     args = parser.parse_args()
@@ -1177,7 +1177,9 @@ async def main() -> None:
             client,
             config.task_queue,
             entry_ids=args.entry_ids,
-            batch_size=args.batch_size,
+            batch_size=(
+                args.batch_size if args.batch_size is not None else config.distillation_batch_size
+            ),
         )
     elif args.command == "reprocess":
         await run_reprocess_entries(
@@ -1213,14 +1215,18 @@ async def main() -> None:
         await run_search_reindex(
             client,
             config.task_queue,
-            batch_size=args.batch_size,
+            batch_size=(
+                args.batch_size if args.batch_size is not None else config.search_reindex_batch_size
+            ),
             clean=args.clean,
         )
     elif args.command == "prune":
         await run_search_prune(
             client,
             config.task_queue,
-            batch_size=args.batch_size,
+            batch_size=(
+                args.batch_size if args.batch_size is not None else config.search_prune_batch_size
+            ),
         )
     elif args.command == "deep-research":
         await run_deep_research(
@@ -1233,14 +1239,20 @@ async def main() -> None:
         await run_graph_rebuild(
             client,
             config.task_queue,
-            batch_size=args.batch_size,
+            batch_size=(
+                args.batch_size if args.batch_size is not None else config.graph_rebuild_batch_size
+            ),
             clean=args.clean,
         )
     elif args.command == "graph-update":
         await run_graph_update(
             client,
             config.task_queue,
-            batch_size=args.batch_size,
+            batch_size=(
+                args.batch_size
+                if args.batch_size is not None
+                else config.global_graph_update_batch_size
+            ),
         )
     elif args.command == "cleanup":
         await run_entries_cleanup(
@@ -1253,7 +1265,11 @@ async def main() -> None:
         await run_embedding_backfill(
             client,
             config.task_queue,
-            batch_size=args.batch_size,
+            batch_size=(
+                args.batch_size
+                if args.batch_size is not None
+                else config.embedding_backfill_batch_size
+            ),
         )
 
 

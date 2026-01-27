@@ -17,6 +17,7 @@ with workflow.unsafe.imports_passed_through():
         fetch_contents,
         get_entries,
     )
+    from buun_curator.config import get_config
     from buun_curator.models import (
         EntryProgressState,
         FetchContentsInput,
@@ -233,10 +234,12 @@ class ReprocessEntriesWorkflow(ProgressNotificationMixin):
             )
 
             # Execute child workflow and wait for completion
+            config = get_config()
             distill_result: ContentDistillationResult = await workflow.execute_child_workflow(
                 ContentDistillationWorkflow.run,
                 ContentDistillationInput(
                     entry_ids=entry_ids,
+                    batch_size=config.distillation_batch_size,
                     parent_workflow_id=wf_info.workflow_id,
                 ),
                 id=distill_wf_id,

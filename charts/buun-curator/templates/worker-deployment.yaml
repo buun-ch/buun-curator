@@ -84,6 +84,32 @@ spec:
             - name: MAX_ENTRY_AGE_DAYS
               value: {{ .Values.worker.maxEntryAgeDays | quote }}
           {{- end }}
+          {{- if .Values.worker.distillationBatchSize }}
+            - name: DISTILLATION_BATCH_SIZE
+              value: {{ .Values.worker.distillationBatchSize | quote }}
+          {{- end }}
+          {{- if .Values.worker.batchSizes }}
+          {{- if .Values.worker.batchSizes.searchReindex }}
+            - name: SEARCH_REINDEX_BATCH_SIZE
+              value: {{ .Values.worker.batchSizes.searchReindex | quote }}
+          {{- end }}
+          {{- if .Values.worker.batchSizes.searchPrune }}
+            - name: SEARCH_PRUNE_BATCH_SIZE
+              value: {{ .Values.worker.batchSizes.searchPrune | quote }}
+          {{- end }}
+          {{- if .Values.worker.batchSizes.graphRebuild }}
+            - name: GRAPH_REBUILD_BATCH_SIZE
+              value: {{ .Values.worker.batchSizes.graphRebuild | quote }}
+          {{- end }}
+          {{- if .Values.worker.batchSizes.globalGraphUpdate }}
+            - name: GLOBAL_GRAPH_UPDATE_BATCH_SIZE
+              value: {{ .Values.worker.batchSizes.globalGraphUpdate | quote }}
+          {{- end }}
+          {{- if .Values.worker.batchSizes.embeddingBackfill }}
+            - name: EMBEDDING_BACKFILL_BATCH_SIZE
+              value: {{ .Values.worker.batchSizes.embeddingBackfill | quote }}
+          {{- end }}
+          {{- end }}
           {{- if .Values.worker.concurrency }}
           {{- if .Values.worker.concurrency.maxActivities }}
             - name: MAX_CONCURRENT_ACTIVITIES

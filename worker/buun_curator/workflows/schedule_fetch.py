@@ -6,7 +6,7 @@ Groups entries by domain and runs parallel child workflows for each domain.
 Within each domain, requests are processed sequentially with delays.
 
 Distillation is batched: as domains complete, entries are collected and
-sent to ContentDistillationWorkflow in batches of 5 (fire-and-forget).
+sent to ContentDistillationWorkflow in configurable batch sizes (fire-and-forget).
 """
 
 import asyncio
@@ -30,9 +30,6 @@ with workflow.unsafe.imports_passed_through():
     from buun_curator.workflows.content_distillation import ContentDistillationWorkflow
     from buun_curator.workflows.domain_fetch import DomainFetchWorkflow
     from buun_curator.workflows.progress_mixin import ProgressNotificationMixin
-
-# Batch size for distillation
-DISTILL_BATCH_SIZE = 5
 
 
 def _extract_domain(url: str) -> str:
@@ -346,11 +343,11 @@ class ScheduleFetchWorkflow(ProgressNotificationMixin):
                     self._progress.updated_at = workflow_now_iso()
                     await self._notify_update()
 
-            # Start distillation for batches of DISTILL_BATCH_SIZE entries
+            # Start distillation for batches of distillation_batch_size entries
             if input.auto_distill:
-                while len(pending_entries) >= DISTILL_BATCH_SIZE:
-                    batch = pending_entries[:DISTILL_BATCH_SIZE]
-                    pending_entries = pending_entries[DISTILL_BATCH_SIZE:]
+                while len(pending_entries) >= input.distillation_batch_size:
+                    batch = pending_entries[: input.distillation_batch_size]
+                    pending_entries = pending_entries[input.distillation_batch_size :]
 
                     # Create unique child workflow ID for distillation
                     hash_input = (
@@ -373,6 +370,7 @@ class ScheduleFetchWorkflow(ProgressNotificationMixin):
                         ContentDistillationWorkflow.run,
                         ContentDistillationInput(
                             entry_ids=batch,
+                            batch_size=input.distillation_batch_size,
                             parent_workflow_id="",
                             show_toast=False,
                         ),
@@ -385,7 +383,7 @@ class ScheduleFetchWorkflow(ProgressNotificationMixin):
                     self._progress.entries_distilled = total_distilled
                     await self._notify_update()
 
-        # Handle remaining entries (less than DISTILL_BATCH_SIZE)
+        # Handle remaining entries (less than distillation_batch_size)
         if input.auto_distill and pending_entries:
             hash_input = f"{wf_info.workflow_id}:{wf_info.run_id}:distill:{distill_workflow_count}"
             unique_suffix = hashlib.sha1(hash_input.encode()).hexdigest()[:7]
@@ -404,6 +402,7 @@ class ScheduleFetchWorkflow(ProgressNotificationMixin):
                 ContentDistillationWorkflow.run,
                 ContentDistillationInput(
                     entry_ids=pending_entries,
+                    batch_size=input.distillation_batch_size,
                     parent_workflow_id="",
                     show_toast=False,
                 ),
