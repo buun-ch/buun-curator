@@ -1,9 +1,9 @@
 "use client";
 
+import type { Core, ElementDefinition } from "cytoscape";
 import * as React from "react";
 // @ts-expect-error - react-cytoscapejs doesn't have type declarations
 import CytoscapeComponent from "react-cytoscapejs";
-import type { Core, ElementDefinition } from "cytoscape";
 
 import { Badge } from "@/components/ui/badge";
 

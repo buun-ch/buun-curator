@@ -1,28 +1,26 @@
 "use client";
 
-import * as React from "react";
-import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import {
-  Users,
-  Calendar,
-  Loader2,
   AlertTriangle,
-  UserCheck,
-  Star,
+  ArrowUp,
+  Calendar,
+  ChevronDown,
+  ChevronUp,
   Circle,
   Inbox,
-  ChevronUp,
-  ChevronDown,
-  ArrowUp,
+  Loader2,
   MessageSquare,
-  Trash2,
   RefreshCw,
+  Star,
+  Trash2,
+  UserCheck,
+  Users,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
+import * as React from "react";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Empty,
   EmptyDescription,
@@ -30,11 +28,14 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Input } from "@/components/ui/input";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useRedditFavorites } from "@/hooks/use-reddit-favorites";
 import { useSubreddit } from "@/hooks/use-subreddit";
 import { useSubredditPosts } from "@/hooks/use-subreddit-posts";
-import { useRedditFavorites } from "@/hooks/use-reddit-favorites";
-import { useSettingsStore } from "@/stores/settings-store";
 import type { RedditFilterMode, RedditPost } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { useSettingsStore } from "@/stores/settings-store";
 
 interface SubredditInfoProps {
   subredditName?: string;
@@ -121,7 +122,6 @@ export function SubredditInfo({
   favoriteId,
   selectedPostId,
   onSelectPost,
-  onBrowse,
   onRemoved,
 }: SubredditInfoProps) {
   // Get favorite data for minScore

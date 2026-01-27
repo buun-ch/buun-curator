@@ -10,8 +10,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+
 import { fetchRedditPost } from "@/lib/reddit-api";
-import type { RedditPostDetail, RedditComment } from "@/lib/types";
+import type { RedditComment, RedditPostDetail } from "@/lib/types";
 
 /**
  * Hook for fetching Reddit post details with comments.

@@ -4,10 +4,12 @@
  * @module lib/api/feeds
  */
 
-import { db as defaultDb } from "@/db";
-import { feeds, categories } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import type { Db, ExtractionRule, FeedOptions, ErrorResult } from "./types";
+
+import { db as defaultDb } from "@/db";
+import { categories, feeds } from "@/db/schema";
+
+import type { Db, ErrorResult, ExtractionRule, FeedOptions } from "./types";
 
 /**
  * Lists all feeds with their category information.

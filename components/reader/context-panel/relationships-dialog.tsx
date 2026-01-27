@@ -8,8 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { RelationshipGraph } from "./relationship-graph";
 
+import { RelationshipGraph } from "./relationship-graph";
 import type { ExtractedContext } from "./types";
 
 interface RelationshipsDialogProps {

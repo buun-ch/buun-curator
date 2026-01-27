@@ -2,8 +2,8 @@
 
 import * as React from "react";
 
-import { useWorkflowStore, selectWorkflowById } from "@/stores/workflow-store";
 import type { FetchEntryLinksProgress } from "@/lib/temporal";
+import { selectWorkflowById, useWorkflowStore } from "@/stores/workflow-store";
 /** Debounce delay in milliseconds. */
 const DEBOUNCE_DELAY = 1000;
 

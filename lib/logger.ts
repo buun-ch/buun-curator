@@ -12,9 +12,9 @@
  *
  * @module lib/logger
  */
-import pino from "pino";
+import { context, trace } from "@opentelemetry/api";
 import createDebug from "debug";
-import { trace, context } from "@opentelemetry/api";
+import pino from "pino";
 
 const isServer = typeof window === "undefined";
 const isDevelopment = process.env.NODE_ENV === "development";

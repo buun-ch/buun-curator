@@ -1,11 +1,12 @@
 "use client";
 
+import { FolderTree, Languages, Rss, Tags, X } from "lucide-react";
 import * as React from "react";
-import { Rss, FolderTree, Languages, Tags, X } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useUrlState } from "@/lib/url-state-context";
 import type { SettingsCategory as SettingsCategoryType } from "@/lib/navigation";
+import { useUrlState } from "@/lib/url-state-context";
+import { cn } from "@/lib/utils";
 
 export interface SettingsCategory {
   id: SettingsCategoryType;

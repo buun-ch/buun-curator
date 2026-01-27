@@ -1,7 +1,7 @@
 "use client";
 
-import * as React from "react";
 import { Inbox, Loader2 } from "lucide-react";
+import * as React from "react";
 
 import {
   Empty,
@@ -11,10 +11,10 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 
-import type { ContentListProps } from "./types";
 import { EntryListItem } from "./entry-list-item";
-import { ListHeader } from "./list-header";
 import { useInfiniteScroll } from "./hooks/use-infinite-scroll";
+import { ListHeader } from "./list-header";
+import type { ContentListProps } from "./types";
 
 // Re-export types for external use
 export type { ContentListProps } from "./types";
@@ -44,6 +44,7 @@ export function ContentList({
   isMarkingAllAsRead = false,
   searchQuery = "",
   onSearchQueryChange,
+  onBack,
 }: ContentListProps) {
   // Refs for entry items (for keyboard navigation focus)
   const entryRefs = React.useRef<Map<string, HTMLDivElement>>(new Map());
@@ -89,6 +90,7 @@ export function ContentList({
         isRefetching={isRefetching}
         onMarkAllAsRead={onMarkAllAsRead}
         isMarkingAllAsRead={isMarkingAllAsRead}
+        onBack={onBack}
       />
 
       {/* Entry list */}

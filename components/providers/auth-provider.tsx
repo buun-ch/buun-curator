@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext, useEffect, ReactNode } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { createContext, ReactNode, useContext, useEffect } from "react";
+
 import { useSession as useBetterAuthSession } from "@/lib/auth-client";
 import { isAuthEnabled } from "@/lib/config";
 

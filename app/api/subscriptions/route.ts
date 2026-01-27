@@ -1,7 +1,8 @@
+import { eq, sql } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+
 import { db } from "@/db";
-import { categories, feeds, entries } from "@/db/schema";
-import { eq, sql, and } from "drizzle-orm";
+import { categories, entries, feeds } from "@/db/schema";
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("api:subscriptions");
@@ -75,7 +76,7 @@ export async function GET(request: NextRequest) {
       );
 
     // Get starred count (for "Starred" special item - always show starred count)
-    const [starredResult] = await db
+    const [_starredResult] = await db
       .select({
         count: sql<number>`COUNT(*)`.as("count"),
       })

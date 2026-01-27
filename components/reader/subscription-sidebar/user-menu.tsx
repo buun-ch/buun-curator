@@ -1,11 +1,8 @@
 "use client";
 
-import { LogOut, ChevronsUpDown } from "lucide-react";
-import { useSession, signOut } from "@/lib/auth-client";
-import { cn } from "@/lib/utils";
-import { useHydrated } from "@/hooks/use-hydrated";
+import { ChevronsUpDown, LogOut } from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useHydrated } from "@/hooks/use-hydrated";
+import { signOut, useSession } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 
 interface UserMenuProps {
   collapsed?: boolean;

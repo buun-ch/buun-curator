@@ -6,6 +6,7 @@
 
 import { db as defaultDb } from "@/db";
 import { appSettings } from "@/db/schema";
+
 import type { Db } from "./types";
 
 /** Application-wide settings stored in the database. */

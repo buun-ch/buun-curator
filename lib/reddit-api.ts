@@ -8,10 +8,10 @@
  */
 
 import type {
-  SubredditInfo,
+  RedditComment,
   RedditPost,
   RedditPostDetail,
-  RedditComment,
+  SubredditInfo,
 } from "./types";
 
 /** API response type from our internal endpoint (dates as ISO strings). */

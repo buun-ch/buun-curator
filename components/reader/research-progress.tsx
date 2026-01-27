@@ -1,17 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { useCoAgent } from "@copilotkit/react-core";
 import {
+  AlertCircle,
+  CheckCircle2,
   ChevronDown,
   ChevronRight,
   FileText,
   Loader2,
   Search,
   Sparkles,
-  AlertCircle,
-  CheckCircle2,
 } from "lucide-react";
+import { useState } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface DocumentInfo {

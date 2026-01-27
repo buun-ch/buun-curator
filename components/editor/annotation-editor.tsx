@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { MarkdownPlugin } from "@platejs/markdown";
 import {
   Bold,
   Code,
@@ -14,22 +14,22 @@ import {
 } from "lucide-react";
 import type { Value } from "platejs";
 import { Plate, usePlateEditor } from "platejs/react";
-import { MarkdownPlugin } from "@platejs/markdown";
+import { useCallback } from "react";
 import remarkGfm from "remark-gfm";
 
-import { cn } from "@/lib/utils";
+import { AutoformatKit } from "@/components/editor/plugins/autoformat-classic-kit";
+import { BasicNodesKit } from "@/components/editor/plugins/basic-nodes-kit";
+import { LinkKit } from "@/components/editor/plugins/link-kit";
+import { ListKit } from "@/components/editor/plugins/list-classic-kit";
+import { TableKit } from "@/components/editor/plugins/table-kit";
 import { Editor, EditorContainer } from "@/components/ui/plate/editor";
 import { FixedToolbar } from "@/components/ui/plate/fixed-toolbar";
-import { MarkToolbarButton } from "@/components/ui/plate/mark-toolbar-button";
-import { ToolbarButton, ToolbarGroup } from "@/components/ui/plate/toolbar";
 import { LinkToolbarButton } from "@/components/ui/plate/link-toolbar-button";
 import { ListToolbarButton } from "@/components/ui/plate/list-classic-toolbar-button";
+import { MarkToolbarButton } from "@/components/ui/plate/mark-toolbar-button";
 import { TableToolbarButton } from "@/components/ui/plate/table-toolbar-button";
-import { BasicNodesKit } from "@/components/editor/plugins/basic-nodes-kit";
-import { ListKit } from "@/components/editor/plugins/list-classic-kit";
-import { LinkKit } from "@/components/editor/plugins/link-kit";
-import { AutoformatKit } from "@/components/editor/plugins/autoformat-classic-kit";
-import { TableKit } from "@/components/editor/plugins/table-kit";
+import { ToolbarButton, ToolbarGroup } from "@/components/ui/plate/toolbar";
+import { cn } from "@/lib/utils";
 
 /** Props for the AnnotationEditor component. */
 interface AnnotationEditorProps {

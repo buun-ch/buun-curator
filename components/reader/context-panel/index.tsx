@@ -1,19 +1,19 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
-import type { ViewMode, GitHubRepo } from "./types";
-import { useContextData } from "./hooks/use-context-data";
-import { useLinkEnrichment } from "./hooks/use-link-enrichment";
-import { usePanelResize } from "./hooks/use-panel-resize";
 import { ContextPanelHeader } from "./context-panel-header";
 import { ContextView } from "./context-view";
 import { DebugView } from "./debug-view";
-import { RepoDetailDialog } from "./repo-detail-dialog";
+import { useContextData } from "./hooks/use-context-data";
+import { useLinkEnrichment } from "./hooks/use-link-enrichment";
+import { usePanelResize } from "./hooks/use-panel-resize";
 import { RelationshipsDialog } from "./relationships-dialog";
+import { RepoDetailDialog } from "./repo-detail-dialog";
+import type { GitHubRepo, ViewMode } from "./types";
 interface ContextPanelProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;

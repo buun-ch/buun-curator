@@ -1,11 +1,10 @@
 "use client";
 
-import { FileQuestion, Loader2, Play, Sparkles } from "lucide-react";
+import { FileQuestion, Loader2, Play } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,

@@ -1,7 +1,8 @@
+import { and, eq, gt, isNull, sql } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+
 import { db } from "@/db";
 import { entries } from "@/db/schema";
-import { eq, sql, isNull, and, gt } from "drizzle-orm";
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("api:entries:embeddings");

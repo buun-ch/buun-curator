@@ -1,22 +1,24 @@
 "use client";
 
-import * as React from "react";
-import { useCallback } from "react";
-import { AlertCircle, Bot, Plus, X } from "lucide-react";
 import { useCopilotChat } from "@copilotkit/react-core";
 import {
-  CopilotChat,
   AssistantMessage as DefaultAssistantMessage,
   type AssistantMessageProps,
+  CopilotChat,
 } from "@copilotkit/react-ui";
+import { AlertCircle, Bot, Plus, X } from "lucide-react";
+import * as React from "react";
+import { useCallback } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+
 import { ChatInput, type ChatMode } from "./chat-input";
-import { useResearchSteps, ResearchStepsDisplay } from "./research-progress";
+import { ResearchStepsDisplay, useResearchSteps } from "./research-progress";
 
 export type { ChatMode };
 

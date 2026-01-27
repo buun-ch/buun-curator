@@ -1,18 +1,14 @@
 "use client";
 
-import * as React from "react";
-
-import type { TLinkElement } from "platejs";
-
 import {
-  type UseVirtualFloatingOptions,
   flip,
   offset,
+  type UseVirtualFloatingOptions,
 } from "@platejs/floating";
 import { getLinkAttributes } from "@platejs/link";
 import {
-  type LinkFloatingToolbarState,
   FloatingLinkUrlInput,
+  type LinkFloatingToolbarState,
   useFloatingLinkEdit,
   useFloatingLinkEditState,
   useFloatingLinkInsert,
@@ -20,6 +16,7 @@ import {
 } from "@platejs/link/react";
 import { cva } from "class-variance-authority";
 import { ExternalLink, Link, Text, Unlink } from "lucide-react";
+import type { TLinkElement } from "platejs";
 import { KEYS } from "platejs";
 import {
   useEditorRef,
@@ -27,6 +24,7 @@ import {
   useFormInputProps,
   usePluginOption,
 } from "platejs/react";
+import * as React from "react";
 
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";

@@ -5,8 +5,9 @@ import { db } from "@/db";
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("api:entries:markdown");
-import { entries } from "@/db/schema";
 import { eq } from "drizzle-orm";
+
+import { entries } from "@/db/schema";
 
 interface RouteParams {
   params: Promise<{ id: string }>;

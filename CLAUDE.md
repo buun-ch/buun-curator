@@ -30,13 +30,6 @@ Key terms: **Entry** (not "Article"), **Feed**, **Category**, **Subscription**.
   source .venv/bin/activate
   ```
 
-**Development:**
-
-```bash
-bun dev                               # Start dev server with Turbopack (http://localhost:3000)
-op run --env-file=.env.op -- bun dev  # With 1Password secrets
-```
-
 **Kubernetes Development (Tilt + Telepresence):**
 
 ```bash

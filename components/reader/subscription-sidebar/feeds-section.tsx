@@ -2,16 +2,16 @@
 
 import { ChevronRight, Rss } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 import { useSettingsStore } from "@/stores/settings-store";
 
-import type { Subscription } from "./types";
 import { SubscriptionItem } from "./subscription-item";
+import type { Subscription } from "./types";
 
 interface FeedsSectionProps {
   subscriptions: Subscription[];

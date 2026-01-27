@@ -1,4 +1,4 @@
-import { testDb, schema } from "../setup";
+import { schema, testDb } from "../setup";
 
 export interface SeedData {
   categories: (typeof schema.categories.$inferSelect)[];

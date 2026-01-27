@@ -9,11 +9,12 @@
  */
 
 import { NextResponse } from "next/server";
+
 import { getPublicEnv } from "./env";
 
 // Re-export for convenience
-export { getPublicEnv, PublicEnv } from "./env";
 export type { PublicEnvType } from "./env";
+export { getPublicEnv, PublicEnv } from "./env";
 
 /**
  * Returns whether authentication is enabled.

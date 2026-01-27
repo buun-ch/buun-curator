@@ -10,6 +10,7 @@
  */
 
 import { parseHTML } from "linkedom";
+
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("feed-discovery");

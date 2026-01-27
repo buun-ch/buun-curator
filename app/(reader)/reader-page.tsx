@@ -9,26 +9,30 @@
  * @module app/(reader)/reader-page
  */
 
-import * as React from "react";
-import { CopilotKit } from "@copilotkit/react-core";
-import { Toaster } from "sonner";
 import "@copilotkit/react-ui/styles.css";
-import { FixedWidthPanel } from "@/components/ui/fixed-width-panel";
-import { SubscriptionSidebar } from "@/components/reader/subscription-sidebar";
+
+import { CopilotKit } from "@copilotkit/react-core";
+import { useQueryClient } from "@tanstack/react-query";
+import * as React from "react";
+import { Toaster } from "sonner";
+import { ulid } from "ulid";
+
 import {
   AssistantSidebar,
   type ChatMode,
 } from "@/components/reader/assistant-sidebar";
-import { ReaderContent } from "@/components/reader/reader-content";
-import { SettingsContent } from "@/components/settings/settings-content";
 import { ContextPanel } from "@/components/reader/context-panel";
-import { useQueryClient } from "@tanstack/react-query";
+import { MobileLayout } from "@/components/reader/mobile-layout";
+import { ReaderContent } from "@/components/reader/reader-content";
+import { SubscriptionSidebar } from "@/components/reader/subscription-sidebar";
+import { SettingsContent } from "@/components/settings/settings-content";
+import { FixedWidthPanel } from "@/components/ui/fixed-width-panel";
 import { useHydrated } from "@/hooks/use-hydrated";
-import { useSettingsStore } from "@/stores/settings-store";
-import { useUrlState } from "@/lib/url-state-context";
+import { useLayoutMode } from "@/hooks/use-layout-mode";
 import { PreserveEntriesProvider } from "@/lib/preserve-entries-context";
 import type { ContentPanelMode, ViewMode } from "@/lib/types";
-import { ulid } from "ulid";
+import { useUrlState } from "@/lib/url-state-context";
+import { useSettingsStore } from "@/stores/settings-store";
 
 /** Minimum panel width in pixels when collapsed. */
 const COLLAPSED_WIDTH = 48;
@@ -43,12 +47,18 @@ export function ReaderPage({
   viewMode: initialViewMode = "reader",
 }: ReaderPageProps) {
   const hydrated = useHydrated();
+  const layoutMode = useLayoutMode();
 
   // URL state for navigation
-  const { selectedSubscription, entryId, section, subreddit } = useUrlState();
+  const {
+    selectedSubscription: _selectedSubscription,
+    entryId,
+    section,
+    subreddit,
+  } = useUrlState();
 
   // View mode (settings is now a separate route, but we keep it for backward compatibility)
-  const [viewMode, setViewMode] = React.useState<ViewMode>(initialViewMode);
+  const [viewMode, _setViewMode] = React.useState<ViewMode>(initialViewMode);
 
   // Subscription collapse state
   const [subscriptionCollapsed, setSubscriptionCollapsed] =
@@ -144,94 +154,109 @@ export function ReaderPage({
   const effectiveViewMode =
     initialViewMode === "settings" ? "settings" : viewMode;
 
+  // Effective layout mode (null during SSR/initial render -> desktop)
+  const effectiveLayoutMode = layoutMode ?? "desktop";
+
+  // Mobile layout for mobile mode (both reader and settings)
+  const showMobileLayout = effectiveLayoutMode === "mobile";
+
   return (
     <PreserveEntriesProvider>
       <CopilotKit
         runtimeUrl="/api/copilotkit"
         properties={{ entryId: currentEntryId, mode: chatMode, sessionId }}
       >
-        <div className="flex h-dvh w-full">
-          {/* Left Sidebar - Subscriptions */}
-          <FixedWidthPanel
-            width={effectiveSubscriptionWidth}
-            onWidthChange={(width) => {
-              if (!subscriptionCollapsed) {
-                setSubscriptionPanelWidth(width);
-              }
-            }}
-            minWidth={COLLAPSED_WIDTH}
-            maxWidth={400}
-            className="h-full"
-          >
-            <SubscriptionSidebar
-              key="subscription-sidebar"
-              collapsed={subscriptionCollapsed}
-              onCollapsedChange={handleSubscriptionCollapsedChange}
-              viewMode={effectiveViewMode}
-              onFetchNewComplete={handleFetchNewComplete}
-            />
-          </FixedWidthPanel>
-
-          {/* Main content area */}
-          <div className="toast-container relative flex min-w-0 flex-1 flex-col">
-            <div className="flex min-h-0 flex-1">
-              {effectiveViewMode === "reader" ? (
-                <ReaderContent
-                  contentPanelMode={contentPanelMode}
-                  setContentPanelMode={setContentPanelMode}
-                  onEntryChange={setCurrentEntryId}
-                  contextPanelOpen={contextPanelOpen}
-                  onContextPanelOpenChange={setContextPanelOpen}
-                />
-              ) : (
-                <SettingsContent />
-              )}
-            </div>
-
-            {/* Context Panel */}
-            {effectiveViewMode === "reader" && (
-              <ContextPanel
-                open={contextPanelOpen}
-                onOpenChange={setContextPanelOpen}
-                entryId={currentEntryId}
-              />
-            )}
-
-            {/* Toaster positioned relative to main content area */}
-            <Toaster position="bottom-right" richColors closeButton />
+        {showMobileLayout ? (
+          /* Mobile Layout */
+          <div className="relative h-dvh w-full">
+            <MobileLayout onEntryChange={setCurrentEntryId} />
+            <Toaster position="bottom-center" richColors closeButton />
           </div>
-
-          {/* AI Assistant Sidebar */}
-          {assistantOpen && (
+        ) : (
+          /* Desktop / Compact Layout */
+          <div className="flex h-dvh w-full">
+            {/* Left Sidebar - Subscriptions */}
             <FixedWidthPanel
-              width={assistantPanelWidth}
-              onWidthChange={setAssistantPanelWidth}
-              minWidth={200}
-              maxWidth={600}
-              handlePosition="left"
+              width={effectiveSubscriptionWidth}
+              onWidthChange={(width) => {
+                if (!subscriptionCollapsed) {
+                  setSubscriptionPanelWidth(width);
+                }
+              }}
+              minWidth={COLLAPSED_WIDTH}
+              maxWidth={400}
               className="h-full"
             >
+              <SubscriptionSidebar
+                key="subscription-sidebar"
+                collapsed={subscriptionCollapsed}
+                onCollapsedChange={handleSubscriptionCollapsedChange}
+                viewMode={effectiveViewMode}
+                onFetchNewComplete={handleFetchNewComplete}
+              />
+            </FixedWidthPanel>
+
+            {/* Main content area */}
+            <div className="toast-container relative flex min-w-0 flex-1 flex-col">
+              <div className="flex min-h-0 flex-1">
+                {effectiveViewMode === "reader" ? (
+                  <ReaderContent
+                    contentPanelMode={contentPanelMode}
+                    setContentPanelMode={setContentPanelMode}
+                    onEntryChange={setCurrentEntryId}
+                    contextPanelOpen={contextPanelOpen}
+                    onContextPanelOpenChange={setContextPanelOpen}
+                  />
+                ) : (
+                  <SettingsContent />
+                )}
+              </div>
+
+              {/* Context Panel */}
+              {effectiveViewMode === "reader" && (
+                <ContextPanel
+                  open={contextPanelOpen}
+                  onOpenChange={setContextPanelOpen}
+                  entryId={currentEntryId}
+                />
+              )}
+
+              {/* Toaster positioned relative to main content area */}
+              <Toaster position="bottom-right" richColors closeButton />
+            </div>
+
+            {/* AI Assistant Sidebar */}
+            {assistantOpen && (
+              <FixedWidthPanel
+                width={assistantPanelWidth}
+                onWidthChange={setAssistantPanelWidth}
+                minWidth={200}
+                maxWidth={600}
+                handlePosition="left"
+                className="h-full"
+              >
+                <AssistantSidebar
+                  open={assistantOpen}
+                  onOpenChange={setAssistantOpen}
+                  mode={chatMode}
+                  onModeChange={setChatMode}
+                  onNewSession={handleNewSession}
+                />
+              </FixedWidthPanel>
+            )}
+
+            {/* Collapsed Assistant Toggle */}
+            {!assistantOpen && (
               <AssistantSidebar
-                open={assistantOpen}
+                open={false}
                 onOpenChange={setAssistantOpen}
                 mode={chatMode}
                 onModeChange={setChatMode}
                 onNewSession={handleNewSession}
               />
-            </FixedWidthPanel>
-          )}
-
-          {/* Collapsed Assistant Toggle */}
-          {!assistantOpen && (
-            <AssistantSidebar
-              open={false}
-              onOpenChange={setAssistantOpen}
-              mode={chatMode}
-              onModeChange={setChatMode}
-              onNewSession={handleNewSession}
-            />
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </CopilotKit>
     </PreserveEntriesProvider>
   );

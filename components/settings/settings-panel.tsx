@@ -1,13 +1,15 @@
 "use client";
 
 import { X } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { settingsCategories } from "./settings-nav";
+import type { SettingsCategory } from "@/lib/navigation";
+
 import { CategoriesSettings } from "./categories-settings";
 import { FeedsSettings } from "./feeds-settings";
 import { LabelsSettings } from "./labels-settings";
 import { LanguageSettings } from "./language-settings";
-import type { SettingsCategory } from "@/lib/navigation";
+import { settingsCategories } from "./settings-nav";
 
 interface SettingsPanelProps {
   categoryId?: SettingsCategory;

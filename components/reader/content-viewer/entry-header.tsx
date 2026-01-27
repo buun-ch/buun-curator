@@ -3,6 +3,7 @@
 import { format } from "date-fns";
 
 import type { Entry } from "@/lib/types";
+
 import { EntryLabels } from "./entry-labels";
 
 interface EntryHeaderProps {

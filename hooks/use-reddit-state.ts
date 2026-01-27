@@ -10,19 +10,20 @@
 "use client";
 
 import * as React from "react";
+
+import { useRedditFavorites } from "@/hooks/use-reddit-favorites";
+import { useRedditPost } from "@/hooks/use-reddit-post";
 import { useSubreddit } from "@/hooks/use-subreddit";
 import { useSubredditPosts } from "@/hooks/use-subreddit-posts";
-import { useRedditPost } from "@/hooks/use-reddit-post";
-import { useRedditFavorites } from "@/hooks/use-reddit-favorites";
-import { useSettingsStore } from "@/stores/settings-store";
-import { useUrlState } from "@/lib/url-state-context";
 import type {
+  ContentPanelMode,
+  RedditComment,
+  RedditFilterMode,
   RedditPost,
   RedditPostDetail,
-  RedditComment,
-  ContentPanelMode,
-  RedditFilterMode,
 } from "@/lib/types";
+import { useUrlState } from "@/lib/url-state-context";
+import { useSettingsStore } from "@/stores/settings-store";
 
 /** Options for the useRedditState hook. */
 export interface UseRedditStateOptions {

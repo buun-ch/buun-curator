@@ -8,12 +8,12 @@
  */
 
 import {
-  type FilterMode,
-  type SortMode,
   FILTER_MODE_TO_URL,
-  SORT_MODE_TO_URL,
+  type FilterMode,
   parseFilterMode,
   parseSortMode,
+  SORT_MODE_TO_URL,
+  type SortMode,
 } from "./types";
 
 /** Options for navigation that can include filter and sort parameters. */

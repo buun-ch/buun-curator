@@ -1,19 +1,20 @@
 "use client";
 
-import * as React from "react";
 import { formatDistanceToNow } from "date-fns";
 import {
   ArrowUp,
-  MessageSquare,
-  ExternalLink,
-  Loader2,
-  User,
   Clock,
+  ExternalLink,
   Link as LinkIcon,
+  Loader2,
+  MessageSquare,
+  User,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import * as React from "react";
+
 import { Button } from "@/components/ui/button";
-import type { RedditPostDetail, RedditComment } from "@/lib/types";
+import type { RedditComment, RedditPostDetail } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface RedditPostViewerProps {
   post?: RedditPostDetail | null;

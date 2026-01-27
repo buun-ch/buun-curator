@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db";
-import { entries, feeds, entryLabels, labels } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { updateEntry as updateEntryApi, isError } from "@/lib/api";
+import { NextRequest, NextResponse } from "next/server";
+
+import { db } from "@/db";
+import { entries, entryLabels, feeds, labels } from "@/db/schema";
+import { isError, updateEntry as updateEntryApi } from "@/lib/api";
 import { createLogger } from "@/lib/logger";
 import { startUpdateEntryIndexWorkflow } from "@/lib/temporal";
 

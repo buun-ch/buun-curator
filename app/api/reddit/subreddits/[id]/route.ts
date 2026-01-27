@@ -1,8 +1,8 @@
+import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+
 import { db } from "@/db";
 import { redditSubreddits } from "@/db/schema";
-import { eq } from "drizzle-orm";
-
 import { checkRedditEnabled } from "@/lib/config";
 import { createLogger } from "@/lib/logger";
 

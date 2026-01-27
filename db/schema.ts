@@ -1,15 +1,15 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
+  char,
+  customType,
+  index,
+  integer,
+  json,
   pgTable,
   text,
   timestamp,
-  json,
-  boolean,
   uniqueIndex,
-  index,
-  char,
-  integer,
-  customType,
 } from "drizzle-orm/pg-core";
 import { ulid } from "ulid";
 

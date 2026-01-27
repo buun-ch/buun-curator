@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db";
 import { sql } from "drizzle-orm";
+import { NextRequest, NextResponse } from "next/server";
+
+import { db } from "@/db";
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("api:entries:search-by-vector");

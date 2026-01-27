@@ -9,30 +9,31 @@
  * @module lib/url-state-context
  */
 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import {
-  type FilterMode,
-  type SortMode,
-  FILTER_MODE_TO_URL,
-  SORT_MODE_TO_URL,
-  parseFilterMode,
-  parseSortMode,
-} from "./types";
+
 import {
   allEntriesUrl,
   categoryUrl,
-  feedUrl,
   entryUrl,
+  feedUrl,
+  type NavigationOptions,
+  parseSettingsCategory,
+  redditFavoritesUrl,
   redditHomeUrl,
   redditSearchUrl,
-  redditFavoritesUrl,
-  subredditUrl,
-  settingsUrl,
-  parseSettingsCategory,
-  type NavigationOptions,
   type SettingsCategory,
+  settingsUrl,
+  subredditUrl,
 } from "./navigation";
+import {
+  FILTER_MODE_TO_URL,
+  type FilterMode,
+  parseFilterMode,
+  parseSortMode,
+  SORT_MODE_TO_URL,
+  type SortMode,
+} from "./types";
 
 /** URL state parsed from current location. */
 export interface UrlStateValue {

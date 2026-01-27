@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 
 import { createLogger } from "@/lib/logger";
 import {
-  startContextCollectionWorkflow,
   getWorkflowStatus,
+  startContextCollectionWorkflow,
 } from "@/lib/temporal";
 
 const log = createLogger("api:entries:context:collect");

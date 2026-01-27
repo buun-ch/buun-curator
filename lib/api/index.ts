@@ -11,31 +11,31 @@
 // Types
 export type {
   Db,
-  ExtractionRuleType,
-  ExtractionRule,
-  FeedOptions,
   ErrorResult,
-  SuccessResult,
+  ExtractionRule,
+  ExtractionRuleType,
+  FeedOptions,
   Result,
+  SuccessResult,
 } from "./types";
-export { DEFAULT_FETCH_LIMIT, MAX_FETCH_LIMIT, isError } from "./types";
+export { DEFAULT_FETCH_LIMIT, isError, MAX_FETCH_LIMIT } from "./types";
 
 // Feed functions
 export {
-  listFeeds,
   getFeed,
-  updateFeedChecked,
+  listFeeds,
   saveExtractionRule,
+  updateFeedChecked,
 } from "./feeds";
 
 // Entry functions
-export { getEntry, createEntry, updateEntry, listEntries } from "./entries";
+export { createEntry, getEntry, listEntries, updateEntry } from "./entries";
 
 // Extraction functions
 export type {
-  SelectorCandidate,
   FindElementResult,
   PreviewExclusionResult,
+  SelectorCandidate,
 } from "./extraction";
 export { findElementByText, previewExclusion } from "./extraction";
 

@@ -1,5 +1,5 @@
-import type { EntryListItem, FilterMode, SortMode } from "@/lib/types";
 import type { SubscriptionInfo } from "@/hooks/use-selected-subscription-info";
+import type { EntryListItem, FilterMode, SortMode } from "@/lib/types";
 
 /** Props for the ContentList component. */
 export interface ContentListProps {
@@ -22,6 +22,8 @@ export interface ContentListProps {
   isMarkingAllAsRead?: boolean;
   searchQuery?: string;
   onSearchQueryChange?: (query: string) => void;
+  /** Callback for back navigation (mobile). */
+  onBack?: () => void;
 }
 
 /** Props for the EntryListItemComponent. */

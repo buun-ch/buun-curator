@@ -16,4 +16,8 @@ export interface SubscriptionSidebarProps {
   viewMode?: ViewMode;
   /** Callback when "Fetch new entries" workflow completes. */
   onFetchNewComplete?: () => Promise<void>;
+  /** Callback after a subscription is selected (for mobile navigation). */
+  onSubscriptionSelect?: (id: string) => void;
+  /** Callback when settings is clicked (for mobile navigation). */
+  onSettingsClick?: () => void;
 }

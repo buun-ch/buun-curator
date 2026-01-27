@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { useState, useCallback } from "react";
 import { Plus, Rss, Settings } from "lucide-react";
+import * as React from "react";
+import { useCallback, useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { SSEStatusIndicator } from "@/components/status";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -12,18 +12,18 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { useSubscriptions } from "@/hooks/use-subscriptions";
 import { useFeedIngestion } from "@/hooks/use-feed-ingestion";
-import { useUrlState } from "@/lib/url-state-context";
+import { useSubscriptions } from "@/hooks/use-subscriptions";
+import { isDebugSSEEnabled, isRedditEnabled } from "@/lib/config";
 import { usePreserveEntries } from "@/lib/preserve-entries-context";
-import { UserMenu } from "./user-menu";
-import { isRedditEnabled, isDebugSSEEnabled } from "@/lib/config";
-import { SSEStatusIndicator } from "@/components/status";
+import { useUrlState } from "@/lib/url-state-context";
+import { cn } from "@/lib/utils";
 
-import type { SubscriptionSidebarProps } from "./types";
-import { SidebarHeader } from "./sidebar-header";
 import { FeedsSection } from "./feeds-section";
 import { RedditSection } from "./reddit-section";
+import { SidebarHeader } from "./sidebar-header";
+import type { SubscriptionSidebarProps } from "./types";
+import { UserMenu } from "./user-menu";
 
 // Re-export types for external use
 export type { Subscription, SubscriptionSidebarProps } from "./types";
@@ -38,6 +38,8 @@ export function SubscriptionSidebar({
   onCollapsedChange,
   viewMode = "reader",
   onFetchNewComplete,
+  onSubscriptionSelect,
+  onSettingsClick,
 }: SubscriptionSidebarProps) {
   // URL state for navigation
   const {
@@ -70,6 +72,8 @@ export function SubscriptionSidebar({
       } else if (id.startsWith("reddit-fav-")) {
         navigateToSubreddit(id.slice(11));
       }
+      // Notify parent of selection (for mobile navigation)
+      onSubscriptionSelect?.(id);
     },
     [
       navigateToAllEntries,
@@ -79,6 +83,7 @@ export function SubscriptionSidebar({
       navigateToRedditSearch,
       navigateToRedditFavorites,
       navigateToSubreddit,
+      onSubscriptionSelect,
     ],
   );
 
@@ -193,7 +198,10 @@ export function SubscriptionSidebar({
       <div className="shrink-0 border-t">
         <div className="space-y-0.5">
           <button
-            onClick={() => navigateToSettings()}
+            onClick={() => {
+              navigateToSettings();
+              onSettingsClick?.();
+            }}
             className={cn(
               "flex w-full items-center gap-2 border-b px-4 py-2 text-sm select-none hover:bg-sidebar-accent",
               viewMode === "settings" && "bg-sidebar-accent font-medium",

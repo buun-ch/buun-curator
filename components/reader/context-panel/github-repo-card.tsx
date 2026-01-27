@@ -1,6 +1,6 @@
 "use client";
 
-import { Star, Check, ExternalLink, Maximize2 } from "lucide-react";
+import { Check, ExternalLink, Maximize2, Star } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 

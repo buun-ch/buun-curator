@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
 import {
-  fetchEventSource,
   EventStreamContentType,
+  fetchEventSource,
 } from "@microsoft/fetch-event-source";
+import { useCallback, useEffect, useRef, useState } from "react";
+
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("sse:hook");

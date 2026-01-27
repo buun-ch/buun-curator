@@ -1,10 +1,11 @@
-import { test, expect, Page } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
+
 import {
-  createProxy,
-  deleteProxy,
-  addTimeoutToxic,
   addLatencyToxic,
   addResetPeerToxic,
+  addTimeoutToxic,
+  createProxy,
+  deleteProxy,
   removeAllToxics,
   removeToxic,
 } from "./helpers/toxiproxy-client";

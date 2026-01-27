@@ -7,8 +7,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { type Entry } from "@/lib/types";
+
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { type Entry } from "@/lib/types";
 
 /** Search result entry with highlight information. */
 export interface SearchResultEntry extends Entry {

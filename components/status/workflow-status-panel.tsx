@@ -9,20 +9,21 @@
  * @module components/sse/workflow-status-panel
  */
 
-import { useCallback, useRef } from "react";
-import { useWorkflowStore } from "@/stores/workflow-store";
-import type { WorkflowProgressNode } from "@/lib/temporal";
-import { cn } from "@/lib/utils";
 import {
-  X,
   CheckCircle,
-  XCircle,
+  CircleSmall,
   Loader2,
   Trash2,
   Workflow,
-  CircleSmall,
+  X,
+  XCircle,
 } from "lucide-react";
+import { useCallback, useRef } from "react";
+
 import { Button } from "@/components/ui/button";
+import type { WorkflowProgressNode } from "@/lib/temporal";
+import { cn } from "@/lib/utils";
+import { useWorkflowStore } from "@/stores/workflow-store";
 
 /**
  * Workflow status panel that shows detailed workflow progress.

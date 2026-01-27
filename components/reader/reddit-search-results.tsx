@@ -1,16 +1,15 @@
 "use client";
 
-import * as React from "react";
 import { formatDistanceToNow } from "date-fns";
 import {
   ArrowUp,
-  MessageSquare,
-  Loader2,
-  Search,
   ExternalLink,
+  Loader2,
+  MessageSquare,
+  Search,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import * as React from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -19,7 +18,9 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Input } from "@/components/ui/input";
 import type { RedditPost } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface RedditSearchResultsProps {
   posts?: RedditPost[];

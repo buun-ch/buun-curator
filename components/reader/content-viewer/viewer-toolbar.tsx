@@ -1,21 +1,21 @@
 "use client";
 
 import {
-  Star,
-  ExternalLink,
+  ChevronDown,
   ChevronLeft,
-  ChevronRight,
-  RefreshCw,
-  Cross,
+  ChevronUp,
   CircleSmall,
-  Sparkles,
+  Cross,
   Download,
+  RefreshCw,
+  Sparkles,
+  Star,
 } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { isResearchContextEnabled } from "@/lib/config";
 import type { Entry } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface ViewerToolbarProps {
   entry: Entry;
@@ -24,6 +24,7 @@ interface ViewerToolbarProps {
   contextPanelOpen: boolean;
   hasPrevious: boolean;
   hasNext: boolean;
+  onBack?: () => void;
   onPrevious?: () => void;
   onNext?: () => void;
   onToggleRead?: (entry: Entry) => void;
@@ -45,6 +46,7 @@ export function ViewerToolbar({
   contextPanelOpen,
   hasPrevious,
   hasNext,
+  onBack,
   onPrevious,
   onNext,
   onToggleRead,
@@ -60,6 +62,19 @@ export function ViewerToolbar({
         isScrolled ? "border-b" : "border-b border-transparent",
       )}
     >
+      {/* Back button (mobile) */}
+      {onBack && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-8"
+          onClick={onBack}
+          title="Back"
+        >
+          <ChevronLeft className="size-4" />
+        </Button>
+      )}
+
       {/* Navigation */}
       <div className="flex items-center gap-1">
         <Button
@@ -69,7 +84,7 @@ export function ViewerToolbar({
           onClick={onPrevious}
           disabled={!hasPrevious}
         >
-          <ChevronLeft className="size-4" />
+          <ChevronUp className="size-4" />
         </Button>
         <Button
           variant="ghost"
@@ -78,7 +93,7 @@ export function ViewerToolbar({
           onClick={onNext}
           disabled={!hasNext}
         >
-          <ChevronRight className="size-4" />
+          <ChevronDown className="size-4" />
         </Button>
       </div>
 
@@ -161,6 +176,7 @@ export function ViewerToolbar({
         <Download className="size-4" />
       </Button>
 
+      {/*
       <Button
         variant="ghost"
         size="icon"
@@ -170,6 +186,7 @@ export function ViewerToolbar({
       >
         <ExternalLink className="size-4" />
       </Button>
+      */}
     </div>
   );
 }

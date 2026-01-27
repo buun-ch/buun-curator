@@ -1,14 +1,14 @@
 "use client";
 
-import { useRef, useCallback, useMemo, useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { useHotkeys } from "react-hotkeys-hook";
-import type Tagify from "@yaireo/tagify";
-
-import { useLabels, useEntryLabels } from "@/hooks/use-labels";
-import type { Label } from "@/lib/types";
-
 import "./entry-labels.css";
+
+import type Tagify from "@yaireo/tagify";
+import dynamic from "next/dynamic";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
+
+import { useEntryLabels, useLabels } from "@/hooks/use-labels";
+import type { Label } from "@/lib/types";
 
 // Dynamic import to avoid SSR issues with Tagify
 const Tags = dynamic(() => import("@yaireo/tagify/dist/react.tagify"), {

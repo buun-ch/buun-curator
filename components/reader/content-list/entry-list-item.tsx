@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
-import Image from "next/image";
 import { formatDistanceToNowStrict } from "date-fns";
+import { Circle, Star } from "lucide-react";
+import Image from "next/image";
+import * as React from "react";
 import ReactMarkdown from "react-markdown";
-import { Star, Circle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 

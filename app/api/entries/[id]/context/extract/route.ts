@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 
 import { createLogger } from "@/lib/logger";
 import {
-  startExtractEntryContextWorkflow,
   getWorkflowStatus,
+  startExtractEntryContextWorkflow,
 } from "@/lib/temporal";
 
 const log = createLogger("api:entries:context:extract");

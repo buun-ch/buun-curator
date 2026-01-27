@@ -9,7 +9,7 @@
 
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 /** Keyboard shortcut definition for help display. */

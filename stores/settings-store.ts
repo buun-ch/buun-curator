@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
 import type { FilterMode, RedditFilterMode, SortMode } from "@/lib/types";
 
 interface RedditSearch {

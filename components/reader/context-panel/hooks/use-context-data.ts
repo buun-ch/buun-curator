@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { useWorkflowStore, selectWorkflowById } from "@/stores/workflow-store";
+import { selectWorkflowById, useWorkflowStore } from "@/stores/workflow-store";
 
 import type { EntryContext } from "../types";
 

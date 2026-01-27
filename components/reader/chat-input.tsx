@@ -1,18 +1,19 @@
 "use client";
 
-import * as React from "react";
-import { useMemo, useRef, useState, useCallback } from "react";
-import TextareaAutosize from "react-textarea-autosize";
 import { useCopilotContext } from "@copilotkit/react-core";
+import type { InputProps } from "@copilotkit/react-ui";
 import { useChatContext } from "@copilotkit/react-ui";
 import { MessageSquare, Search, Send, Square } from "lucide-react";
-import { cn } from "@/lib/utils";
+import * as React from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import TextareaAutosize from "react-textarea-autosize";
+
 import {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { InputProps } from "@copilotkit/react-ui";
+import { cn } from "@/lib/utils";
 
 /** Chat mode for the assistant. */
 export type ChatMode = "dialogue" | "research";

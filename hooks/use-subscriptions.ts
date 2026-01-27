@@ -8,8 +8,9 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
-import type { FilterMode } from "@/lib/types";
+
 import type { Subscription } from "@/components/reader/subscription-sidebar";
+import type { FilterMode } from "@/lib/types";
 import { useUrlState } from "@/lib/url-state-context";
 
 /** Return value from useSubscriptions hook. */

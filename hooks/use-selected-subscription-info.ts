@@ -9,11 +9,12 @@
 
 "use client";
 
-import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
+import * as React from "react";
+
 import type { Subscription } from "@/components/reader/subscription-sidebar";
-import { useUrlState } from "@/lib/url-state-context";
 import { useSubscriptions } from "@/hooks/use-subscriptions";
+import { useUrlState } from "@/lib/url-state-context";
 
 /** An item in the breadcrumb navigation path. */
 export interface BreadcrumbItem {

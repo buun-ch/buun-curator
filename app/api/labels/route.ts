@@ -1,7 +1,8 @@
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+
 import { db } from "@/db";
 import { labels } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("api:labels");

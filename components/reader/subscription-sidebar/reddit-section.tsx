@@ -1,17 +1,17 @@
 "use client";
 
+import { Check, ChevronRight, Loader2, Plus, Trash2, X } from "lucide-react";
 import * as React from "react";
-import { ChevronRight, Plus, Check, X, Loader2, Trash2 } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Input } from "@/components/ui/input";
 import { useRedditFavorites } from "@/hooks/use-reddit-favorites";
+import { cn } from "@/lib/utils";
 import { useSettingsStore } from "@/stores/settings-store";
 
 import { RedditIcon } from "./icons";

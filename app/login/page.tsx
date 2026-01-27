@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const searchParams = useSearchParams();

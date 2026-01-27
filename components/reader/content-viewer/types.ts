@@ -4,6 +4,8 @@ import type { Entry, LanguageMode } from "@/lib/types";
 export interface ContentViewerProps {
   entry?: Entry | null;
   loading?: boolean;
+  /** Callback when back button is pressed (mobile only). */
+  onBack?: () => void;
   onToggleStar?: (entry: Entry) => void;
   onToggleKeep?: (entry: Entry) => void;
   onToggleRead?: (entry: Entry) => void;

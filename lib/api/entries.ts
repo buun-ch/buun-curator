@@ -4,10 +4,12 @@
  * @module lib/api/entries
  */
 
+import { desc, eq } from "drizzle-orm";
+
 import { db as defaultDb } from "@/db";
-import { feeds, entries } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
-import type { Db, ErrorResult } from "./types";
+import { entries, feeds } from "@/db/schema";
+
+import type { Db } from "./types";
 import { DEFAULT_FETCH_LIMIT, MAX_FETCH_LIMIT } from "./types";
 
 /**

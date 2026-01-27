@@ -9,9 +9,11 @@
 
 "use client";
 
-import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import * as React from "react";
+
 import { type Entry, type EntryListItem } from "@/lib/types";
+
 import { useEntry, useUpdateEntry } from "./use-entry";
 
 /** Options for the useSelectedEntry hook. */
@@ -136,16 +138,32 @@ export function useSelectedEntry({
     markedAsReadRef.current = null; // Reset for new entry
   }, []);
 
-  // setSelectedEntry - updates the query cache directly
+  // setSelectedEntry - updates the query cache directly, or clears selection if null
   const setSelectedEntry = React.useCallback<
     React.Dispatch<React.SetStateAction<Entry | null>>
   >(
     (action) => {
+      // Handle clearing selection when called with null directly
+      if (action === null) {
+        setSelectedEntryId(null);
+        setSimilarityScore(undefined);
+        markedAsReadRef.current = null;
+        return;
+      }
+
       if (!selectedEntryId) return;
 
       queryClient.setQueryData<Entry>(["entry", selectedEntryId], (old) => {
         if (typeof action === "function") {
-          return action(old ?? null) ?? undefined;
+          const result = action(old ?? null);
+          // If the function returns null, clear selection
+          if (result === null) {
+            setSelectedEntryId(null);
+            setSimilarityScore(undefined);
+            markedAsReadRef.current = null;
+            return undefined;
+          }
+          return result ?? undefined;
         }
         return action ?? undefined;
       });

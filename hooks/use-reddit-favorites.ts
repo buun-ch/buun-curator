@@ -9,7 +9,8 @@
 
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { isRedditEnabled } from "@/lib/config";
 
 /** A favorite subreddit saved in the database. */

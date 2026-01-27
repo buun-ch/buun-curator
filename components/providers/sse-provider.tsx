@@ -1,27 +1,28 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import {
   createContext,
-  useContext,
+  type ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useRef,
-  type ReactNode,
 } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-import { useSSE, type SSEStatus } from "@/hooks/use-sse";
-import { signOut } from "@/lib/auth-client";
+
 import { useAuth } from "@/components/providers/auth-provider";
-import { useWorkflowStore } from "@/stores/workflow-store";
+import { type SSEStatus, useSSE } from "@/hooks/use-sse";
+import { signOut } from "@/lib/auth-client";
 import { isAuthEnabled } from "@/lib/config";
+import { createLogger } from "@/lib/logger";
 import type {
-  WorkflowProgress,
   ContentDistillationProgress,
+  WorkflowProgress,
 } from "@/lib/temporal";
 import { getWorkflowToastMessage } from "@/lib/workflow-toast";
-import { createLogger } from "@/lib/logger";
+import { useWorkflowStore } from "@/stores/workflow-store";
 
 const log = createLogger("sse:provider");
 

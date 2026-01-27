@@ -1,15 +1,13 @@
 "use client";
 
-import * as React from "react";
-
-import type { PlateElementProps } from "platejs/react";
-
 import {
   useTodoListElement,
   useTodoListElementState,
 } from "@platejs/list-classic/react";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
+import type { PlateElementProps } from "platejs/react";
 import { PlateElement } from "platejs/react";
+import * as React from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";

@@ -1,9 +1,9 @@
 "use client";
 
-import { X, Sparkles, RefreshCw, Loader2, Play, Bug } from "lucide-react";
+import { Bug, Loader2, Play, RefreshCw, Sparkles, X } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 import type { ViewMode } from "./types";
 

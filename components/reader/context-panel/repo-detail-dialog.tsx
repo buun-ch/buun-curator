@@ -1,6 +1,6 @@
 "use client";
 
-import { Star, GitFork, ExternalLink, FileText } from "lucide-react";
+import { ExternalLink, FileText, GitFork, Star } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
@@ -16,8 +16,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import type { GitHubRepo } from "./types";
 import { GitHubIcon } from "./github-repo-card";
+import type { GitHubRepo } from "./types";
 
 interface RepoDetailDialogProps {
   repo: GitHubRepo | null;

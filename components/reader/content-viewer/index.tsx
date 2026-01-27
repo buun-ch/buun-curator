@@ -1,19 +1,18 @@
 "use client";
 
+import { ChevronDown, ChevronUp, FileText, Loader2 } from "lucide-react";
+import type { Ref } from "react";
 import {
-  useState,
+  forwardRef,
   useCallback,
   useImperativeHandle,
-  forwardRef,
   useRef,
+  useState,
 } from "react";
-import type { Ref } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ChevronDown, ChevronUp, FileText, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-
 import {
   Empty,
   EmptyDescription,
@@ -22,16 +21,16 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 
-import type { ContentViewerProps, ContentViewerRef } from "./types";
-import { useContent } from "./hooks/use-content";
-import { ViewerToolbar } from "./viewer-toolbar";
-import { EntryHeader } from "./entry-header";
-import { LanguageToggle } from "./language-toggle";
-import { EntryContent } from "./entry-content";
-import { DebugPanel } from "./debug-panel";
-import { RelatedEntriesSection } from "./related-entries-section";
 import { AnnotationSection } from "./annotation-section";
+import { DebugPanel } from "./debug-panel";
+import { EntryContent } from "./entry-content";
+import { EntryHeader } from "./entry-header";
+import { useContent } from "./hooks/use-content";
+import { LanguageToggle } from "./language-toggle";
 import { markdownComponents } from "./markdown-components";
+import { RelatedEntriesSection } from "./related-entries-section";
+import type { ContentViewerProps, ContentViewerRef } from "./types";
+import { ViewerToolbar } from "./viewer-toolbar";
 
 // Re-export types for external use
 export type { ContentViewerProps, ContentViewerRef } from "./types";
@@ -45,6 +44,7 @@ export const ContentViewer = forwardRef(function ContentViewer(
   {
     entry,
     loading = false,
+    onBack,
     onToggleStar,
     onToggleKeep,
     onToggleRead,
@@ -152,6 +152,7 @@ export const ContentViewer = forwardRef(function ContentViewer(
         contextPanelOpen={contextPanelOpen}
         hasPrevious={hasPrevious}
         hasNext={hasNext}
+        onBack={onBack}
         onPrevious={onPrevious}
         onNext={onNext}
         onToggleRead={onToggleRead}

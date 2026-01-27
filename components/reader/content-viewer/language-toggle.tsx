@@ -1,6 +1,6 @@
 "use client";
 
-import { Globe, Languages, Columns2 } from "lucide-react";
+import { Columns2, Globe, Languages } from "lucide-react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { LanguageMode } from "@/lib/types";

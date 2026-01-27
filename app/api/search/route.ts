@@ -1,7 +1,8 @@
+import { inArray } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+
 import { db } from "@/db";
 import { entries, feeds } from "@/db/schema";
-import { eq, inArray } from "drizzle-orm";
 import { createLogger } from "@/lib/logger";
 import { isMeilisearchEnabled, searchEntries } from "@/lib/meilisearch";
 

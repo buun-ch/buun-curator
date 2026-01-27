@@ -1,36 +1,33 @@
 "use client";
 
-import * as React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { FixedWidthPanel } from "@/components/ui/fixed-width-panel";
+import * as React from "react";
+
 import { ContentList } from "@/components/reader/content-list";
 import {
   ContentViewer,
   type ContentViewerRef,
 } from "@/components/reader/content-viewer";
+import { KeyboardShortcutsDialog } from "@/components/reader/keyboard-shortcuts-dialog";
+import { RedditPostViewer } from "@/components/reader/reddit-post-viewer";
 import { RedditSearchResults } from "@/components/reader/reddit-search-results";
 import { SubredditInfo } from "@/components/reader/subreddit-info";
-import { RedditPostViewer } from "@/components/reader/reddit-post-viewer";
 import { TranslationPanel } from "@/components/reader/translation-panel";
-import { KeyboardShortcutsDialog } from "@/components/reader/keyboard-shortcuts-dialog";
+import { FixedWidthPanel } from "@/components/ui/fixed-width-panel";
 import { useEntries } from "@/hooks/use-entries";
-import { useEntrySearch } from "@/hooks/use-entry-search";
-import { useSelectedEntry } from "@/hooks/use-selected-entry";
-import { useEntryActions } from "@/hooks/use-entry-actions";
 import { useUpdateEntry } from "@/hooks/use-entry";
+import { useEntryActions } from "@/hooks/use-entry-actions";
+import { useEntrySearch } from "@/hooks/use-entry-search";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { useRedditState } from "@/hooks/use-reddit-state";
-import { useSubscriptions } from "@/hooks/use-subscriptions";
+import { useSelectedEntry } from "@/hooks/use-selected-entry";
 import { useSelectedSubscriptionInfo } from "@/hooks/use-selected-subscription-info";
 import { useSingleFeedIngestion } from "@/hooks/use-single-feed-ingestion";
+import { useSubscriptions } from "@/hooks/use-subscriptions";
 import { useTranslation } from "@/hooks/use-translation";
-import { useSettingsStore } from "@/stores/settings-store";
-import {
-  useWorkflowStore,
-  selectIsEntryRefreshing,
-  selectIsEntryDistilled,
-} from "@/stores/workflow-store";
-import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { isRedditEnabled } from "@/lib/config";
+import { createLogger } from "@/lib/logger";
+import { usePreserveEntries } from "@/lib/preserve-entries-context";
 import {
   type ContentPanelMode,
   type Entry,
@@ -38,8 +35,12 @@ import {
   type LanguageMode,
 } from "@/lib/types";
 import { useUrlState } from "@/lib/url-state-context";
-import { usePreserveEntries } from "@/lib/preserve-entries-context";
-import { createLogger } from "@/lib/logger";
+import { useSettingsStore } from "@/stores/settings-store";
+import {
+  selectIsEntryDistilled,
+  selectIsEntryRefreshing,
+  useWorkflowStore,
+} from "@/stores/workflow-store";
 
 const log = createLogger("components:reader-content");
 /** Scroll amount in pixels for keyboard shortcuts. */

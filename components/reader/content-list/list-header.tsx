@@ -1,26 +1,26 @@
 "use client";
 
-import * as React from "react";
 import {
-  Star,
-  Circle,
-  Inbox,
   ArrowDownWideNarrow,
   ArrowUpWideNarrow,
-  Sparkles,
+  CheckCheck,
+  ChevronLeft,
+  ChevronRight,
+  CircleSmall,
+  Inbox,
   RefreshCw,
   Search,
-  ChevronRight,
-  CheckCheck,
-  CircleSmall,
+  Sparkles,
+  Star,
 } from "lucide-react";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { FilterMode, SortMode } from "@/lib/types";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { SubscriptionInfo } from "@/hooks/use-selected-subscription-info";
+import type { FilterMode, SortMode } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface ListHeaderProps {
   subscriptionInfo?: SubscriptionInfo | null;
@@ -35,6 +35,8 @@ interface ListHeaderProps {
   isRefetching: boolean;
   onMarkAllAsRead?: () => void;
   isMarkingAllAsRead: boolean;
+  /** Callback for back navigation (mobile). */
+  onBack?: () => void;
 }
 
 /**
@@ -55,6 +57,7 @@ export function ListHeader({
   isRefetching,
   onMarkAllAsRead,
   isMarkingAllAsRead,
+  onBack,
 }: ListHeaderProps) {
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const isSearchMode = filterMode === "search";
@@ -68,8 +71,18 @@ export function ListHeader({
 
   return (
     <div className="shrink-0">
-      {/* Row 1: Breadcrumb */}
-      <div className="flex h-11 items-center gap-2 px-2">
+      {/* Row 1: Back button (mobile) + Breadcrumb */}
+      <div className="flex h-11 items-center gap-1 px-2">
+        {onBack && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onBack}
+            className="size-8 shrink-0"
+          >
+            <ChevronLeft className="size-5" />
+          </Button>
+        )}
         <div className="text-s flex min-w-0 flex-1 items-center gap-1 px-1 text-muted-foreground">
           {subscriptionInfo?.breadcrumb.map((item, index) => (
             <React.Fragment key={item.id}>

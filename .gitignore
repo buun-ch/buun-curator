@@ -49,5 +49,6 @@ next-env.d.ts
 
 .venv
 .playwright-mcp/
+.playwright-cli/
 /private/
 /dist/

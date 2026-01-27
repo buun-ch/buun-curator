@@ -1,6 +1,6 @@
 "use client";
 
-import { Globe, Check, ExternalLink, X, Loader2 } from "lucide-react";
+import { Check, ExternalLink, Globe, Loader2, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 

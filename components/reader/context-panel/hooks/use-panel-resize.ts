@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { useSettingsStore } from "@/stores/settings-store";
 
-import { MIN_HEIGHT, MAX_HEIGHT, DEFAULT_HEIGHT } from "../constants";
+import { DEFAULT_HEIGHT, MAX_HEIGHT, MIN_HEIGHT } from "../constants";
 
 interface UsePanelResizeResult {
   height: number;

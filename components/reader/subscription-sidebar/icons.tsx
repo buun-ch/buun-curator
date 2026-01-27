@@ -1,8 +1,9 @@
+import { CircleSmall, Inbox, Rss, Star } from "lucide-react";
 import * as React from "react";
-import { Rss, Star, Inbox, CircleSmall } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 import type { Subscription } from "./types";
-import { cn } from "@/lib/utils";
 
 /**
  * Get the icon for a subscription based on its type and id.

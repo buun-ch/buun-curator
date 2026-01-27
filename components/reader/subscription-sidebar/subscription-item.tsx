@@ -2,16 +2,16 @@
 
 import { ChevronRight } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 import { useSettingsStore } from "@/stores/settings-store";
 
-import type { Subscription } from "./types";
 import { getSubscriptionIcon } from "./icons";
+import type { Subscription } from "./types";
 
 interface SubscriptionItemProps {
   subscription: Subscription;

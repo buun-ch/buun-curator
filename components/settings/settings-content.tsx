@@ -1,10 +1,10 @@
 "use client";
 
-import { FixedWidthPanel } from "@/components/ui/fixed-width-panel";
 import { SettingsNav } from "@/components/settings/settings-nav";
 import { SettingsPanel } from "@/components/settings/settings-panel";
-import { useSettingsStore } from "@/stores/settings-store";
+import { FixedWidthPanel } from "@/components/ui/fixed-width-panel";
 import { useUrlState } from "@/lib/url-state-context";
+import { useSettingsStore } from "@/stores/settings-store";
 
 /** Settings content with navigation and panel. */
 export function SettingsContent() {

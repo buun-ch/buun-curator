@@ -1,8 +1,6 @@
 "use client";
 
 import type { AutoformatBlockRule, AutoformatRule } from "@platejs/autoformat";
-import type { SlateEditor } from "platejs";
-
 import {
   autoformatArrow,
   autoformatLegal,
@@ -14,6 +12,7 @@ import {
 } from "@platejs/autoformat";
 import { insertEmptyCodeBlock } from "@platejs/code-block";
 import { toggleList, toggleTaskList, unwrapList } from "@platejs/list-classic";
+import type { SlateEditor } from "platejs";
 import { ElementApi, isType, KEYS } from "platejs";
 
 const preFormat: AutoformatBlockRule["preFormat"] = (editor) =>

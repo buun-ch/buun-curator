@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getWorkflowStatus } from "@/lib/temporal";
+
 import { createLogger } from "@/lib/logger";
+import { getWorkflowStatus } from "@/lib/temporal";
 
 const log = createLogger("api:workflows:status");
 

@@ -1,11 +1,10 @@
 "use client";
 
+import { ChevronRight, Loader2, Network, Play, Sparkles } from "lucide-react";
 import * as React from "react";
-import { Sparkles, Loader2, Play, ChevronRight, Network } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
@@ -19,17 +18,18 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { cn } from "@/lib/utils";
 
+import { EntryLinkCard } from "./entry-link-card";
+import { GitHubRepoCard } from "./github-repo-card";
 import type {
   EntryContext,
-  GroupedEntryLink,
-  GitHubRepo,
   GitHubEnrichment,
+  GitHubRepo,
+  GroupedEntryLink,
   WebPage,
   WebPageEnrichment,
 } from "./types";
-import { EntryLinkCard } from "./entry-link-card";
-import { GitHubRepoCard } from "./github-repo-card";
 import { WebPageCard } from "./web-page-card";
 
 interface ContextViewProps {

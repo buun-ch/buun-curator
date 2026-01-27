@@ -1,7 +1,5 @@
 "use client";
 
-import * as React from "react";
-
 import { indentListItems, unindentListItems } from "@platejs/list-classic";
 import {
   useListToolbarButton,
@@ -16,6 +14,7 @@ import {
 } from "lucide-react";
 import { KEYS } from "platejs";
 import { useEditorRef } from "platejs/react";
+import * as React from "react";
 
 import { ToolbarButton } from "./toolbar";
 

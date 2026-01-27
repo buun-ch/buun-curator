@@ -1,13 +1,13 @@
 "use client";
 
-import * as React from "react";
-import Image from "next/image";
 import { formatDistanceToNowStrict } from "date-fns";
+import Image from "next/image";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRelatedEntries } from "@/hooks/use-related-entries";
 import type { RelatedEntry } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface RelatedEntriesSectionProps {
   entryId: string;

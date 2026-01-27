@@ -1,9 +1,9 @@
+import { HttpAgent } from "@ag-ui/client";
 import {
   CopilotRuntime,
-  ExperimentalEmptyAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
+  ExperimentalEmptyAdapter,
 } from "@copilotkit/runtime";
-import { HttpAgent } from "@ag-ui/client";
 import { NextRequest } from "next/server";
 
 const AGENT_URL = process.env.AGENT_URL || "http://localhost:8000";

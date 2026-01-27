@@ -4,7 +4,8 @@
  * @module hooks/use-labels
  */
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import type { Label } from "@/lib/types";
 
 /** Fetches all available labels. */

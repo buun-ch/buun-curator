@@ -10,6 +10,7 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { fetchSubredditInfo } from "@/lib/reddit-api";
 import type { SubredditInfo } from "@/lib/types";
 

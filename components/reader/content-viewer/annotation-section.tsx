@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { Check, Loader2, Pencil, X } from "lucide-react";
 import dynamic from "next/dynamic";
-import { Pencil, X, Check, Loader2 } from "lucide-react";
+import { useCallback, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { Button } from "@/components/ui/button";
 import type { Entry } from "@/lib/types";
+
 import { markdownComponents } from "./markdown-components";
 
 // Dynamic import to avoid SSR issues with Plate

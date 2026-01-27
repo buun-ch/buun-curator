@@ -11,9 +11,11 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { broadcastEvent, type SSEEventType } from "../route";
+
 import { createLogger } from "@/lib/logger";
 import type { WorkflowProgress } from "@/lib/temporal";
+
+import { broadcastEvent, type SSEEventType } from "../route";
 
 const log = createLogger("api:events:send");
 

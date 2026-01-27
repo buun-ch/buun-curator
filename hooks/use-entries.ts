@@ -9,21 +9,22 @@
 
 "use client";
 
-import * as React from "react";
 import {
+  type InfiniteData,
   useInfiniteQuery,
   useQueryClient,
-  type InfiniteData,
 } from "@tanstack/react-query";
+import * as React from "react";
+
+import { createLogger } from "@/lib/logger";
 import {
+  type EntriesConnection,
   type EntryListItem,
   type FilterMode,
-  type SortMode,
-  type EntriesConnection,
   normalizeEntryListItem,
+  type SortMode,
 } from "@/lib/types";
 import { useUrlState } from "@/lib/url-state-context";
-import { createLogger } from "@/lib/logger";
 
 const log = createLogger("hooks:entries");
 
@@ -205,7 +206,6 @@ export function useEntries({
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-    refetch: queryRefetch,
   } = useInfiniteQuery({
     queryKey,
     queryFn: ({ pageParam }) =>

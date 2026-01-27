@@ -3,8 +3,8 @@ import { z } from "zod";
 
 import { createLogger } from "@/lib/logger";
 import {
-  startFetchEntryLinksWorkflow,
   getWorkflowStatus,
+  startFetchEntryLinksWorkflow,
 } from "@/lib/temporal";
 
 const log = createLogger("api:entries:fetch-links");
