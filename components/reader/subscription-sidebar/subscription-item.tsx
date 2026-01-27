@@ -64,7 +64,7 @@ export function SubscriptionItem({
         >
           <CollapsibleTrigger asChild>
             <button
-              className="flex items-center px-1 py-1.5 hover:bg-sidebar-accent"
+              className="flex items-center px-1 py-1.5 hover:bg-sidebar-ring"
               onClick={(e) => e.stopPropagation()}
             >
               <ChevronRight
@@ -78,7 +78,7 @@ export function SubscriptionItem({
           </CollapsibleTrigger>
           <button
             className={cn(
-              "flex min-w-0 flex-1 items-center gap-0.5 py-1.5 pr-4 hover:bg-sidebar-accent",
+              "flex min-w-0 flex-1 items-center gap-0.5 py-1.5 pr-4 hover:bg-sidebar-ring",
               collapsed && "justify-center px-0",
             )}
             onClick={() => onSelect?.(subscription.id)}
@@ -118,7 +118,7 @@ export function SubscriptionItem({
     <button
       onClick={() => onSelect?.(subscription.id)}
       className={cn(
-        "flex w-full items-center gap-0.5 py-1.5 pr-4 pl-2 text-sm select-none hover:bg-sidebar-accent",
+        "flex w-full items-center gap-0.5 py-1.5 pr-4 pl-2 text-sm select-none hover:bg-sidebar-ring",
         isSelected && "bg-sidebar-accent",
         collapsed && "justify-center px-0",
       )}

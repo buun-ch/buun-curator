@@ -37,7 +37,7 @@ export const EntryListItem = React.forwardRef<
         }
       }}
       className={cn(
-        "group flex w-full cursor-pointer gap-3 p-2.5 text-left transition-colors select-none hover:bg-accent",
+        "group flex w-full cursor-pointer gap-3 p-2.5 text-left transition-colors select-none hover:bg-ring",
         isSelected && "bg-accent",
         !entry.isRead && "bg-accent/30",
       )}
@@ -65,7 +65,7 @@ export const EntryListItem = React.forwardRef<
         <div className="flex items-start gap-2">
           {/* Unread indicator */}
           {!entry.isRead && (
-            <Circle className="mt-1.5 size-2 shrink-0 fill-primary text-primary" />
+            <Circle className="mt-1.5 size-2 shrink-0 fill-primary" />
           )}
           <h3
             className={cn(
@@ -82,10 +82,9 @@ export const EntryListItem = React.forwardRef<
               onToggleStar?.(entry);
             }}
             className={cn(
-              "shrink-0 p-1 hover:text-foreground",
-              entry.isStarred
-                ? "text-neutral-500"
-                : "text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100",
+              "shrink-0 p-1 text-muted-foreground hover:text-foreground",
+              !entry.isStarred &&
+                "opacity-0 transition-opacity group-hover:opacity-100",
             )}
           >
             <Star className={cn("size-4", entry.isStarred && "fill-current")} />
